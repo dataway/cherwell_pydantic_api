@@ -29,7 +29,22 @@ class CherwellConnection(object):
     def get(self, url, **kwargs):
         r = self.session.get(self.urlbase + url, **kwargs)
         self.last_result = r
+        if r.status_code == 500:
+            return None
         r.raise_for_status()
+        if r.text == '':
+            return None
+        return r.json()
+
+
+    def post(self, url, json, **kwargs):
+        r = self.session.post(self.urlbase + url, json=json, **kwargs)
+        self.last_result = r
+        if r.status_code == 500:
+            return None
+        r.raise_for_status()
+        if r.text == '':
+            return None
         return r.json()
 
 
@@ -53,5 +68,22 @@ class CherwellConnection(object):
         if busObId is None:
             busObId = self.bo_name_to_id(busObName)
         r = self.get('/api/v1/getbusinessobject/busobid/{0}/publicid/{1}'.format(busObId, publicId))
+        return r
+
+
+    def save_bo(self, bo_dict):
+        req = bo_dict.save_change()
+        self.last_save_bo_req = req
+        if req is None:
+            return None
+        r = self.post('/api/v1/savebusinessobject', req)
+        bo_dict.clear_dirty()
+        if bo_dict.busObRecId is None:
+            bo_dict.busObRecId = r['busObRecId']
+        return r
+
+
+    def link_related_bo(self, parentBusObId, parentBusObRecId, relationshipId, busObId, busObRecId):
+        r = self.get('/api/v1/linkrelatedbusinessobject/parentbusobid/{0}/parentbusobrecid/{1}/relationshipid/{2}/busobid/{3}/busobrecid/{4}'.format(parentBusObId, parentBusObRecId, relationshipId, busObId, busObRecId))
         return r
 

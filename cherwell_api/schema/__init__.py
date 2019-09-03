@@ -4,7 +4,7 @@ import importlib.abc
 import importlib.machinery
 import types
 from typing import Any, Callable, List, Optional, Sequence, Tuple, Union
-from marshmallow import Schema, pre_load, fields as marshmallow_fields
+from marshmallow import Schema, pre_load, post_load, fields as marshmallow_fields
 import pprint
 
 
@@ -44,14 +44,76 @@ class TypeHandler(object):
 
 
 
+class BusinessObjectDict(dict):
+    __slots__ = ['busObId', 'busObPublicId', 'busObRecId', 'fieldIds', 'html', 'schema', 'dirty']
+
+    def __init__(self, schema):
+        self.schema = schema
+        self.busObId = self.busObPublicId = self.busObRecId = None
+        self.fieldIds = {}
+        self.html = {}
+        self.dirty = set()
+
+    def clear_dirty(self):
+        self.dirty.clear()
+
+    def __setitem__(self, key, value):
+        if key not in self or self[key] != value:
+            self.dirty.add(key)
+        dict.__setitem__(self, key, value)
+
+    def set_html(self, key, html):
+        if key not in self.html or self.html[key] != html:
+            self.dirty.add(key)
+        self.html[key] = html
+
+    def save_change(self):
+        if not self.dirty:
+            return None
+        fields = []
+        r = {'busObId': self.busObId, 'persist': True, 'fields': fields}
+        if self.busObRecId is not None:
+            r['busObRecId'] = self.busObRecId
+        for field in self.dirty:
+            f = {'dirty': True, 'fieldId': self.fieldIds[field], 'value': self[field]}
+            if field in self.html:
+                f['html'] = self.html[field]
+            fields.append(f)
+        return r
+
+
+
 class BusinessObjectSchema(Schema):
+
+    def make_empty(self):
+        r = BusinessObjectDict(self)
+        r.busObId = self._busObId
+        r.fieldIds = self._field_name_to_long_id
+        return r
 
     @pre_load(pass_many=True)
     def unpack(self, data, many, **kwargs):
         fields_hash = dict()
-        for field in data['fields']:
-            fields_hash[field['name']] = field['value']
+        if data is not None:
+            for field in data['fields']:
+                fields_hash[field['name']] = field['value']
         return fields_hash
+
+    @post_load(pass_many=True, pass_original=True)
+    def make_bo_dict(self, data, original, **kwargs):
+        r = BusinessObjectDict(self)
+        for k, v in data.items():
+            r[k] = v
+        if original is not None:
+            for field in original['fields']:
+                r.fieldIds[field['name']] = field['fieldId']
+                if field['html'] is not None:
+                    r.html[field['name']] = field['html']
+            r.busObId = original['busObId']
+            r.busObPublicId = original['busObPublicId']
+            r.busObRecId = original['busObRecId']
+        r.clear_dirty()
+        return r
 
 
 class BusinessObjectBuilder(object):
@@ -77,6 +139,7 @@ class BusinessObjectBuilder(object):
         self.last_schema = schema
         type_handler = type_handler_class(schema)
         field_id_to_name = dict()
+        field_name_to_long_id = dict()
         lines.append(
 r"""class {0[name]}Schema(BusinessObjectSchema):
     _busObId = '{0[busObId]}'
@@ -87,6 +150,7 @@ r"""class {0[name]}Schema(BusinessObjectSchema):
             if description:
                 lines.append('    #{0}'.format(description))
             lines.append('    {0[name]} = {1}'.format(field, mtype))
+            field_name_to_long_id[field['name']] = field['fieldId']
             field_id_parts = dict()
             for field_id_part in field['fieldId'].split(','):
                 k, v = field_id_part.split(':', 1)
@@ -95,11 +159,13 @@ r"""class {0[name]}Schema(BusinessObjectSchema):
                 field_id_to_name[field_id_parts.get('FI', '')] = field['name']
         if schema['states'] is not None:
             lines.append('    _states = ' + repr(schema['states'].split(',')))
+
         if field_id_to_name:
             lines.append('    _first_rec_id_field = {0}'.format(field_id_to_name[schema['firstRecIdField']]))
             if 'stateFieldId' in schema and schema['stateFieldId'] in field_id_to_name:
                 lines.append('    _state_field = {0}'.format(field_id_to_name[schema['stateFieldId']]))
             lines.append('    _field_id_to_name = ' + pprint.pformat(field_id_to_name, indent=8, width=160))
+        lines.append('    _field_name_to_long_id = ' + pprint.pformat(field_name_to_long_id, indent=8, width=160))
         lines.append('')
         for relationship in schema['relationships']:
             pass
