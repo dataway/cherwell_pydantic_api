@@ -12,6 +12,7 @@ class CherwellConnection(object):
         self.password = password
         self.session = requests.Session()
         self.token = None
+        self.raise_on_error_500 = False
 
 
     def authenticate(self):
@@ -29,7 +30,7 @@ class CherwellConnection(object):
     def get(self, url, **kwargs):
         r = self.session.get(self.urlbase + url, **kwargs)
         self.last_result = r
-        if r.status_code == 500:
+        if not self.raise_on_error_500 and r.status_code == 500:
             return None
         r.raise_for_status()
         if r.text == '':
@@ -40,7 +41,7 @@ class CherwellConnection(object):
     def post(self, url, json, **kwargs):
         r = self.session.post(self.urlbase + url, json=json, **kwargs)
         self.last_result = r
-        if r.status_code == 500:
+        if not self.raise_on_error_500 and r.status_code == 500:
             return None
         r.raise_for_status()
         if r.text == '':
@@ -71,12 +72,19 @@ class CherwellConnection(object):
         return r
 
 
+    def get_related_bo(self, parentBusObId, parentBusObRecId, relationshipId):
+        r = self.get('/api/v1/getrelatedbusinessobject/parentbusobid/{0}/parentbusobrecid/{1}/relationshipid/{2}'.format(parentBusObId, parentBusObRecId, relationshipId))
+        return r
+
+
     def save_bo(self, bo_dict):
         req = bo_dict.save_change()
         self.last_save_bo_req = req
         if req is None:
             return None
         r = self.post('/api/v1/savebusinessobject', req)
+        if r is None:
+            return None
         bo_dict.clear_dirty()
         if bo_dict.busObRecId is None:
             bo_dict.busObRecId = r['busObRecId']

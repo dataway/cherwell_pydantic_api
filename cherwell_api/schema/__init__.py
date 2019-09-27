@@ -4,7 +4,7 @@ import importlib.abc
 import importlib.machinery
 import types
 from typing import Any, Callable, List, Optional, Sequence, Tuple, Union
-from marshmallow import Schema, pre_load, post_load, fields as marshmallow_fields
+from marshmallow import Schema, pre_load, post_load, post_dump, fields as marshmallow_fields
 import pprint
 
 
@@ -29,6 +29,7 @@ class TypeHandler(object):
             else:
                 ftype = self.marshmallow_fields + '.Decimal'
                 args.append('places={0[decimalDigits]}'.format(field))
+                args.append('as_string=True')
         elif bo_type == 'DateTime':
             if field['hasDate'] and field['hasTime']:
                 ftype = self.cherwell_fields + '.DateTime'
@@ -61,25 +62,19 @@ class BusinessObjectDict(dict):
         if key not in self or self[key] != value:
             self.dirty.add(key)
         dict.__setitem__(self, key, value)
+        if key in self.html:
+            del self.html[key]
 
     def set_html(self, key, html):
         if key not in self.html or self.html[key] != html:
             self.dirty.add(key)
         self.html[key] = html
+        dict.__setitem__(self, key, html)
 
     def save_change(self):
         if not self.dirty:
             return None
-        fields = []
-        r = {'busObId': self.busObId, 'persist': True, 'fields': fields}
-        if self.busObRecId is not None:
-            r['busObRecId'] = self.busObRecId
-        for field in self.dirty:
-            f = {'dirty': True, 'fieldId': self.fieldIds[field], 'value': self[field]}
-            if field in self.html:
-                f['html'] = self.html[field]
-            fields.append(f)
-        return r
+        return type(self.schema)(only=self.dirty).dump(self)
 
 
 
@@ -114,6 +109,26 @@ class BusinessObjectSchema(Schema):
             r.busObRecId = original['busObRecId']
         r.clear_dirty()
         return r
+
+
+    @post_dump(pass_many=True, pass_original=True)
+    def dump_bo_dict(self, data, original, **kwargs):
+        fields = []
+        r = {'busObId': original.busObId, 'persist': True, 'fields': fields}
+        if original.busObRecId is not None:
+            r['busObRecId'] = original.busObRecId
+        for field, value in data.items():
+            f = { 'dirty': field in original.dirty,
+                    'fieldId': original.fieldIds[field] }
+            if field in original.html:
+                f['html'] = original.html[field]
+                f['value'] = original.html[field]
+            else:
+                f['value'] = value
+            #f['name'] = field
+            fields.append(f)
+        return r
+
 
 
 class BusinessObjectBuilder(object):
