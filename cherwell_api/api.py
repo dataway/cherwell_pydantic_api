@@ -88,6 +88,8 @@ class CherwellConnection(object):
         bo_dict.clear_dirty()
         if bo_dict.busObRecId is None:
             bo_dict.busObRecId = r['busObRecId']
+        if bo_dict.busObPublicId is None:
+            bo_dict.busObPublicId = r['busObPublicId']
         return r
 
 
