@@ -125,7 +125,7 @@ class BusinessObjectSchema(Schema):
                 f['value'] = original.html[field]
             else:
                 f['value'] = value
-            #f['name'] = field
+            f['name'] = field
             fields.append(f)
         return r
 

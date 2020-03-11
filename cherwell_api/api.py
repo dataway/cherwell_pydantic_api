@@ -97,3 +97,28 @@ class CherwellConnection(object):
         r = self.get('/api/v1/linkrelatedbusinessobject/parentbusobid/{0}/parentbusobrecid/{1}/relationshipid/{2}/busobid/{3}/busobrecid/{4}'.format(parentBusObId, parentBusObRecId, relationshipId, busObId, busObRecId))
         return r
 
+
+    def get_search_results_operator(self, bo_dict, op_dict, fields=None):
+        change = bo_dict.save_change()
+        search = {'busObId': change['busObId']}
+        if fields is not None:
+            field_ids = []
+            for field in fields:
+                if 'BO:' in field:
+                    field_ids.append(field)
+                else:
+                    field_ids.append(bo_dict.fieldIds[field])
+            search['fields'] = field_ids
+        filters = []
+        search['filters'] = filters
+        for field in change['fields']:
+            op = op_dict.get(field['name'], op_dict.get(field['fieldId'], 'eq'))
+            filters.append({'fieldId': field['fieldId'], 'value': field['value'], 'operator': op})
+        search['pageSize'] = 100000
+        self.last_search = search
+        r = self.post('/api/v1/getsearchresults', search)
+        return r
+
+
+    def get_search_results_eq(self, bo_dict, fields=None):
+        return self.get_search_results_operator(bo_dict=bo_dict, op_dict={}, fields=fields)

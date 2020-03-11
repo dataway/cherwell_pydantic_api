@@ -1,9 +1,14 @@
 from marshmallow import fields
 import datetime
+import re
 
 
 def from_cw_datetime(value):
-    return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M')
+    try:
+        return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M')
+    except:
+        pass
+    return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M:%S')
 
 def from_cw_date(value):
     return datetime.datetime.strptime(value, '%d.%m.%Y').date()
