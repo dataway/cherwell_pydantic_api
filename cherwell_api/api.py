@@ -27,6 +27,10 @@ class CherwellConnection(object):
         return self.token
 
 
+    def logout(self):
+        return self.delete('/api/v1/logout')
+
+
     def get(self, url, **kwargs):
         r = self.session.get(self.urlbase + url, **kwargs)
         self.last_result = r
@@ -40,6 +44,17 @@ class CherwellConnection(object):
 
     def post(self, url, json, **kwargs):
         r = self.session.post(self.urlbase + url, json=json, **kwargs)
+        self.last_result = r
+        if not self.raise_on_error_500 and r.status_code == 500:
+            return None
+        r.raise_for_status()
+        if r.text == '':
+            return None
+        return r.json()
+
+
+    def delete(self, url, **kwargs):
+        r = self.session.delete(self.urlbase + url, **kwargs)
         self.last_result = r
         if not self.raise_on_error_500 and r.status_code == 500:
             return None
