@@ -27,7 +27,7 @@ class TypeHandler(object):
             if not field['decimalDigits']:
                 ftype = self.cherwell_fields + '.Int'
             else:
-                ftype = self.marshmallow_fields + '.Decimal'
+                ftype = self.cherwell_fields + '.Decimal'
                 args.append('places={0[decimalDigits]}'.format(field))
                 args.append('as_string=True')
         elif bo_type == 'DateTime':

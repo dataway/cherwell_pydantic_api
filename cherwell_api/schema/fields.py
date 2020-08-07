@@ -57,3 +57,12 @@ class Int(fields.Int):
             return None
         value = value.translate(self._map)
         return fields.Int._deserialize(self, value, attr, data, **kwargs)
+
+
+class Decimal(fields.Decimal):
+    _map = str.maketrans("',", "__")
+    def _deserialize(self, value, attr, data, **kwargs):
+        if not value:
+            return None
+        value = value.translate(self._map)
+        return fields.Int._deserialize(self, value, attr, data, **kwargs)
