@@ -147,8 +147,8 @@ class BusinessObjectBuilder(object):
                  '###################################',
                  '',
                  'from marshmallow import fields',
-                 'from cherwell_api.schema import BusinessObjectSchema',
-                 'from cherwell_api.schema import fields as cherwell_fields',
+                 'from {0} import BusinessObjectSchema'.format(__name__),
+                 'from {0} import fields as cherwell_fields'.format(__name__),
                  '']
         schema = self.connection.get_bo_schema(busObName = busObName, relationships=True)
         self.last_schema = schema
