@@ -31,8 +31,12 @@ class CherwellConnection(object):
         return self.delete('/api/v1/logout')
 
 
+    def _make_url(self, url, **kwargs):
+        return self.urlbase + url + '?locale=en-GB'
+
+
     def get(self, url, **kwargs):
-        r = self.session.get(self.urlbase + url, **kwargs)
+        r = self.session.get(self._make_url(url), **kwargs)
         self.last_result = r
         if not self.raise_on_error_500 and r.status_code == 500:
             return None
@@ -43,7 +47,7 @@ class CherwellConnection(object):
 
 
     def post(self, url, json, **kwargs):
-        r = self.session.post(self.urlbase + url, json=json, **kwargs)
+        r = self.session.post(self._make_url(url), json=json, **kwargs)
         self.last_result = r
         if not self.raise_on_error_500 and r.status_code == 500:
             return None
@@ -54,7 +58,7 @@ class CherwellConnection(object):
 
 
     def delete(self, url, **kwargs):
-        r = self.session.delete(self.urlbase + url, **kwargs)
+        r = self.session.delete(self._make_url(url), **kwargs)
         self.last_result = r
         if not self.raise_on_error_500 and r.status_code == 500:
             return None
