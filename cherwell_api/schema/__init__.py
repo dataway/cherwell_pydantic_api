@@ -27,7 +27,7 @@ class TypeHandler(object):
             if not field['decimalDigits']:
                 ftype = self.cherwell_fields + '.Int'
             else:
-                ftype = self.marshmallow_fields + '.Decimal'
+                ftype = self.cherwell_fields + '.Decimal'
                 args.append('places={0[decimalDigits]}'.format(field))
                 args.append('as_string=True')
         elif bo_type == 'DateTime':
@@ -53,21 +53,27 @@ class BusinessObjectDict(dict):
         self.busObId = self.busObPublicId = self.busObRecId = None
         self.fieldIds = {}
         self.html = {}
-        self.dirty = set()
+        self.dirty = []
+
+    def set_dirty(self, key):
+        if key in self.dirty:
+            self.dirty.remove(key)
+        self.dirty.append(key)
+        return key
 
     def clear_dirty(self):
-        self.dirty.clear()
+        self.dirty = []
 
     def __setitem__(self, key, value):
         if key not in self or self[key] != value:
-            self.dirty.add(key)
+            self.set_dirty(key)
         dict.__setitem__(self, key, value)
         if key in self.html:
             del self.html[key]
 
     def set_html(self, key, html):
         if key not in self.html or self.html[key] != html:
-            self.dirty.add(key)
+            self.set_dirty(key)
         self.html[key] = html
         dict.__setitem__(self, key, html)
 
@@ -117,9 +123,22 @@ class BusinessObjectSchema(Schema):
         r = {'busObId': original.busObId, 'persist': True, 'fields': fields}
         if original.busObRecId is not None:
             r['busObRecId'] = original.busObRecId
+        # First enumerate dirty fields in order of setting them
+        for field in original.dirty:
+            value = data[field]
+            f = { 'dirty': True, 'fieldId': original.fieldIds[field] }
+            if field in original.html:
+                f['html'] = original.html[field]
+                f['value'] = original.html[field]
+            else:
+                f['value'] = value
+            f['name'] = field
+            fields.append(f)
+        # Then add non-dirty fields
         for field, value in data.items():
-            f = { 'dirty': field in original.dirty,
-                    'fieldId': original.fieldIds[field] }
+            if field in original.dirty:
+                continue
+            f = { 'dirty': False, 'fieldId': original.fieldIds[field] }
             if field in original.html:
                 f['html'] = original.html[field]
                 f['value'] = original.html[field]

@@ -1,5 +1,6 @@
 import logging
 import requests
+import time
 
 
 
@@ -13,6 +14,9 @@ class CherwellConnection(object):
         self.session = requests.Session()
         self.token = None
         self.raise_on_error_500 = False
+        self.retry_on_error_401 = False
+        self.retry_on_error_401_wait = 4.0
+        self.reauthentication_counter = 0
 
 
     def authenticate(self):
@@ -35,35 +39,38 @@ class CherwellConnection(object):
         return self.urlbase + url + '?locale=en-GB'
 
 
-    def get(self, url, **kwargs):
-        r = self.session.get(self._make_url(url), **kwargs)
+    def request(self, method, url, **kwargs):
+        r = self.session.request(method, self._make_url(url), **kwargs)
         self.last_result = r
+        if self.retry_on_error_401 and r.status_code == 401:
+            logging.debug('401, retrying')
+            time.sleep(self.retry_on_error_401_wait)
+            self.authenticate()
+            self.reauthentication_counter += 1
+            r = self.session.request(method, self.urlbase + url, **kwargs)
+            self.last_result = r
         if not self.raise_on_error_500 and r.status_code == 500:
             return None
         r.raise_for_status()
-        if r.text == '':
+        return r
+
+    def get(self, url, **kwargs):
+        r = self.request('GET', url, **kwargs)
+        if r is None or r.text == '':
             return None
         return r.json()
 
 
     def post(self, url, json, **kwargs):
-        r = self.session.post(self._make_url(url), json=json, **kwargs)
-        self.last_result = r
-        if not self.raise_on_error_500 and r.status_code == 500:
-            return None
-        r.raise_for_status()
-        if r.text == '':
+        r = self.request('POST', url, json=json, **kwargs)
+        if r is None or r.text == '':
             return None
         return r.json()
 
 
     def delete(self, url, **kwargs):
-        r = self.session.delete(self._make_url(url), **kwargs)
-        self.last_result = r
-        if not self.raise_on_error_500 and r.status_code == 500:
-            return None
-        r.raise_for_status()
-        if r.text == '':
+        r = self.request('DELETE', url, **kwargs)
+        if r is None or r.text == '':
             return None
         return r.json()
 
