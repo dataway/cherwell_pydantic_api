@@ -4,6 +4,7 @@ import re
 
 
 def from_cw_datetime(value):
+    value = value.replace('/', '.')
     try:
         return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M')
     except:
@@ -15,6 +16,7 @@ def from_cw_datetime(value):
     return None
 
 def from_cw_date(value):
+    value = value.replace('/', '.')
     return datetime.datetime.strptime(value, '%d.%m.%Y').date()
 
 def to_cw_datetime(value):

@@ -35,8 +35,12 @@ class CherwellConnection(object):
         return self.delete('/api/v1/logout')
 
 
+    def _make_url(self, url, **kwargs):
+        return self.urlbase + url + '?locale=en-GB'
+
+
     def request(self, method, url, **kwargs):
-        r = self.session.request(method, self.urlbase + url, **kwargs)
+        r = self.session.request(method, self._make_url(url), **kwargs)
         self.last_result = r
         for i in range(5):
             if self.retry_on_error_401 and r.status_code == 401:
