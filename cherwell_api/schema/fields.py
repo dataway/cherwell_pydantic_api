@@ -8,7 +8,11 @@ def from_cw_datetime(value):
         return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M')
     except:
         pass
-    return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M:%S')
+    try:
+        return datetime.datetime.strptime(value, '%d.%m.%Y %H:%M:%S')
+    except:
+        pass
+    return None
 
 def from_cw_date(value):
     return datetime.datetime.strptime(value, '%d.%m.%Y').date()

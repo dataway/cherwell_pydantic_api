@@ -38,13 +38,14 @@ class CherwellConnection(object):
     def request(self, method, url, **kwargs):
         r = self.session.request(method, self.urlbase + url, **kwargs)
         self.last_result = r
-        if self.retry_on_error_401 and r.status_code == 401:
-            logging.debug('401, retrying')
-            time.sleep(self.retry_on_error_401_wait)
-            self.authenticate()
-            self.reauthentication_counter += 1
-            r = self.session.request(method, self.urlbase + url, **kwargs)
-            self.last_result = r
+        for i in range(5):
+            if self.retry_on_error_401 and r.status_code == 401:
+                logging.debug('401, retry {0}'.format(i + 1))
+                time.sleep(self.retry_on_error_401_wait * i)
+                self.authenticate()
+                self.reauthentication_counter += 1
+                r = self.session.request(method, self.urlbase + url, **kwargs)
+                self.last_result = r
         if not self.raise_on_error_500 and r.status_code == 500:
             return None
         r.raise_for_status()
