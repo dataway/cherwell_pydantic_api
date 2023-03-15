@@ -17,7 +17,11 @@ def from_cw_datetime(value):
 
 def from_cw_date(value):
     value = value.replace('/', '.')
-    return datetime.datetime.strptime(value, '%d.%m.%Y').date()
+    try:
+        return datetime.datetime.strptime(value, '%d.%m.%Y').date()
+    except:
+        pass
+    return None
 
 def to_cw_datetime(value):
     return value.strftime('%d/%m/%Y %H:%M')
