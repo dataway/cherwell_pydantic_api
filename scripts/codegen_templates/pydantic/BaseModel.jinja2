@@ -1,0 +1,47 @@
+import cherwell_pydantic_api.types as ct
+{% for decorator in decorators -%}
+{{ decorator }}
+{% endfor -%}
+{%- if class_name  == 'CherwellObjectID' %}
+from cherwell_pydantic_api.generated_api_utils import {{ class_name }}
+{%- else %}
+class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comment }}{% endif %}
+{%- if description %}
+    """
+    {{ description | indent(4) }}
+    """
+{%- endif %}
+{%- if not fields %}
+    pass
+{%- endif %}
+{%- if config %}
+{%- filter indent(4) %}
+{% include 'Config.jinja2' %}
+{%- endfilter %}
+{%- endif %}
+{%- for field in fields -%}
+    {%- set field_type = field.type_hint %}
+    {%- if field.name.lower().endswith('busobid') %}{% set field_type = field_type.replace('str', 'ct.BusObID') %}{% endif %}
+    {%- if field.name.lower().endswith('busobrecid') %}{% set field_type = field_type.replace('str', 'ct.BusObRecID') %}{% endif %}
+    {%- if not field.annotated and field.field %}
+    {{ field.name }}: {{ field_type }} = {{ field.field }}
+    {%- else %}
+    {%- if field.annotated %}
+    {{ field.name }}: {{ field.annotated }}
+    {%- else %}
+    {{ field.name }}: {{ field_type }}
+    {%- endif %}
+    {%- if not (field.required or (field.represented_default == 'None' and field.strip_default_none))
+            %} = {{ field.represented_default }}
+    {%- endif -%}
+    {%- endif %}
+    {%- if field.docstring %}
+    """
+    {{ field.docstring | indent(4) }}
+    """
+    {%- endif %}
+{%- for method in methods -%}
+    {{ method }}
+{%- endfor -%}
+{%- endfor -%}
+{%- endif %}

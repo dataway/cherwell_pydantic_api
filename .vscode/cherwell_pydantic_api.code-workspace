@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"python.analysis.autoImportCompletions": true,
+		"python.analysis.autoImportUserSymbols": true,
+		"python.analysis.completeFunctionParens": false,
+		"python.analysis.diagnosticMode": "workspace",
+		"python.analysis.typeCheckingMode": "basic",
+        "isort.args": [
+            "--lines-after-imports",
+            "3",
+            "--line-length",
+            "120",
+            "--profile",
+            "hug"
+        ]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": []
+	}
+}

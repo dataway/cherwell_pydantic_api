@@ -14,6 +14,7 @@ pip-selfcheck.json
 **/*.egg-info/
 *.export
 *.bak
+*.env
 docs/bin/
 docs/build/
 docs/lib/
@@ -22,3 +23,8 @@ docs/lib64/
 docs/include/
 docs/share/
 docs/apidoc/
+.ipy*
+.venv/
+dist/
+Untitled*.ipynb
+/*swagger.json

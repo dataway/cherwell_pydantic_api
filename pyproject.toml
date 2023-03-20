@@ -1,0 +1,59 @@
+[tool.poetry]
+name = "cherwell_pydantic_api"
+version = "0.0.1"
+description = "A pythonic, asyncio connector for the Cherwell CSM API with full usage of Pydantic types"
+authors = ["Anthony Uk <uk@anthonyuk.dev>"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/dataway/cherwell_pydantic_api"
+homepage = "https://github.com/dataway/cherwell_pydantic_api"
+packages = [
+    { include = "cherwell_pydantic_api" },
+    { include = "scripts", format="sdist" }
+]
+
+classifiers = [
+    'Development Status :: 1 - Planning',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Intended Audience :: Developers',
+    'Intended Audience :: System Administrators',
+    'Intended Audience :: Customer Service',
+]
+
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+pydantic = {extras = ["dotenv"], version = "^1.10.6"}
+httpx = "^0.23.3"
+async-lru = "^2.0.2"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.11.0"
+datamodel-code-generator = {path = "../github/datamodel-code-generator", develop = true}
+black = "^23.1.0"
+pdoc = "^13.0.0"
+rich = "^13.3.2"
+
+[tool.poetry.group.jupyter.dependencies]
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.autopep8]
+ignore = ['E303']
+line-length = 120
+
+[tool.isort]
+profile = "hug"
+line_length = 120
+lines_after_imports = 3
+
