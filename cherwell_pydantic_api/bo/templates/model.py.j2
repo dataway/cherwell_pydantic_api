@@ -14,7 +14,9 @@ class {{ schema.name }}:
         statefieldid = "{{ schema.stateFieldId }}"
         firstrecidfield = "{{ schema.firstRecIdField }}"
         recidfields = "{{ schema.recIdFields }}"
+        {% if schema.states %}
         states = {{ schema.states.split(',') }}
+        {% endif %}
 
     class Config:
         title = "{{ schema.name }}"

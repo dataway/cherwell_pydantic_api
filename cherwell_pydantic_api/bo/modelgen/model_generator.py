@@ -1,5 +1,4 @@
 
-from pathlib import Path
 from typing import Any, Optional
 
 import black
@@ -85,17 +84,6 @@ class PydanticModelGenerator:
             if field.python_type_module:
                 modules.add(field.python_type_module)
             assert field.fieldid_parts['BO'] == schema.busObId
-        return template.render(schema=schema, fields=fields, modules=modules, settings=self._instance_settings)
-
-
-    def generate_model_file(self, schema: ValidSchema) -> Path:
-        model_str = self.generate_model(schema)
-        model_dir = Settings().model_dir / self._instance_settings.name
-        if not model_dir.exists():
-            model_dir.mkdir()
-            (model_dir / '__init__.py').touch()
-        model_file = model_dir / f'{schema.name.lower()}.py'
-        model_file.write_text(black.format_str(
-            model_str, mode=black.FileMode(preview=True)))
-
-        return model_file
+        model_str = template.render(schema=schema, fields=fields, modules=modules, settings=self._instance_settings)
+        model_str = black.format_str(model_str, mode=black.FileMode(preview=True))
+        return model_str

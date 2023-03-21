@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 import traitlets
 
+from cherwell_pydantic_api.bo.modelgen.collector import Collector
+
 
 
 def ipython_shell():
@@ -22,6 +24,8 @@ def ipython_shell():
 
     logger = logging.getLogger(None)
     logger.setLevel(logging.INFO)
+    
+    collector = Collector(Instance.use(), verbose=True, bo_include_filter=r'ticket.*')
 
     _cfg = traitlets.config.Config()  # type: ignore
     _cfg.InteractiveShellApp.exec_lines = [

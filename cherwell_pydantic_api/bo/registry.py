@@ -20,8 +20,8 @@ class ServiceInfoModel(BaseModel):
     csmVersion: Optional[str] = None
     base_url: Optional[AnyHttpUrl] = None
 
-    
-    
+
+
 class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
     def __init__(self, instance: ApiRequesterInterface):
         self._instance = instance
@@ -32,14 +32,15 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
         self._service_info: Optional[ServiceInfoResponse] = None
 
 
-    def marshal(self) -> Iterable[tuple[str, str]]:
+    def marshal(self, include_summaries: bool = False) -> Iterable[tuple[str, str]]:
         yield ('instance_name.txt', self._instance.settings.name)
         for busobid, schema in self._schemas.items():
             yield (f'bo.{busobid}.json', schema.json(indent=2, sort_keys=True))
-        for busobid, summary in self._summaries.items():
-            if busobid in self._schemas:
-                continue
-            yield (f'bo_sum.{busobid}.json', summary.json(indent=2, sort_keys=True))
+        if include_summaries:
+            for busobid, summary in self._summaries.items():
+                if busobid in self._schemas:
+                    continue
+                yield (f'bo_sum.{busobid}.json', summary.json(indent=2, sort_keys=True))
         names_csv = [
             f"{name};{self._name_to_id[name]}\n" for name in self._name_to_id.keys()]
         names_csv.sort()
@@ -54,6 +55,10 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
             yield ('service_info.json', si_model.json(indent=2, sort_keys=True))
 
 
+    def get_schema(self, busobid: BusObID) -> ValidSchema:
+        return self._schemas[busobid.lower()]
+
+
     def register(self, schema: SchemaResponse):
         if schema.busObId is None:
             raise ValueError('SchemaResponse.busObId is None')
@@ -61,8 +66,9 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
             raise ValueError('SchemaResponse.name is None')
         busobid = schema.busObId.lower()
         name = schema.name.lower()
+        valid_schema = ValidSchema.from_schema_response(schema)
         if busobid in self._schemas:
-            if self._schemas[busobid] != schema:
+            if self._schemas[busobid] != valid_schema:
                 raise ValueError(
                     f'SchemaResponse.busObId {schema.busObId} already registered and new schema is different')
             if name in self._name_to_id:
@@ -70,7 +76,6 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
                     raise ValueError(
                         f'SchemaResponse.name {schema.name} already registered and new busObId is different')
             return
-        valid_schema = ValidSchema.from_schema_response(schema)
         self._schemas[busobid] = valid_schema
         self._name_to_id[name] = busobid
         self._wrappers[busobid] = BusinessObjectWrapper(

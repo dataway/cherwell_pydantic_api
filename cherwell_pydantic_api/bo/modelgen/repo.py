@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Iterable, Literal, Optional
 
 from dulwich import porcelain
 from dulwich.errors import NotGitRepository
@@ -13,6 +13,9 @@ from cherwell_pydantic_api.settings import Settings
 
 logger = logging.getLogger(__name__)
 
+
+FileTypeLiteral = Literal['registry', 'model']
+FileGenerator = Iterable[tuple[str, str]]
 
 
 class ModelRepo:
@@ -43,7 +46,7 @@ class ModelRepo:
                                  author=author.encode())
 
 
-    def save(self, *, instance_name: Optional[str] = None, instance: Optional[Instance] = None, commit: bool = True):
+    def prepare_save(self, *, instance_name: Optional[str] = None, instance: Optional[Instance] = None) -> tuple[Instance, Path]:
         # ensure repo is clean
         repo_status = porcelain.status(self._repo)  # type: ignore
         if repo_status.unstaged or repo_status.untracked or repo_status.staged['add'] or repo_status.staged['delete'] or repo_status.staged['modify']:
@@ -64,38 +67,49 @@ class ModelRepo:
             logging.info(
                 f'Creating instance directory {instance_dir} for instance {instance_name}')
             instance_dir.mkdir()
-        registry_dir = instance_dir / 'registry'
-        if not registry_dir.exists():
+        return (instance, instance_dir)
+
+
+    def save(self, *,
+             instance_name: Optional[str] = None,
+             instance: Optional[Instance] = None,
+             file_type: FileTypeLiteral = 'registry',
+             file_generator: FileGenerator,
+             commit: bool = True):
+        instance, instance_dir = self.prepare_save(
+            instance_name=instance_name, instance=instance)
+        file_type_dir = instance_dir / file_type
+        if not file_type_dir.exists():
             logging.info(
-                f'Creating registry directory {registry_dir} for instance {instance_name}')
-            registry_dir.mkdir()
-        for filename, content in instance.bo.marshal():
-            filepath = registry_dir / filename
+                f'Creating {file_type} directory {file_type_dir} for instance {instance_name}')
+            file_type_dir.mkdir()
+        for filename, content in file_generator:
+            filepath = file_type_dir / filename
             logging.info(f'Writing file {filepath}')
             filepath.write_text(content)
             self._repo.stage(str(filepath.relative_to(self._repo_dir)))
         if commit:
-            self.commit(instance=instance)
+            self.commit(instance=instance, file_type=file_type)
 
 
-    def commit(self, *, instance: Instance) -> Optional[bytes]:
+    def commit(self, *, instance: Instance, file_type: FileTypeLiteral) -> Optional[bytes]:
         # Check if there are any changes to commit (because dulwich allows empty commits)
         repo_status = porcelain.status(self._repo)  # type: ignore
         if not repo_status.staged['add'] and not repo_status.staged['delete'] and not repo_status.staged['modify']:
             logging.info(
-                f'No changes to commit for instance {instance.settings.name}')
+                f'No {file_type} changes to commit for instance {instance.settings.name}')
             return None
-        commit = f'cherwell_pydantic_api: update instance {instance.settings.name}'
+        commit = f'cherwell_pydantic_api: update {file_type} for instance {instance.settings.name}'
         author = Settings().repo_author
         branch = instance.settings.get_repo_branch()
         ref = f'refs/heads/{branch}'
         porcelain.update_head(self._repo, ref)  # this is like git checkout
         logging.info(
-            f'Committing to {branch} for instance {instance.settings.name}')
+            f'Committing {file_type} to {branch} for instance {instance.settings.name}')
         return self._repo.do_commit(message=commit.encode(),
                                     author=author.encode(), ref=ref.encode())
 
 
     def save_all(self):
         for instance in Instance._instances.values():
-            self.save(instance=instance)
+            self.save(instance=instance, file_generator=instance.bo.marshal())
