@@ -6,6 +6,13 @@ Assume poor communication between Cherwell admins and users of this package. Be 
 
 (_N.B._ This design principle is not a reflection of my personal experience with Cherwell admins.)
 
+### Consequences
+
+To deal with schema changes, autogenerate Pydantic models from Business Objects and maintain them in a separate git repository. Ensure that schema changes result in understandable diffs.
+
+If we have API access to both the staging and production Cherwell instances, take advantage of this (schema changes will probably appear in staging and then move to production).
+
+
 ## Code generation vs. runtime type construction
 
 Prefer code generation **if** it offers advantages such as:

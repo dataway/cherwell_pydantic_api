@@ -26,5 +26,6 @@ docs/apidoc/
 .ipy*
 .venv/
 dist/
+repo/
 Untitled*.ipynb
 /*swagger.json

@@ -1,7 +1,7 @@
 from pathlib import Path
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import ReadResponse
-from cherwell_pydantic_api.bo.interfaces import ApiRequesterInterface
-from cherwell_pydantic_api.bo.pydantic_model_generator import PydanticModelGenerator
+from cherwell_pydantic_api.interfaces import ApiRequesterInterface
+from cherwell_pydantic_api.bo.modelgen.model_generator import PydanticModelGenerator
 from cherwell_pydantic_api.bo.valid_schema import ValidSchema
 
 

@@ -1,12 +1,13 @@
-from typing import TYPE_CHECKING, Any, AsyncIterable, Iterable, Mapping, NewType, Optional, Union
+import re
+from typing import TYPE_CHECKING, Any, AsyncIterable, Iterable, Mapping, Optional, Union
 
 import httpx
 import pydantic
-import re
+
 
 
 URLType = Union[str, httpx.URL]
-CherwellObjectID = NewType("CherwellObjectID", str)
+CherwellObjectID = dict[str, Any]
 HttpStatusCode = httpx.codes
 
 _re_path_param = re.compile(r'^[a-zA-Z0-9_-]+$')

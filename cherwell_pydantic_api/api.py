@@ -128,6 +128,10 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         return summary.busObId
 
 
+    async def get_bo_summaries(self, type: Literal["All", "Major", "Supporting", "Lookup", "Groups"]) -> list[Summary]:
+        return await self.GetBusinessObjectSummariesV1(type=type)
+
+
     # TODO: legacy, remove
     bo_name_to_id = get_busobid
 
