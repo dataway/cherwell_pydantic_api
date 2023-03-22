@@ -10,15 +10,19 @@ against the Cherwell Swagger schema and may not work with other schemas.
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Set, Tuple
+from typing import Tuple, Literal
 
 import black
 import datamodel_code_generator
 import datamodel_code_generator.format
+import isort
+
+import cherwell_pydantic_api.types
 
 
 
 re_fstr = re.compile(r'{([^}]+)}')
+Literal  # type: ignore # used by eval
 
 
 def class_name_generator(name: str) -> str:
@@ -46,7 +50,7 @@ def generate_models(input: Path, output: Path):
     )
 
 
-def get_endpoint_method(path: str, op: str, opspec: Dict) -> Tuple[str, str]:
+def get_endpoint_method(path: str, op: str, opspec: dict) -> Tuple[str, str]:
     opid = opspec['operationId']
     tag = opspec['tags'][0]
     if opid.startswith(f"{tag}_"):
@@ -54,7 +58,7 @@ def get_endpoint_method(path: str, op: str, opspec: Dict) -> Tuple[str, str]:
     return (tag, opid)
 
 
-def get_python_type(paramspec: Dict, opspec: Dict, models_module: str, import_set: Set) -> str:
+def get_python_type(paramspec: dict, opspec: dict, models_module: str, import_set: set) -> str:
     if not paramspec.get('required', True):
         optional_paramspec = paramspec.copy()
         del optional_paramspec['required']
@@ -68,8 +72,18 @@ def get_python_type(paramspec: Dict, opspec: Dict, models_module: str, import_se
     if 'schema' in paramspec:
         schema = paramspec['schema']
         if schema.get('type', None) == 'array':
-            return f"List[{get_python_type(schema['items'], opspec, models_module, import_set)}]"
-        return get_python_type(schema, opspec, models_module, import_set)
+            return f"list[{get_python_type(schema['items'], opspec, models_module, import_set)}]"
+        if '$ref' in schema:
+            schema['from_ref'] = schema['$ref']
+            return get_python_type(schema, opspec, models_module, import_set)
+        if schema.get('type', '') == 'string':
+            import_set.add('cherwell_pydantic_api.types')
+            if paramspec.get('in', '') == 'body':
+                return 'cherwell_pydantic_api.types.FileUpload'
+            if schema.get('format', '') == 'binary':
+                return 'cherwell_pydantic_api.types.FileDownload'
+            return 'cherwell_pydantic_api.types.StringResponse'
+
     name = paramspec.get('name', '').lower()
     is_input = paramspec.get('in', '') in ('query', 'path',)
     if name.endswith('busobid'):
@@ -80,15 +94,26 @@ def get_python_type(paramspec: Dict, opspec: Dict, models_module: str, import_se
         return 'cherwell_pydantic_api.types.BusObRecID'
     enumvals = paramspec.get('enum', None)
     if enumvals:
-        return (f"Literal{enumvals}")
-    if 'application/octet-stream' in opspec['consumes'] and paramspec['type'] == 'string':
-        paramspec['pytype'] = 'Union[str, bytes, Iterable[bytes], AsyncIterable[bytes]]'
+        pytype = f"Literal{enumvals}"
+        # TODO: see if we can do without eval
+        typeval = eval(pytype)
+        for tname in dir(cherwell_pydantic_api.types):
+            if getattr(cherwell_pydantic_api.types, tname) == typeval:
+                import_set.add('cherwell_pydantic_api.types')
+                return f"cherwell_pydantic_api.types.{tname}"
+        return pytype
+    # if 'application/octet-stream' in opspec['consumes']:
+    #    print(f"BINARY: {opspec['operationId']}: {paramspec=}")
+    # if 'application/octet-stream' in opspec['consumes'] and paramspec.get('type', '') == 'string' and paramspec.get('in', '') == 'body':
+    #    import_set.add('cherwell_pydantic_api.types')
+    #    return 'cherwell_pydantic_api.types.FileUpload'
     if opspec['operationId'] == 'Service_Token' and name in ('client_id', 'client_secret', 'password',):
         import_set.add('pydantic')
         return 'pydantic.SecretStr'
     if 'type' in paramspec:
         return {'boolean': 'bool', 'integer': 'int', 'number': 'float', 'string': 'str',
-                'array': 'List', 'object': 'Dict'}.get(paramspec['type'], 'Any')
+                'array': 'list', 'object': 'dict'}.get(paramspec['type'], 'Any')
+    print(f"ANY: {opspec['operationId']}: {paramspec=}")
     return 'Any'
 
 
@@ -115,6 +140,8 @@ def generate_endpoints(output: Path):
             interface, method = get_endpoint_method(path, op, opspec)
             if method == '':
                 continue
+            opspec['interface'] = interface
+            opspec['method'] = method
 
             # Parse the parameters
 
@@ -161,7 +188,8 @@ def generate_endpoints(output: Path):
             # Generate method docstring
 
             if 'summary' in opspec:
-                ilines.append(f"  \"\"\"{format_docstring(opspec['summary'])}\n")
+                ilines.append(
+                    f"  \"\"\"{format_docstring(opspec['summary'])}\n")
             else:
                 ilines.append('  """')
             if 'description' in opspec:
@@ -206,11 +234,11 @@ def generate_endpoints(output: Path):
                 elif paramspec['in'] == 'path':
                     assert (paramspec['required'])
                     pathparams.append(paramspec['name'])
-                    if not paramspec['name'].lower().endswith('id'):
-                        print(f"pathparam not *id: {paramspec['name']}")
+                    if not paramspec['pytype'].startswith('cherwell_pydantic_api.types.') and not paramspec['name'].lower().endswith('id'):
+                        print(f"{method}: pathparam not typed: {paramspec['name']} - {paramspec['pytype']}")
                     if paramspec['pytype'] not in ('int', 'float'):
                         ilines.append(
-                            f"  self.validate_path_param({paramspec['name']})")
+                            f"  self.validate_path_param({paramspec['name']}, {paramspec['pytype']})")
                     path_fstrs.remove(paramspec['name'])
                 elif paramspec is bodyparam:
                     assert op in ('post', 'put',)
@@ -228,7 +256,8 @@ def generate_endpoints(output: Path):
             elif post_optional:
                 ilines.append("  post={}")
             if qparams:
-                ilines.append(f"  params: dict[str, Any]={{{', '.join(qparams)}}}")
+                ilines.append(
+                    f"  params: dict[str, Any]={{{', '.join(qparams)}}}")
                 call_params.append('params=params')
             elif qparams_optional:
                 ilines.append("  params={}")
@@ -252,16 +281,9 @@ def generate_endpoints(output: Path):
 
             # Call the API
 
-            if rtype == 'None':
-                ilines.append(f"  await self.{op}({', '.join(call_params)})")
-                ilines.append('  return None')
-            elif '.' not in rtype:
-                ilines.append(
-                    f"  return await self.{op}({', '.join(call_params)})")
-            else:
-                ilines.append(
-                    f"  response = await self.{op}({', '.join(call_params)})")
-                ilines.append(f"  return parse_obj_as({rtype}, response)")
+            ilines.append(
+                f"  response = await self.{op}({', '.join(call_params)})")
+            ilines.append(f"  return self.parse_response(response, {rtype})")
             ilines.append('')
 
             # End of method
@@ -271,8 +293,7 @@ def generate_endpoints(output: Path):
     init_lines = []
     for interface in interfaces.keys():
         ilines = interfaces[interface]
-        hlines = ["from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable",
-                  "from pydantic import parse_obj_as"]
+        hlines = ["from typing import Any, Literal, Optional",]
         hlines.extend([f"import {i}" for i in interface_imports[interface]])
         hlines.append(
             "from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase\n")
@@ -287,7 +308,7 @@ def generate_endpoints(output: Path):
     for interface in ifiles.keys():
         file = output.joinpath(f"{interface}.py").open('wt')
         file.write(black.format_str(
-            ifiles[interface], mode=black.FileMode(preview=True)))
+            isort.api.sort_code_string(ifiles[interface]), mode=black.FileMode(preview=True)))
         file.close()
     return ifiles
 
@@ -304,7 +325,7 @@ def generate(base: Path):
         r2 = generate_endpoints(apipath.joinpath('endpoints'))
         r1 = None
         print("Models were recycled")
-    except AttributeError as e:
+    except Exception as e:
         print(
             f"Failed to generate endpoints, trying to regenerate models; {e}")
         r1 = generate_models(base.joinpath('csm_api-swagger.json'),

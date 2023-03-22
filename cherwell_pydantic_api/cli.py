@@ -37,6 +37,7 @@ except:
 
 
 def api_detect(urls):
+    "Try to detect the Cherwell API at the given URLs"
     for url in urls:
         try:
             click.secho(
@@ -56,6 +57,7 @@ def api_detect(urls):
 
 
 def initial_setup(envpath: Path):
+    "Create a new cherwell.env file from user input"
     envdict = {}
     click.secho("""Enter the API base URL of your Cherwell instance, e.g. https://myinstance.cherwellsoftware.com/CherwellAPI
 You can also just enter the hostname or IP address and I will attempt to guess the rest.
@@ -101,12 +103,36 @@ however you won't be able to use the API until you do. Contact your Cherwell adm
 
 
 
-def cli():
+def check_envpath():
     envpath = Path.cwd().joinpath('cherwell.env')
     if not envpath.exists():
         click.secho(
             f"\nNo cherwell.env file found in the current path, {Path.cwd()}.\nYou can now create one, or press Ctrl+C to abort.\n", fg='yellow')
         initial_setup(envpath)
+    else:
+        click.secho(f"\nFound existing cherwell.env file at {envpath}\n", fg='green')
+
+
+def welcome_banner():
+    click.echo()
+    lines = ['Welcome to cherwell_pydantic_api!', '', 'For more information, please visit:', '', 'https://github.com/dataway/cherwell_pydantic_api']
+    width = max([len(line) for line in lines])
+    hash = '\u2592'
+    style = {'fg': 'white', 'bg': 'blue'}
+    click.secho(hash * (width + 6), **style)
+    for line in lines:
+        click.secho(f"{hash}  {line}{' ' * (width - len(line))}  {hash}", **style)
+    click.secho(hash * (width + 6), **style)
+    click.echo()
+
+
+def cli():
+    welcome_banner()
+    try:
+        check_envpath()
+    except click.exceptions.Abort:
+        click.secho("\nAborted.\n", fg='red')
+        return
 
 
 if __name__ == '__main__':

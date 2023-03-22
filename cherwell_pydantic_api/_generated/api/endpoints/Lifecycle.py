@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
@@ -16,13 +16,13 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param businessObjectDefinitionId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetStagesResponse
         """
-        self.validate_path_param(businessObjectDefinitionId)
+        self.validate_path_param(businessObjectDefinitionId, str)
         response = await self.get(
             f"/api/V1/{businessObjectDefinitionId}/lifecycle/stages"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetStagesResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetStagesResponse,
         )
 
     async def GetStatuses(
@@ -35,13 +35,13 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param businessObjectDefinitionId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetStatusesResponse
         """
-        self.validate_path_param(businessObjectDefinitionId)
+        self.validate_path_param(businessObjectDefinitionId, str)
         response = await self.get(
             f"/api/V1/{businessObjectDefinitionId}/lifecycle/statuses"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetStatusesResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetStatusesResponse,
         )
 
     async def GetTransitions(
@@ -54,13 +54,13 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param businessObjectDefinitionId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetTransitionsResponse
         """
-        self.validate_path_param(businessObjectDefinitionId)
+        self.validate_path_param(businessObjectDefinitionId, str)
         response = await self.get(
             f"/api/V1/{businessObjectDefinitionId}/lifecycle/transitions"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetTransitionsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetTransitionsResponse,
         )
 
     async def GetRecordStatus(
@@ -75,14 +75,14 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param recordId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetRecordStatusResponse
         """
-        self.validate_path_param(businessObjectDefinitionId)
-        self.validate_path_param(recordId)
+        self.validate_path_param(businessObjectDefinitionId, str)
+        self.validate_path_param(recordId, str)
         response = await self.get(
             f"/api/V1/{businessObjectDefinitionId}/records/{recordId}/status"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetRecordStatusResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetRecordStatusResponse,
         )
 
     async def GetRecordStage(
@@ -97,14 +97,14 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param recordId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetRecordStatusResponse
         """
-        self.validate_path_param(businessObjectDefinitionId)
-        self.validate_path_param(recordId)
+        self.validate_path_param(businessObjectDefinitionId, str)
+        self.validate_path_param(recordId, str)
         response = await self.get(
             f"/api/V1/{businessObjectDefinitionId}/records/{recordId}/stage"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetRecordStatusResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetRecordStatusResponse,
         )
 
     async def GetTransitionOptions(
@@ -119,14 +119,14 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param recordId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetTransitionOptionsResponse
         """
-        self.validate_path_param(businessObjectDefinitionId)
-        self.validate_path_param(recordId)
+        self.validate_path_param(businessObjectDefinitionId, str)
+        self.validate_path_param(recordId, str)
         response = await self.get(
             f"/api/V1/{businessObjectDefinitionId}/records/{recordId}/transitionOptions"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetTransitionOptionsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Lifecycle.GetTransitionOptionsResponse,
         )
 
     async def TransitionRecord(
@@ -143,13 +143,13 @@ class LifecycleInterface(GeneratedInterfaceBase):
          :param transitionRecordRequest: The request body
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase
         """
-        self.validate_path_param(businessObjectDefinitionId)
-        self.validate_path_param(recordId)
+        self.validate_path_param(businessObjectDefinitionId, str)
+        self.validate_path_param(recordId, str)
         response = await self.post_body(
             f"/api/V1/{businessObjectDefinitionId}/records/{recordId}/transitions",
             content=transitionRecordRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase,
         )

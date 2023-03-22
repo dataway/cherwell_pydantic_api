@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users
 import cherwell_pydantic_api.types
@@ -24,13 +24,23 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param applicationtype: The type of CSM application to return security settings for.  Application type is Desktop Client, Browser Client, Browser Portal or Cherwell Mobile.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.ClientSecuritySettingsResponse
         """
-        self.validate_path_param(applicationtype)
+        self.validate_path_param(
+            applicationtype,
+            Literal[
+                "NotSet",
+                "RichClient",
+                "BrowserClient",
+                "BrowserPortal",
+                "MobileClient",
+                "ServiceMonitor",
+            ],
+        )
         response = await self.get(
             f"/api/V1/getclientsecuritysettings/applicationtype/{applicationtype}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.ClientSecuritySettingsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.ClientSecuritySettingsResponse,
         )
 
     async def GetRolesV1(
@@ -42,9 +52,9 @@ class SecurityInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadResponse
         """
         response = await self.get("/api/V1/getroles")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadResponse,
         )
 
     async def GetRolesV2(
@@ -56,16 +66,16 @@ class SecurityInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadV2Response
         """
         response = await self.get("/api/V2/getroles")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadV2Response,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsByBusObIdV1(
         self,
         groupid: str,
         busObId: cherwell_pydantic_api.types.BusObIDParamType,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
     ]:
         """Get Business Object permissions by Security Group
@@ -73,18 +83,18 @@ class SecurityInterface(GeneratedInterfaceBase):
         Operation to get specific Business Object permissions for a Security Group.
          :param groupid: Specify the Security Group ID.
          :param busObId: Specify the Business Object ID.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
         """
-        self.validate_path_param(groupid)
-        self.validate_path_param(busObId)
+        self.validate_path_param(groupid, str)
+        self.validate_path_param(busObId, cherwell_pydantic_api.types.BusObIDParamType)
         response = await self.get(
             f"/api/V1/getsecuritygroupbusinessobjectpermissions/groupid/{groupid}/busobid/{busObId}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
             ],
-            response,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsByBusObIdV2(
@@ -99,21 +109,21 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param busObId: Specify the Business Object ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
         """
-        self.validate_path_param(groupid)
-        self.validate_path_param(busObId)
+        self.validate_path_param(groupid, str)
+        self.validate_path_param(busObId, cherwell_pydantic_api.types.BusObIDParamType)
         response = await self.get(
             f"/api/V2/getsecuritygroupbusinessobjectpermissions/groupid/{groupid}/busobid/{busObId}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsByBusObNameV1(
         self,
         groupname: str,
         busobname: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
     ]:
         """Get Business Object permissions by Security Group
@@ -121,18 +131,18 @@ class SecurityInterface(GeneratedInterfaceBase):
         Operation to get specific Business Object permissions for a Security Group.
          :param groupname: Specify the Security Group name.
          :param busobname: Specify the Business Object name.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
         """
-        self.validate_path_param(groupname)
-        self.validate_path_param(busobname)
+        self.validate_path_param(groupname, str)
+        self.validate_path_param(busobname, str)
         response = await self.get(
             f"/api/V1/getsecuritygroupbusinessobjectpermissions/groupname/{groupname}/busobname/{busobname}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
             ],
-            response,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsByBusObNameV2(
@@ -147,37 +157,37 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param busobname: Specify the Business Object name.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
         """
-        self.validate_path_param(groupname)
-        self.validate_path_param(busobname)
+        self.validate_path_param(groupname, str)
+        self.validate_path_param(busobname, str)
         response = await self.get(
             f"/api/V2/getsecuritygroupbusinessobjectpermissions/groupname/{groupname}/busobname/{busobname}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsForCurrentUserByBusObIdV1(
         self,
         busObId: cherwell_pydantic_api.types.BusObIDParamType,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
     ]:
         """Get Business Object permission for current user
 
         Operation to get Business Object permissions for the currently logged-in user's Security Group.
          :param busObId: Specify the Business Object ID.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
         """
-        self.validate_path_param(busObId)
+        self.validate_path_param(busObId, cherwell_pydantic_api.types.BusObIDParamType)
         response = await self.get(
             f"/api/V1/getsecuritygroupbusinessobjectpermissionsforcurrentuserbybusobid/busobid/{busObId}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
             ],
-            response,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsForCurrentUserByBusObIdV2(
@@ -190,36 +200,36 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param busObId: Specify the Business Object ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
         """
-        self.validate_path_param(busObId)
+        self.validate_path_param(busObId, cherwell_pydantic_api.types.BusObIDParamType)
         response = await self.get(
             f"/api/V2/getsecuritygroupbusinessobjectpermissionsforcurrentuserbybusobid/busobid/{busObId}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsForCurrentUserByBusObNameV1(
         self,
         busobname: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
     ]:
         """Get Business Object permissions for current user
 
         Operation to get Business Object permissions for currently logged in user's Security Group.
          :param busobname: Specify the Business Object name.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission]
         """
-        self.validate_path_param(busobname)
+        self.validate_path_param(busobname, str)
         response = await self.get(
             f"/api/V1/getsecuritygroupbusinessobjectpermissionsforcurrentuserbybusobname/busobname/{busobname}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.BusinessObjectPermission
             ],
-            response,
         )
 
     async def GetSecurityGroupBusinessObjectPermissionsForCurrentUserByBusObNameV2(
@@ -232,31 +242,31 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param busobname: Specify the Business Object name.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
         """
-        self.validate_path_param(busobname)
+        self.validate_path_param(busobname, str)
         response = await self.get(
             f"/api/V2/getsecuritygroupbusinessobjectpermissionsforcurrentuserbybusobname/busobname/{busobname}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse,
         )
 
     async def GetSecurityGroupCategoriesV1(
         self,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RightCategory
     ]:
         """Get all Security Group categories
 
         Operation to get IDs and names for all available Security Group categories.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RightCategory]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RightCategory]
         """
         response = await self.get("/api/V1/getsecuritygroupcategories")
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RightCategory
             ],
-            response,
         )
 
     async def GetSecurityGroupCategoriesV2(
@@ -268,16 +278,16 @@ class SecurityInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightCategoriesResponse
         """
         response = await self.get("/api/V2/getsecuritygroupcategories")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightCategoriesResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightCategoriesResponse,
         )
 
     async def GetSecurityGroupRightsByGroupIdAndCategoryIdV1(
         self,
         groupid: str,
         categoryid: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
     ]:
         """Get permissions for a Security Group by category
@@ -285,18 +295,18 @@ class SecurityInterface(GeneratedInterfaceBase):
         Operation to get permissions for a Security Group by category. To get Security Group IDs, use "Get all available Security Groups." To get Security Group category IDs, use "Get all Security Group categories."
          :param groupid: Specify the Security Group ID
          :param categoryid: Specify the Security Group category ID
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
         """
-        self.validate_path_param(groupid)
-        self.validate_path_param(categoryid)
+        self.validate_path_param(groupid, str)
+        self.validate_path_param(categoryid, str)
         response = await self.get(
             f"/api/V1/getsecuritygrouprights/groupid/{groupid}/categoryid/{categoryid}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
             ],
-            response,
         )
 
     async def GetSecurityGroupRightsByGroupIdAndCategoryIdV2(
@@ -311,21 +321,21 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param categoryid: Specify the Security Group category ID
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
         """
-        self.validate_path_param(groupid)
-        self.validate_path_param(categoryid)
+        self.validate_path_param(groupid, str)
+        self.validate_path_param(categoryid, str)
         response = await self.get(
             f"/api/V2/getsecuritygrouprights/groupid/{groupid}/categoryid/{categoryid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
         )
 
     async def GetSecurityGroupRightsByGroupNameAndCategoryNameV1(
         self,
         groupname: str,
         categoryname: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
     ]:
         """Get permissions for a Security Group by category
@@ -333,18 +343,18 @@ class SecurityInterface(GeneratedInterfaceBase):
         Operation to get permissions for a Security Group by category.
          :param groupname: Specify the Security Group name.
          :param categoryname: Specify the Security Group category name.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
         """
-        self.validate_path_param(groupname)
-        self.validate_path_param(categoryname)
+        self.validate_path_param(groupname, str)
+        self.validate_path_param(categoryname, str)
         response = await self.get(
             f"/api/V1/getsecuritygrouprights/groupname/{groupname}/categoryname/{categoryname}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
             ],
-            response,
         )
 
     async def GetSecurityGroupRightsByGroupNameAndCategoryNameV2(
@@ -359,37 +369,37 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param categoryname: Specify the Security Group category name.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
         """
-        self.validate_path_param(groupname)
-        self.validate_path_param(categoryname)
+        self.validate_path_param(groupname, str)
+        self.validate_path_param(categoryname, str)
         response = await self.get(
             f"/api/V2/getsecuritygrouprights/groupname/{groupname}/categoryname/{categoryname}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
         )
 
     async def GetSecurityGroupRightsForCurrentUserByCategoryIdV1(
         self,
         categoryid: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
     ]:
         """Get current user's permissions by Security Group category by ID
 
         Operation to get permissions for the current user's Security Group by category. To get Security Group category IDs, use "Get all Security Group categories."
          :param categoryid: Specify the Security Group category ID.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
         """
-        self.validate_path_param(categoryid)
+        self.validate_path_param(categoryid, str)
         response = await self.get(
             f"/api/V1/getsecuritygrouprightsforcurrentuserbycategoryid/categoryid/{categoryid}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
             ],
-            response,
         )
 
     async def GetSecurityGroupRightsForCurrentUserByCategoryIdV2(
@@ -402,36 +412,36 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param categoryid: Specify the Security Group category ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
         """
-        self.validate_path_param(categoryid)
+        self.validate_path_param(categoryid, str)
         response = await self.get(
             f"/api/V2/getsecuritygrouprightsforcurrentuserbycategoryid/categoryid/{categoryid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
         )
 
     async def GetSecurityGroupRightsForCurrentUserByCategoryNameV1(
         self,
         categoryname: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
     ]:
         """Get current user's permissions by Security Group category by name
 
         Operation to get permissions for the current user's Security Group by category.
          :param categoryname: Specify the Security Group category name.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right]
         """
-        self.validate_path_param(categoryname)
+        self.validate_path_param(categoryname, str)
         response = await self.get(
             f"/api/V1/getsecuritygrouprightsforcurrentuserbycategoryname/categoryname/{categoryname}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.Right
             ],
-            response,
         )
 
     async def GetSecurityGroupRightsForCurrentUserByCategoryNameV2(
@@ -444,13 +454,13 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param categoryname: Specify the Security Group category name.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
         """
-        self.validate_path_param(categoryname)
+        self.validate_path_param(categoryname, str)
         response = await self.get(
             f"/api/V2/getsecuritygrouprightsforcurrentuserbycategoryname/categoryname/{categoryname}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse,
         )
 
     async def GetSecurityGroupsV1(
@@ -462,9 +472,9 @@ class SecurityInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupResponse
         """
         response = await self.get("/api/V1/getsecuritygroups")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupResponse,
         )
 
     async def GetSecurityGroupsV2(
@@ -476,30 +486,30 @@ class SecurityInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupV2Response
         """
         response = await self.get("/api/V2/getsecuritygroups")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupV2Response,
         )
 
     async def GetUsersInSecurityGroupV1(
         self,
         groupid: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User
     ]:
         """Get users in a Security Group
 
         Operation to get the users in a specified Security Group. Use "Get all available Security Groups" to get Security Group record IDs.
          :param groupid: Specify the Security Group ID.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User]
         """
-        self.validate_path_param(groupid)
+        self.validate_path_param(groupid, str)
         response = await self.get(f"/api/V1/getusersinsecuritygroup/groupid/{groupid}")
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User
             ],
-            response,
         )
 
     async def GetUsersInSecurityGroupV2(
@@ -512,9 +522,9 @@ class SecurityInterface(GeneratedInterfaceBase):
          :param groupid: Specify the Security Group ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response
         """
-        self.validate_path_param(groupid)
+        self.validate_path_param(groupid, str)
         response = await self.get(f"/api/V2/getusersinsecuritygroup/groupid/{groupid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response,
         )

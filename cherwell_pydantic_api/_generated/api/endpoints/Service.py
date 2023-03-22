@@ -1,8 +1,9 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
-import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security
-import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
+from typing import Any, Literal, Optional
+
 import pydantic
+
+import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
+import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
 
@@ -16,9 +17,9 @@ class ServiceInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ServiceInfoResponse
         """
         response = await self.get("/api/V1/serviceinfo")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ServiceInfoResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ServiceInfoResponse,
         )
 
     async def LogoutUserV1(self) -> None:
@@ -26,8 +27,8 @@ class ServiceInterface(GeneratedInterfaceBase):
 
         Operation that logs out the user referenced in the authentication token.
          :return: None"""
-        await self.delete("/api/V1/logout")
-        return None
+        response = await self.delete("/api/V1/logout")
+        return self.parse_response(response, None)
 
     async def Token(
         self,
@@ -80,7 +81,7 @@ class ServiceInterface(GeneratedInterfaceBase):
         if site_name is not None:
             params["site_name"] = site_name
         response = await self.post_form("/token", params=params, data=post)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.TokenResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.TokenResponse,
         )

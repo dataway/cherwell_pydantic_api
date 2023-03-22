@@ -1,6 +1,7 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
+import cherwell_pydantic_api.types
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
 
@@ -14,9 +15,11 @@ class CoreInterface(GeneratedInterfaceBase):
         Endpoint to delete a gallery image.
          :param standinkey: The StandIn key for the gallery image to delete.
          :return: None"""
-        self.validate_path_param(standinkey)
-        await self.delete(f"/api/V1/deletegalleryimage/standinkey/{standinkey}")
-        return None
+        self.validate_path_param(standinkey, str)
+        response = await self.delete(
+            f"/api/V1/deletegalleryimage/standinkey/{standinkey}"
+        )
+        return self.parse_response(response, None)
 
     async def GetGalleryImagesFolderV1(
         self,
@@ -34,9 +37,9 @@ class CoreInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(folder)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(folder, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -44,9 +47,9 @@ class CoreInterface(GeneratedInterfaceBase):
             f"/api/V1/getgalleryimages/scope/{scope}/scopeowner/{scopeowner}/folder/{folder}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetGalleryImagesScopeOwnerV1(
@@ -63,8 +66,8 @@ class CoreInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -72,9 +75,9 @@ class CoreInterface(GeneratedInterfaceBase):
             f"/api/V1/getgalleryimages/scope/{scope}/scopeowner/{scopeowner}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetGalleryImagesScopeV1(
@@ -89,16 +92,16 @@ class CoreInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
+        self.validate_path_param(scope, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
             f"/api/V1/getgalleryimages/scope/{scope}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetGalleryImagesV1(
@@ -115,9 +118,9 @@ class CoreInterface(GeneratedInterfaceBase):
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getgalleryimages", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetGalleryImageV1(
@@ -125,21 +128,22 @@ class CoreInterface(GeneratedInterfaceBase):
         name: str,
         width: Optional[int] = None,
         height: Optional[int] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Get built-in images
 
         Operation that gets built-in images. If you are requesting an icon (.ico), you can specify width and height.
          :param name: Image name and folder location in the Image Manager. Parameter must begin with "[PlugIn]Images;" and then a period-separated list of folders. Example: "[PlugIn]Images;Images.Common.Cherwell.ico".
          :param width: Specify the width (icons only).
          :param height: Specify the height (icons only).
-         :return: str"""
-        self.validate_path_param(name)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(name, str)
         params = {}
         if width is not None:
             params["width"] = width
         if height is not None:
             params["height"] = height
-        return await self.get(f"/api/V1/getgalleryimage/name/{name}", params=params)
+        response = await self.get(f"/api/V1/getgalleryimage/name/{name}", params=params)
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def GetStoredValuesFolderV1(
         self,
@@ -157,9 +161,9 @@ class CoreInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(folder)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(folder, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -167,9 +171,9 @@ class CoreInterface(GeneratedInterfaceBase):
             f"/api/V1/storedvalues/scope/{scope}/scopeowner/{scopeowner}/folder/{folder}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetStoredValuesScopeOwnerV1(
@@ -186,17 +190,17 @@ class CoreInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
             f"/api/V1/storedvalues/scope/{scope}/scopeowner/{scopeowner}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetStoredValuesScopeV1(
@@ -211,14 +215,14 @@ class CoreInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
+        self.validate_path_param(scope, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(f"/api/V1/storedvalues/scope/{scope}", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetStoredValuesV1(
@@ -235,9 +239,9 @@ class CoreInterface(GeneratedInterfaceBase):
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/storedvalues", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetStoredValueV1(
@@ -250,11 +254,11 @@ class CoreInterface(GeneratedInterfaceBase):
          :param standInKey: The StandIn key for the Stored Value you would like to retrieve.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse
         """
-        self.validate_path_param(standInKey)
+        self.validate_path_param(standInKey, str)
         response = await self.get(f"/api/V1/getstoredvalue/standinkey/{standInKey}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse,
         )
 
     async def GetViewsV1(
@@ -266,9 +270,9 @@ class CoreInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ViewsResponse
         """
         response = await self.get("/api/V1/getviews")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ViewsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ViewsResponse,
         )
 
     async def SaveGalleryImageV1(
@@ -295,9 +299,9 @@ class CoreInterface(GeneratedInterfaceBase):
             "/api/V1/savegalleryimage",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.SaveGalleryImageResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.SaveGalleryImageResponse,
         )
 
     async def SaveStoredValueV1(
@@ -314,19 +318,20 @@ class CoreInterface(GeneratedInterfaceBase):
             "/api/V1/savestoredvalue",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse,
         )
 
     async def SetCultureV1(
         self,
         culturecode: str,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Set the culture for the current user
 
         Operation to update the current users culture by culture code. This returns a new access token that has the updated information in it.
          :param culturecode: The culture code to set for the current user.
-         :return: str"""
-        self.validate_path_param(culturecode)
-        return await self.put(f"/api/V1/setculture/culturecode/{culturecode}")
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(culturecode, str)
+        response = await self.put(f"/api/V1/setculture/culturecode/{culturecode}")
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)

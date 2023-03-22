@@ -1,9 +1,9 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
+import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches
 import cherwell_pydantic_api.types
-import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
 
@@ -22,9 +22,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/deletebusinessobjectbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchDeleteResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchDeleteResponse,
         )
 
     async def DeleteBusinessObjectByPublicIdV1(
@@ -39,14 +39,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param publicid: Specify the Business Object public ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(publicid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(publicid, str)
         response = await self.delete(
             f"/api/V1/deletebusinessobject/busobid/{busobid}/publicid/{publicid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse,
         )
 
     async def DeleteBusinessObjectByRecIdV1(
@@ -61,14 +61,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobrecid:  Specify the Business Object record ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.delete(
             f"/api/V1/deletebusinessobject/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse,
         )
 
     async def DeleteRelatedBusinessObjectByPublicIdV1(
@@ -87,16 +87,20 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param publicid: Specify the public ID for the related Business Object you want to delete. Use only for Business Objects with unique public IDs. Use "Delete a related Business Object by record ID" when public IDs are not unique.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
-        self.validate_path_param(publicid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(publicid, str)
         response = await self.delete(
             f"/api/V1/deleterelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/publicid/{publicid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def DeleteRelatedBusinessObjectByRecIdV1(
@@ -115,16 +119,20 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobrecid: Specify the record ID for the related Business Object you want to delete.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.delete(
             f"/api/V1/deleterelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def FieldValuesLookupV1(
@@ -141,9 +149,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/fieldvalueslookup",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.FieldValuesLookupResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.FieldValuesLookupResponse,
         )
 
     async def GetActivitiesV1(
@@ -155,7 +163,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         activityType: Optional[
             Literal["All", "Audit", "Communication", "Notes", "Pinned"]
         ] = None,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BusObActivity
     ]:
         """Retrieve all activities for a business object
@@ -166,10 +174,10 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param pageSize: Specify the number of rows to return per page. Maximum value is 2000 per page.
          :param pageNumber: Specify the page number of the result set to return.
          :param activityType: The category of activities to retrieve. Will default to All if not specified.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BusObActivity]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BusObActivity]
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         params = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
@@ -179,11 +187,11 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getactivities/busobid/{busobid}/busobrecid/{busobrecid}/pagesize/{pageSize}",
             params=params,
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BusObActivity
             ],
-            response,
         )
 
     async def GetBusinessObjectAttachmentByAttachmentIdV1(
@@ -191,37 +199,28 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         attachmentid: str,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.FileDownload:
         """Get an imported Business Object attachment
 
         Operation to get a Business Object attachment that has been imported into the system.  HTTP Range Header can be used but is optional.
          :param attachmentid: Specify the internal ID of the attachment record that contains information about the imported file.
          :param busobid: Specify the Business Object ID.
          :param busobrecid: Specify the Business Object record ID.
-         :return: str"""
-        self.validate_path_param(attachmentid)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
-        return await self.get(
+         :return: cherwell_pydantic_api.types.FileDownload"""
+        self.validate_path_param(attachmentid, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
+        response = await self.get(
             f"/api/V1/getbusinessobjectattachment/attachmentid/{attachmentid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.FileDownload)
 
     async def GetBusinessObjectAttachmentsByIdAndPublicIdV1(
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         publicid: str,
-        type: Literal[
-            "None",
-            "File",
-            "FileManagerFile",
-            "BusOb",
-            "History",
-            "Other",
-            "Solution",
-            "UsedAsSolution",
-            "ExternalSolution",
-        ],
-        attachmenttype: Literal["Imported", "Linked", "URL"],
+        type: cherwell_pydantic_api.types.RecordAttachmentType,
+        attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
         """Get attachments by Business Object public ID
@@ -253,10 +252,12 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(publicid)
-        self.validate_path_param(type)
-        self.validate_path_param(attachmenttype)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(publicid, str)
+        self.validate_path_param(type, cherwell_pydantic_api.types.RecordAttachmentType)
+        self.validate_path_param(
+            attachmenttype, cherwell_pydantic_api.types.AttachmentType
+        )
         params = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
@@ -264,27 +265,17 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getbusinessobjectattachments/busobid/{busobid}/publicid/{publicid}/type/{type}/attachmenttype/{attachmenttype}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def GetBusinessObjectAttachmentsByIdAndRecIdV1(
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-        type: Literal[
-            "None",
-            "File",
-            "FileManagerFile",
-            "BusOb",
-            "History",
-            "Other",
-            "Solution",
-            "UsedAsSolution",
-            "ExternalSolution",
-        ],
-        attachmenttype: Literal["Imported", "Linked", "URL"],
+        type: cherwell_pydantic_api.types.RecordAttachmentType,
+        attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
         """Get attachments by Business Object record ID
@@ -316,10 +307,12 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
-        self.validate_path_param(type)
-        self.validate_path_param(attachmenttype)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
+        self.validate_path_param(type, cherwell_pydantic_api.types.RecordAttachmentType)
+        self.validate_path_param(
+            attachmenttype, cherwell_pydantic_api.types.AttachmentType
+        )
         params = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
@@ -327,27 +320,17 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getbusinessobjectattachments/busobid/{busobid}/busobrecid/{busobrecid}/type/{type}/attachmenttype/{attachmenttype}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def GetBusinessObjectAttachmentsByNameAndPublicIdV1(
         self,
         busobname: str,
         publicid: str,
-        type: Literal[
-            "None",
-            "File",
-            "FileManagerFile",
-            "BusOb",
-            "History",
-            "Other",
-            "Solution",
-            "UsedAsSolution",
-            "ExternalSolution",
-        ],
-        attachmenttype: Literal["Imported", "Linked", "URL"],
+        type: cherwell_pydantic_api.types.RecordAttachmentType,
+        attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
         """Get attachments by Business Object name and public ID
@@ -379,10 +362,12 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
         """
-        self.validate_path_param(busobname)
-        self.validate_path_param(publicid)
-        self.validate_path_param(type)
-        self.validate_path_param(attachmenttype)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(publicid, str)
+        self.validate_path_param(type, cherwell_pydantic_api.types.RecordAttachmentType)
+        self.validate_path_param(
+            attachmenttype, cherwell_pydantic_api.types.AttachmentType
+        )
         params = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
@@ -390,27 +375,17 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getbusinessobjectattachments/busobname/{busobname}/publicid/{publicid}/type/{type}/attachmenttype/{attachmenttype}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def GetBusinessObjectAttachmentsByNameAndRecIdV1(
         self,
         busobname: str,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-        type: Literal[
-            "None",
-            "File",
-            "FileManagerFile",
-            "BusOb",
-            "History",
-            "Other",
-            "Solution",
-            "UsedAsSolution",
-            "ExternalSolution",
-        ],
-        attachmenttype: Literal["Imported", "Linked", "URL"],
+        type: cherwell_pydantic_api.types.RecordAttachmentType,
+        attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
         """Get attachments by Business Object name and record ID
@@ -442,10 +417,12 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
         """
-        self.validate_path_param(busobname)
-        self.validate_path_param(busobrecid)
-        self.validate_path_param(type)
-        self.validate_path_param(attachmenttype)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
+        self.validate_path_param(type, cherwell_pydantic_api.types.RecordAttachmentType)
+        self.validate_path_param(
+            attachmenttype, cherwell_pydantic_api.types.AttachmentType
+        )
         params = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
@@ -453,9 +430,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getbusinessobjectattachments/busobname/{busobname}/busobrecid/{busobrecid}/type/{type}/attachmenttype/{attachmenttype}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def GetBusinessObjectAttachmentsV1(
@@ -472,9 +449,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/getbusinessobjectattachments",
             content=attachmentsRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def GetBusinessObjectBatchV1(
@@ -491,9 +468,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/getbusinessobjectbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchReadResponse,
         )
 
     async def GetBusinessObjectByPublicIdV1(
@@ -508,14 +485,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param publicid: Specify the Business Object public ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(publicid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(publicid, str)
         response = await self.get(
             f"/api/V1/getbusinessobject/busobid/{busobid}/publicid/{publicid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse,
         )
 
     async def GetBusinessObjectByRecIdV1(
@@ -530,14 +507,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobrecid: Specify the Business Object record ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.get(
             f"/api/V1/getbusinessobject/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse,
         )
 
     async def GetBusinessObjectByScanCodeBusObIdV1(
@@ -552,14 +529,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobid: The Business Object ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse
         """
-        self.validate_path_param(scanCode)
-        self.validate_path_param(busobid)
+        self.validate_path_param(scanCode, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         response = await self.get(
             f"/api/V1/getbusinessobject/scancode/{scanCode}/busobid/{busobid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse,
         )
 
     async def GetBusinessObjectByScanCodeBusObNameV1(
@@ -574,14 +551,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobname: The Business Bbject name.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse
         """
-        self.validate_path_param(scanCode)
-        self.validate_path_param(busobname)
+        self.validate_path_param(scanCode, str)
+        self.validate_path_param(busobname, str)
         response = await self.get(
             f"/api/V1/getbusinessobject/scancode/{scanCode}/busobname/{busobname}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse,
         )
 
     async def GetBusinessObjectSchemaV1(
@@ -596,22 +573,22 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includerelationships: Flag to include schemas for related Business Object. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SchemaResponse
         """
-        self.validate_path_param(busobId)
+        self.validate_path_param(busobId, cherwell_pydantic_api.types.BusObIDParamType)
         params = {}
         if includerelationships is not None:
             params["includerelationships"] = includerelationships
         response = await self.get(
             f"/api/V1/getbusinessobjectschema/busobid/{busobId}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SchemaResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SchemaResponse,
         )
 
     async def GetBusinessObjectSummariesV1(
         self,
-        type: Literal["All", "Major", "Supporting", "Lookup", "Groups"],
-    ) -> List[
+        type: cherwell_pydantic_api.types.BusinessObjectType,
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary
     ]:
         """Get Business Object summaries by type
@@ -623,59 +600,59 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         Supporting - Supporting objects only
         Lookup - Lookup objects only
         Groups - Groups only
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary]
         """
-        self.validate_path_param(type)
+        self.validate_path_param(type, cherwell_pydantic_api.types.BusinessObjectType)
         response = await self.get(f"/api/V1/getbusinessobjectsummaries/type/{type}")
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary
             ],
-            response,
         )
 
     async def GetBusinessObjectSummaryByIdV1(
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary
     ]:
         """Get a Business Object summary by ID
 
         Operation that returns a single Business Object summary by ID.
          :param busobid: Specify a Business Object ID to get its summary.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary]
         """
-        self.validate_path_param(busobid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         response = await self.get(f"/api/V1/getbusinessobjectsummary/busobid/{busobid}")
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary
             ],
-            response,
         )
 
     async def GetBusinessObjectSummaryByNameV1(
         self,
         busobname: str,
-    ) -> List[
+    ) -> list[
         cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary
     ]:
         """Get a Business Object summary by name
 
         Operation that returns a single Business Object summary by name.
          :param busobname: Specify a Business Object name to get its summary.
-         :return: List[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary]
+         :return: list[cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary]
         """
-        self.validate_path_param(busobname)
+        self.validate_path_param(busobname, str)
         response = await self.get(
             f"/api/V1/getbusinessobjectsummary/busobname/{busobname}"
         )
-        return parse_obj_as(
-            List[
+        return self.parse_response(
+            response,
+            list[
                 cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.Summary
             ],
-            response,
         )
 
     async def GetBusinessObjectTemplateV1(
@@ -692,9 +669,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/getbusinessobjecttemplate",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.TemplateResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.TemplateResponse,
         )
 
     async def GetRelatedBusinessObjectByRequestV1(
@@ -719,9 +696,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
                 exclude_unset=True, by_alias=True
             ),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def GetRelatedBusinessObjectV1(
@@ -748,9 +725,13 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
         params = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
@@ -766,9 +747,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getrelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def GetRelatedBusinessObjectWithCustomGridV1(
@@ -793,10 +774,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
-        self.validate_path_param(gridid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(gridid, str)
         params = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
@@ -808,9 +793,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             f"/api/V1/getrelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/gridid/{gridid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def LinkRelatedBusinessObjectByRecIdV1(
@@ -831,17 +816,21 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobrecid: Specify the Business Object record ID of the Business Object to be linked.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.get(
             f"/api/V1/linkrelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def LinkRelatedBusinessObjectByRecIdV2(
@@ -862,17 +851,21 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobrecid: Specify the Business Object record ID of the Business Object to be linked.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.get(
             f"/api/V2/linkrelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase,
         )
 
     async def RemoveBusinessObjectAttachmentByIdAndPublicIdV1(
@@ -888,13 +881,13 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobid: Specify the Business Object ID.
          :param publicid: Specify the Business Object public ID.
          :return: None"""
-        self.validate_path_param(attachmentid)
-        self.validate_path_param(busobid)
-        self.validate_path_param(publicid)
-        await self.delete(
+        self.validate_path_param(attachmentid, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(publicid, str)
+        response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobid/{busobid}/publicid/{publicid}"
         )
-        return None
+        return self.parse_response(response, None)
 
     async def RemoveBusinessObjectAttachmentByIdAndRecIdV1(
         self,
@@ -909,13 +902,13 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobid: Specify the Business Object ID.
          :param busobrecid: Specify the Business Object record ID.
          :return: None"""
-        self.validate_path_param(attachmentid)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
-        await self.delete(
+        self.validate_path_param(attachmentid, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
+        response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return None
+        return self.parse_response(response, None)
 
     async def RemoveBusinessObjectAttachmentByNameAndPublicIdV1(
         self,
@@ -930,13 +923,13 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobname: Specify the Business Object name.
          :param publicid: Specify the Business Object public ID.
          :return: None"""
-        self.validate_path_param(attachmentid)
-        self.validate_path_param(busobname)
-        self.validate_path_param(publicid)
-        await self.delete(
+        self.validate_path_param(attachmentid, str)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(publicid, str)
+        response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobname/{busobname}/publicid/{publicid}"
         )
-        return None
+        return self.parse_response(response, None)
 
     async def RemoveBusinessObjectAttachmentByNameAndRecIdV1(
         self,
@@ -951,13 +944,13 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobname: Specify the Business Object name.
          :param busobrecid: Specify the Business Object record ID.
          :return: None"""
-        self.validate_path_param(attachmentid)
-        self.validate_path_param(busobname)
-        self.validate_path_param(busobrecid)
-        await self.delete(
+        self.validate_path_param(attachmentid, str)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
+        response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobname/{busobname}/busobrecid/{busobrecid}"
         )
-        return None
+        return self.parse_response(response, None)
 
     async def SaveBusinessObjectAttachmentBusObV1(
         self,
@@ -973,9 +966,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/savebusinessobjectattachmentbusob",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def SaveBusinessObjectAttachmentLinkV1(
@@ -992,9 +985,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/savebusinessobjectattachmentlink",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def SaveBusinessObjectAttachmentUrlV1(
@@ -1011,9 +1004,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/savebusinessobjectattachmenturl",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse,
         )
 
     async def SaveBusinessObjectBatchV1(
@@ -1030,9 +1023,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/savebusinessobjectbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchSaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchSaveResponse,
         )
 
     async def SaveBusinessObjectV1(
@@ -1049,9 +1042,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/savebusinessobject",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse,
         )
 
     async def SaveRelatedBusinessObjectV1(
@@ -1068,9 +1061,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             "/api/V1/saverelatedbusinessobject",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.RelatedSaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.RelatedSaveResponse,
         )
 
     async def UnLinkRelatedBusinessObjectByRecIdV1(
@@ -1091,22 +1084,26 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param busobrecid: Specify the Business Object record ID of the Business Object to be unlinked.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        self.validate_path_param(parentbusobid)
-        self.validate_path_param(parentbusobrecid)
-        self.validate_path_param(relationshipid)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(
+            parentbusobid, cherwell_pydantic_api.types.BusObIDParamType
+        )
+        self.validate_path_param(
+            parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
+        )
+        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.delete(
             f"/api/V1/unlinkrelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse,
         )
 
     async def UploadBusinessObjectAttachmentByIdAndPublicIdV1(
         self,
-        body: str,
+        body: cherwell_pydantic_api.types.FileUpload,
         filename: str,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         publicid: str,
@@ -1114,7 +1111,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         totalsize: int,
         attachmentid: Optional[str] = None,
         displaytext: Optional[str] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Upload an attachment by Business Object ID and public ID
 
         Operation to upload an attachment to a Business Object record using a Business Object ID and public ID. The body of the request is the byte array of the file part being uploaded.
@@ -1126,25 +1123,26 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param totalsize: The entire file size in bytes.
          :param attachmentid: Specify the attachment ID of an uploaded file to upload subsequent parts and ensure each part gets appended to the parts that have already been uploaded.
          :param displaytext: Specify the attachment name, which is the display text for the attachment record.
-         :return: str"""
-        self.validate_path_param(filename)
-        self.validate_path_param(busobid)
-        self.validate_path_param(publicid)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(filename, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(publicid, str)
         params = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
             params["displaytext"] = displaytext
-        return await self.post_body(
+        response = await self.post_body(
             f"/api/V1/uploadbusinessobjectattachment/filename/{filename}/busobid/{busobid}/publicid/{publicid}/offset/{offset}/totalsize/{totalsize}",
             params=params,
             content=body,
             content_type="application/octet-stream",
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def UploadBusinessObjectAttachmentByIdAndRecIdV1(
         self,
-        body: str,
+        body: cherwell_pydantic_api.types.FileUpload,
         filename: str,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
@@ -1152,7 +1150,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         totalsize: int,
         attachmentid: Optional[str] = None,
         displaytext: Optional[str] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Upload an attachment by Business Object ID and record ID
 
         Operation to upload an attachment to a Business Object record using a Business Object ID and record ID. The body of the request is the byte array of the file part being uploaded.
@@ -1164,25 +1162,26 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param totalsize: The entire file size in bytes.
          :param attachmentid: Specify the attachment ID of an uploaded file to upload subsequent parts and ensure each part gets appended to the parts that have already been uploaded.
          :param displaytext: Specify the attachment name, which is the display text for the attachment record.
-         :return: str"""
-        self.validate_path_param(filename)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(filename, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         params = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
             params["displaytext"] = displaytext
-        return await self.post_body(
+        response = await self.post_body(
             f"/api/V1/uploadbusinessobjectattachment/filename/{filename}/busobid/{busobid}/busobrecid/{busobrecid}/offset/{offset}/totalsize/{totalsize}",
             params=params,
             content=body,
             content_type="application/octet-stream",
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def UploadBusinessObjectAttachmentByNameAndPublicIdV1(
         self,
-        body: str,
+        body: cherwell_pydantic_api.types.FileUpload,
         filename: str,
         busobname: str,
         publicid: str,
@@ -1190,7 +1189,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         totalsize: int,
         attachmentid: Optional[str] = None,
         displaytext: Optional[str] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Upload an attachment by Business Object name and public ID
 
         Operation to upload an attachment to a Business Object record using a Business Object name and public ID. The body of the request is the byte array of the file part being uploaded.
@@ -1202,25 +1201,26 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param totalsize: The entire file size in bytes.
          :param attachmentid: Specify the attachment ID of an uploaded file to upload subsequent parts and ensure each part gets appended to the parts that have already been uploaded.
          :param displaytext: Specify the attachment name, which is the display text for the attachment record.
-         :return: str"""
-        self.validate_path_param(filename)
-        self.validate_path_param(busobname)
-        self.validate_path_param(publicid)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(filename, str)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(publicid, str)
         params = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
             params["displaytext"] = displaytext
-        return await self.post_body(
+        response = await self.post_body(
             f"/api/V1/uploadbusinessobjectattachment/filename/{filename}/busobname/{busobname}/publicid/{publicid}/offset/{offset}/totalsize/{totalsize}",
             params=params,
             content=body,
             content_type="application/octet-stream",
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def UploadBusinessObjectAttachmentByNameAndRecIdV1(
         self,
-        body: str,
+        body: cherwell_pydantic_api.types.FileUpload,
         filename: str,
         busobname: str,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
@@ -1228,7 +1228,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         totalsize: int,
         attachmentid: Optional[str] = None,
         displaytext: Optional[str] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Upload an attachment by Business Object name and record ID
 
         Operation to upload an attachment to a Business Object record using a Business Object name and record ID. The body of the request is the byte array of the file part being uploaded.
@@ -1240,18 +1240,19 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param totalsize: The entire file size in bytes.
          :param attachmentid: Specify the attachment ID of an uploaded file to upload subsequent parts and ensure each part gets appended to the parts that have already been uploaded.
          :param displaytext: Specify the attachment name, which is the display text for the attachment record.
-         :return: str"""
-        self.validate_path_param(filename)
-        self.validate_path_param(busobname)
-        self.validate_path_param(busobrecid)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(filename, str)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         params = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
             params["displaytext"] = displaytext
-        return await self.post_body(
+        response = await self.post_body(
             f"/api/V1/uploadbusinessobjectattachment/filename/{filename}/busobname/{busobname}/busobrecid/{busobrecid}/offset/{offset}/totalsize/{totalsize}",
             params=params,
             content=body,
             content_type="application/octet-stream",
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)

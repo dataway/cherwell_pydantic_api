@@ -1,7 +1,7 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
-import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval
+import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
 
@@ -18,12 +18,12 @@ class ApprovalInterface(GeneratedInterfaceBase):
          :param approvalAction:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse
         """
-        self.validate_path_param(approvalRecId)
-        self.validate_path_param(approvalAction)
+        self.validate_path_param(approvalRecId, str)
+        self.validate_path_param(approvalAction, str)
         response = await self.post(f"/api/V1/approval/{approvalRecId}/{approvalAction}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse,
         )
 
     async def GetApprovalByRecIdV1(
@@ -36,11 +36,11 @@ class ApprovalInterface(GeneratedInterfaceBase):
          :param approvalRecId:
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.ApprovalReadResponse
         """
-        self.validate_path_param(approvalRecId)
+        self.validate_path_param(approvalRecId, str)
         response = await self.get(f"/api/V1/approval/{approvalRecId}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.ApprovalReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.ApprovalReadResponse,
         )
 
     async def GetMyApprovalsV1(
@@ -52,9 +52,9 @@ class ApprovalInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse
         """
         response = await self.get("/api/V1/getmyapprovals")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse,
         )
 
     async def GetMyPendingApprovalsV1(
@@ -66,7 +66,7 @@ class ApprovalInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse
         """
         response = await self.get("/api/V1/getmypendingapprovals")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse,
         )

@@ -20,7 +20,7 @@ def compile_filter(filter: FilterType) -> Optional[Pattern]:
     if filter is None:
         return None
     if isinstance(filter, str):
-        return re.compile(filter, re.IGNORECASE)
+        return re.compile(filter)
     return filter
 
 
@@ -44,13 +44,13 @@ class Collector:
 
 
     def verbose_report(self, verdict: bool, type: str, summary: Summary, schema: Optional[SchemaResponse]):
-        icon = "[ \u2611 ]" if verdict else "[   ]"
+        icon = "[**]" if verdict else "[  ]"
         if schema:
             fields = len(schema.fieldDefinitions) if schema.fieldDefinitions else 0
             rels = len(schema.relationships) if schema.relationships else 0
         else:
-            fields = rels = 0
-        report = f" {type:10} {summary.name:40} {fields:4} {rels:4} {summary.busObId:24}"
+            fields = rels = '?'
+        report = f" {type[:3]:3} {summary.name:30} {fields:>4} {rels:>4}  {summary.busObId:24}"
         if click:
             click.secho(icon, nl=False, bg='green' if verdict else 'red', fg='white')
             click.secho(report, fg='cyan')

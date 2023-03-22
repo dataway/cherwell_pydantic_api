@@ -1,7 +1,8 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches
+import cherwell_pydantic_api.types
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
 
@@ -51,9 +52,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             "/api/V1/getquicksearchconfigurationforbusobs",
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse,
         )
 
     async def GetQuickSearchConfigurationForBusObsWithViewRightsV1(
@@ -97,9 +98,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         response = await self.get(
             "/api/V1/getquicksearchconfigurationforbusobswithviewrights"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse,
         )
 
     async def GetQuickSearchResultsV1(
@@ -122,9 +123,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             params=params,
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SimpleResultsList,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SimpleResultsList,
         )
 
     async def GetQuickSearchSpecificResultsV1(
@@ -155,9 +156,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             params=params,
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsTableResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsTableResponse,
         )
 
     async def GetQuickSearchSpecificResultsV2(
@@ -188,9 +189,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             params=params,
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchResponse,
         )
 
     async def GetSearchItemsByAssociation_Scope_ScopeOwner_FolderV1(
@@ -211,10 +212,10 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(folder)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(folder, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -222,9 +223,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V1/getsearchitems/association/{association}/scope/{scope}/scopeowner/{scopeowner}/folder/{folder}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
         )
 
     async def GetSearchItemsByAssociation_Scope_ScopeOwner_FolderV2(
@@ -245,10 +246,10 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(folder)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(folder, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -256,9 +257,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V2/getsearchitems/association/{association}/scope/{scope}/scopeowner/{scopeowner}/folder/{folder}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetSearchItemsByAssociation_Scope_ScopeOwnerV1(
@@ -277,9 +278,9 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -287,9 +288,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V1/getsearchitems/association/{association}/scope/{scope}/scopeowner/{scopeowner}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
         )
 
     async def GetSearchItemsByAssociation_Scope_ScopeOwnerV2(
@@ -308,9 +309,9 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -318,9 +319,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V2/getsearchitems/association/{association}/scope/{scope}/scopeowner/{scopeowner}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetSearchItemsByAssociation_ScopeV1(
@@ -337,8 +338,8 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -346,9 +347,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V1/getsearchitems/association/{association}/scope/{scope}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
         )
 
     async def GetSearchItemsByAssociation_ScopeV2(
@@ -365,8 +366,8 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -374,9 +375,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V2/getsearchitems/association/{association}/scope/{scope}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetSearchItemsByAssociationV1(
@@ -391,16 +392,16 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
         """
-        self.validate_path_param(association)
+        self.validate_path_param(association, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
             f"/api/V1/getsearchitems/association/{association}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
         )
 
     async def GetSearchItemsByAssociationV2(
@@ -415,16 +416,16 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
+        self.validate_path_param(association, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
             f"/api/V2/getsearchitems/association/{association}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetSearchItemsV1(
@@ -441,9 +442,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getsearchitems", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse,
         )
 
     async def GetSearchItemsV2(
@@ -460,9 +461,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V2/getsearchitems", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetSearchResultsAdHocV1(
@@ -496,9 +497,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             "/api/V1/getsearchresults",
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse,
         )
 
     async def GetSearchResultsByIdV1(
@@ -544,10 +545,10 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param resultsAsSimpleResultsList: Indicates if the results should be returned in a simple results list format or a table format. Default is a table format.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(searchid)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(searchid, str)
         params = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
@@ -563,9 +564,9 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V1/getsearchresults/association/{association}/scope/{scope}/scopeowner/{scopeowner}/searchid/{searchid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse,
         )
 
     async def GetSearchResultsByNameV1(
@@ -611,10 +612,10 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param resultsAsSimpleResultsList: Indicates if the results should be returned in a simple results list format or a table format. Default is a table format.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(searchname)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(searchname, str)
         params = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
@@ -630,15 +631,15 @@ class SearchesInterface(GeneratedInterfaceBase):
             f"/api/V1/getsearchresults/association/{association}/scope/{scope}/scopeowner/{scopeowner}/searchname/{searchname}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse,
         )
 
     async def GetSearchResultsExportAdHocV1(
         self,
         dataRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.ExportSearchResultsRequest,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Export an ad-hoc search
 
         Operation that returns an ad-hoc search in a specified export format: 0=CSV, 1=Excel, 2=Tab, 3=Word, 4=Custom Separator, 5=Simple JSON. To execute a search with Prompts, the PromptId and Value are required in the Prompt request object.
@@ -660,11 +661,12 @@ class SearchesInterface(GeneratedInterfaceBase):
         TimeValue = 12
 
          :param dataRequest: Request object to specify search parameters and export format.
-         :return: str"""
-        return await self.post_body(
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        response = await self.post_body(
             "/api/V1/getsearchresultsexport",
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def GetSearchResultsExportByIdV1(
         self,
@@ -676,7 +678,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         searchTerm: Optional[str] = None,
         pagenumber: Optional[int] = None,
         pagesize: Optional[int] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Export a saved search by ID
 
         Operation that returns the paged results of a saved search in a specified format. When the search contains Prompts, the response contains the Prompt. Send the Prompt and the original operation parameters to  SearchResultsRequest to the getsearchresultsexport ad-hoc http post operation.
@@ -705,12 +707,15 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param searchTerm: Specify search text filter the results. Example: Use "Service Request" to filter Incident results to include only service requests.
          :param pagenumber: Specify the page number of the result set to return.
          :param pagesize: Specify the number of rows to return per page.
-         :return: str"""
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(searchid)
-        self.validate_path_param(exportformat)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(searchid, str)
+        self.validate_path_param(
+            exportformat,
+            Literal["CSV", "Excel", "Tab", "Word", "CustomSeparator", "Json"],
+        )
         params = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
@@ -718,10 +723,11 @@ class SearchesInterface(GeneratedInterfaceBase):
             params["pagenumber"] = pagenumber
         if pagesize is not None:
             params["pagesize"] = pagesize
-        return await self.get(
+        response = await self.get(
             f"/api/V1/getsearchresultsexport/association/{association}/scope/{scope}/scopeowner/{scopeowner}/searchid/{searchid}/exportformat/{exportformat}",
             params=params,
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def GetSearchResultsExportByNameV1(
         self,
@@ -733,7 +739,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         searchTerm: Optional[str] = None,
         pagenumber: Optional[int] = None,
         pagesize: Optional[int] = None,
-    ) -> str:
+    ) -> cherwell_pydantic_api.types.StringResponse:
         """Export a saved search by name
 
         Operation that returns the paged results of a saved search in a specified format. When the search contains Prompts, the response contains the Prompt. Send the Prompt and the original operation parameters to  SearchResultsRequest to the getsearchresultsexport ad-hoc http post operation.
@@ -762,12 +768,15 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param searchTerm: Specify search text filter the results. Example: Use "Service Request" to filter Incident results to include only service requests.
          :param pagenumber: Specify the page number of the result set to return.
          :param pagesize: Specify the number of rows to return per page.
-         :return: str"""
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(searchname)
-        self.validate_path_param(exportformat)
+         :return: cherwell_pydantic_api.types.StringResponse"""
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(searchname, str)
+        self.validate_path_param(
+            exportformat,
+            Literal["CSV", "Excel", "Tab", "Word", "CustomSeparator", "Json"],
+        )
         params = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
@@ -775,10 +784,11 @@ class SearchesInterface(GeneratedInterfaceBase):
             params["pagenumber"] = pagenumber
         if pagesize is not None:
             params["pagesize"] = pagesize
-        return await self.get(
+        response = await self.get(
             f"/api/V1/getsearchresultsexport/association/{association}/scope/{scope}/scopeowner/{scopeowner}/searchname/{searchname}/exportformat/{exportformat}",
             params=params,
         )
+        return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
     async def GetSearchResultsAsStringByNameV1(
         self,
@@ -786,7 +796,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         associationName: str,
         searchName: str,
         scopeOwner: Optional[str] = None,
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """Get results of a saved search
 
         Operation that returns the results of a saved search in JSON format.
@@ -801,17 +811,18 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param associationName: Specify the Business Object association Name for the saved search.
          :param searchName: Specify the name of the saved search.
          :param scopeOwner: Specify the scope owner ID for the saved search. Use (None) when no scope owner exists.
-         :return: List[Dict]"""
-        self.validate_path_param(scope)
-        self.validate_path_param(associationName)
-        self.validate_path_param(searchName)
+         :return: list[dict]"""
+        self.validate_path_param(scope, str)
+        self.validate_path_param(associationName, str)
+        self.validate_path_param(searchName, str)
         params = {}
         if scopeOwner is not None:
             params["scopeOwner"] = scopeOwner
-        return await self.get(
+        response = await self.get(
             f"/api/V1/storedsearches/{scope}/{associationName}/{searchName}",
             params=params,
         )
+        return self.parse_response(response, list[dict])
 
     async def GetSearchResultsAsStringByNameV2(
         self,
@@ -819,7 +830,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         associationName: str,
         searchName: str,
         scopeOwner: Optional[str] = None,
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """Get results of a saved search
 
         Operation that returns the results of a saved search in JSON format.
@@ -836,17 +847,18 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param associationName: Specify the Business Object association Name for the saved search.
          :param searchName: Specify the name of the saved search.
          :param scopeOwner: Specify the scope owner ID for the saved search. Use (None) when no scope owner exists.
-         :return: List[Dict]"""
-        self.validate_path_param(scope)
-        self.validate_path_param(associationName)
-        self.validate_path_param(searchName)
+         :return: list[dict]"""
+        self.validate_path_param(scope, str)
+        self.validate_path_param(associationName, str)
+        self.validate_path_param(searchName, str)
         params = {}
         if scopeOwner is not None:
             params["scopeOwner"] = scopeOwner
-        return await self.get(
+        response = await self.get(
             f"/api/V2/storedsearches/{scope}/{associationName}/{searchName}",
             params=params,
         )
+        return self.parse_response(response, list[dict])
 
     async def GetSearchResultsAsStringByIdV2(
         self,
@@ -871,7 +883,7 @@ class SearchesInterface(GeneratedInterfaceBase):
             "/api/V2/storedsearches",
             content=searchRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.StoredSearchResults,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.StoredSearchResults,
         )

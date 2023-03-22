@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms
 import cherwell_pydantic_api.types
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
@@ -22,8 +22,8 @@ class FormsInterface(GeneratedInterfaceBase):
          :param formid: Specify the form ID if the default is not desired.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(publicid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(publicid, str)
         params = {}
         if foredit is not None:
             params["foredit"] = foredit
@@ -33,9 +33,9 @@ class FormsInterface(GeneratedInterfaceBase):
             f"/api/V1/getmobileformforbusob/busobid/{busobid}/publicid/{publicid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
         )
 
     async def GetMobileFormForBusObByIdAndRecIdV1(
@@ -54,8 +54,8 @@ class FormsInterface(GeneratedInterfaceBase):
          :param formid: Specify the form ID if the default is not desired.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse
         """
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         params = {}
         if foredit is not None:
             params["foredit"] = foredit
@@ -65,9 +65,9 @@ class FormsInterface(GeneratedInterfaceBase):
             f"/api/V1/getmobileformforbusob/busobid/{busobid}/busobrecid/{busobrecid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
         )
 
     async def GetMobileFormForBusObByNameAndPublicIdV1(
@@ -86,8 +86,8 @@ class FormsInterface(GeneratedInterfaceBase):
          :param formid: Specify the form ID if the default is not desired.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse
         """
-        self.validate_path_param(busobname)
-        self.validate_path_param(publicid)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(publicid, str)
         params = {}
         if foredit is not None:
             params["foredit"] = foredit
@@ -97,9 +97,9 @@ class FormsInterface(GeneratedInterfaceBase):
             f"/api/V1/getmobileformforbusob/busobname/{busobname}/publicid/{publicid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
         )
 
     async def GetMobileFormForBusObByNameAndRecIdV1(
@@ -118,8 +118,8 @@ class FormsInterface(GeneratedInterfaceBase):
          :param formid: Specify the form ID if the default is not desired.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse
         """
-        self.validate_path_param(busobname)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(busobname, str)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         params = {}
         if foredit is not None:
             params["foredit"] = foredit
@@ -129,7 +129,7 @@ class FormsInterface(GeneratedInterfaceBase):
             f"/api/V1/getmobileformforbusob/busobname/{busobname}/busobrecid/{busobrecid}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Forms.MobileFormResponse,
         )

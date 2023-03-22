@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
@@ -19,9 +19,9 @@ class TeamsInterface(GeneratedInterfaceBase):
             "/api/V1/addusertoteambybatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamByBatchResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamByBatchResponse,
         )
 
     async def AddUserToTeamV1(
@@ -33,11 +33,11 @@ class TeamsInterface(GeneratedInterfaceBase):
         Operation to add a user to a Team. To get the user's internal ID, use "Get a user by login ID" or "Get a user by public ID." To get a Team's internal ID, use "Get all available Teams."
          :param dataRequest: Request object to specify user and team values.
          :return: None"""
-        await self.post_body(
+        response = await self.post_body(
             "/api/V1/addusertoteam",
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return None
+        return self.parse_response(response, None)
 
     async def AddUserToTeamV2(
         self,
@@ -53,9 +53,9 @@ class TeamsInterface(GeneratedInterfaceBase):
             "/api/V2/addusertoteam",
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamResponse,
         )
 
     async def DeleteTeamV1(
@@ -67,9 +67,9 @@ class TeamsInterface(GeneratedInterfaceBase):
         Operation to delete a Team by Team ID.
          :param teamid: Specify the Team ID.
          :return: None"""
-        self.validate_path_param(teamid)
-        await self.delete(f"/api/V1/deleteteam/{teamid}")
-        return None
+        self.validate_path_param(teamid, str)
+        response = await self.delete(f"/api/V1/deleteteam/{teamid}")
+        return self.parse_response(response, None)
 
     async def GetTeamsV1(
         self,
@@ -80,9 +80,9 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse
         """
         response = await self.get("/api/V1/getteams")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse,
         )
 
     async def GetTeamsV2(
@@ -94,9 +94,9 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response
         """
         response = await self.get("/api/V2/getteams")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response,
         )
 
     async def GetTeamV1(
@@ -109,11 +109,11 @@ class TeamsInterface(GeneratedInterfaceBase):
          :param teamid: The Team ID of the Team to get.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamResponse
         """
-        self.validate_path_param(teamid)
+        self.validate_path_param(teamid, str)
         response = await self.get(f"/api/V1/getteam/{teamid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamResponse,
         )
 
     async def GetUsersTeamsV1(
@@ -126,11 +126,11 @@ class TeamsInterface(GeneratedInterfaceBase):
          :param userRecordId: Specify the user record ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse
         """
-        self.validate_path_param(userRecordId)
+        self.validate_path_param(userRecordId, str)
         response = await self.get(f"/api/V1/getusersteams/userrecordid/{userRecordId}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse,
         )
 
     async def GetUsersTeamsV2(
@@ -143,11 +143,11 @@ class TeamsInterface(GeneratedInterfaceBase):
          :param userRecordId: Specify the user record ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response
         """
-        self.validate_path_param(userRecordId)
+        self.validate_path_param(userRecordId, str)
         response = await self.get(f"/api/V2/getusersteams/userrecordid/{userRecordId}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response,
         )
 
     async def GetWorkgroupsV1(
@@ -159,9 +159,9 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse
         """
         response = await self.get("/api/V1/getworkgroups")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse,
         )
 
     async def GetWorkgroupsV2(
@@ -173,9 +173,9 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response
         """
         response = await self.get("/api/V2/getworkgroups")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response,
         )
 
     async def RemoveUserFromTeamV1(
@@ -189,12 +189,12 @@ class TeamsInterface(GeneratedInterfaceBase):
          :param teamId: Specify the internal ID of the Team.
          :param userrecordid: Specify the record ID of the User to remove.
          :return: None"""
-        self.validate_path_param(teamId)
-        self.validate_path_param(userrecordid)
-        await self.delete(
+        self.validate_path_param(teamId, str)
+        self.validate_path_param(userrecordid, str)
+        response = await self.delete(
             f"/api/V1/removeuserfromteam/teamid/{teamId}/userrecordid/{userrecordid}"
         )
-        return None
+        return self.parse_response(response, None)
 
     async def RemoveUserFromTeamV2(
         self,
@@ -208,14 +208,14 @@ class TeamsInterface(GeneratedInterfaceBase):
          :param userrecordid: Specify the record ID of the User to remove.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveUserFromTeamResponse
         """
-        self.validate_path_param(teamId)
-        self.validate_path_param(userrecordid)
+        self.validate_path_param(teamId, str)
+        self.validate_path_param(userrecordid, str)
         response = await self.delete(
             f"/api/V2/removeuserfromteam/teamid/{teamId}/userrecordid/{userrecordid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveUserFromTeamResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveUserFromTeamResponse,
         )
 
     async def RemoveCustomerFromWorkgroupV1(
@@ -230,14 +230,14 @@ class TeamsInterface(GeneratedInterfaceBase):
          :param customerrecordid: Specify the Customer record ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveCustomerFromWorkgroupResponse
         """
-        self.validate_path_param(workgroupid)
-        self.validate_path_param(customerrecordid)
+        self.validate_path_param(workgroupid, str)
+        self.validate_path_param(customerrecordid, str)
         response = await self.delete(
             f"/api/V1/removecustomerfromworkgroup/workgroupid/{workgroupid}/customerrecordid/{customerrecordid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveCustomerFromWorkgroupResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveCustomerFromWorkgroupResponse,
         )
 
     async def SaveTeamV1(
@@ -253,9 +253,9 @@ class TeamsInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V1/saveteam", content=request.json(exclude_unset=True, by_alias=True)
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamSaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamSaveResponse,
         )
 
     async def SaveTeamMemberV1(
@@ -272,9 +272,9 @@ class TeamsInterface(GeneratedInterfaceBase):
             "/api/V1/saveteammember",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveTeamMemberResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveTeamMemberResponse,
         )
 
     async def SaveWorkgroupMemberV1(
@@ -291,7 +291,7 @@ class TeamsInterface(GeneratedInterfaceBase):
             "/api/V1/saveworkgroupmember",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveWorkgroupMemberResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveWorkgroupMemberResponse,
         )

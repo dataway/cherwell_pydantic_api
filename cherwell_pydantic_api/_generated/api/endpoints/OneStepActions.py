@@ -1,8 +1,8 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
-import cherwell_pydantic_api.types
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions
+import cherwell_pydantic_api.types
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
 
@@ -25,10 +25,10 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(folder)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(folder, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -36,9 +36,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
             f"/api/V1/getonestepactions/association/{association}/scope/{scope}/scopeowner/{scopeowner}/folder/{folder}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetOneStepActionsByAssociation_Scope_ScopeOwnerV1(
@@ -57,9 +57,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -67,9 +67,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
             f"/api/V1/getonestepactions/association/{association}/scope/{scope}/scopeowner/{scopeowner}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetOneStepActionsByAssociation_ScopeV1(
@@ -86,8 +86,8 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
-        self.validate_path_param(scope)
+        self.validate_path_param(association, str)
+        self.validate_path_param(scope, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -95,9 +95,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
             f"/api/V1/getonestepactions/association/{association}/scope/{scope}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetOneStepActionsByAssociationV1(
@@ -112,16 +112,16 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(association)
+        self.validate_path_param(association, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
             f"/api/V1/getonestepactions/association/{association}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetOneStepActionsV1(
@@ -138,9 +138,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getonestepactions", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def RunOneStepActionByKeyForRecordByRecIdV1(
@@ -157,15 +157,15 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :param busobrecid: Specify the Business Object record ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse
         """
-        self.validate_path_param(standinkey)
-        self.validate_path_param(busobid)
-        self.validate_path_param(busobrecid)
+        self.validate_path_param(standinkey, str)
+        self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
+        self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.get(
             f"/api/V1/runonestepaction/standinkey/{standinkey}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse,
         )
 
     async def RunOneStepActionByStandInKeyV1(
@@ -178,11 +178,11 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :param standinkey: The key to find the One-Step Action to run
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse
         """
-        self.validate_path_param(standinkey)
+        self.validate_path_param(standinkey, str)
         response = await self.get(f"/api/V1/runonestepaction/standinkey/{standinkey}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse,
         )
 
     async def RunOneStepActionV1(
@@ -199,7 +199,7 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
             "/api/V1/runonestepaction",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse,
         )

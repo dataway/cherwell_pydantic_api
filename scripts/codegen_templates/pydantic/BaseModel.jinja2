@@ -3,7 +3,7 @@ import cherwell_pydantic_api.types as ct
 {{ decorator }}
 {% endfor -%}
 {%- if class_name  == 'CherwellObjectID' %}
-from cherwell_pydantic_api.generated_api_utils import {{ class_name }}
+from cherwell_pydantic_api.types import {{ class_name }}
 {%- else %}
 class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comment }}{% endif %}
 {%- if description %}

@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
@@ -20,9 +20,9 @@ class QueuesInterface(GeneratedInterfaceBase):
             "/api/V1/additemtoqueue",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.AddItemToQueueResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.AddItemToQueueResponse,
         )
 
     async def CheckInQueueItemV1(
@@ -39,9 +39,9 @@ class QueuesInterface(GeneratedInterfaceBase):
             "/api/V1/checkinqueueitem",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckInQueueItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckInQueueItemResponse,
         )
 
     async def CheckOutQueueItemV1(
@@ -58,9 +58,9 @@ class QueuesInterface(GeneratedInterfaceBase):
             "/api/V1/checkoutqueueitem",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckOutQueueItemResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckOutQueueItemResponse,
         )
 
     async def GetQueuesFolderV1(
@@ -79,9 +79,9 @@ class QueuesInterface(GeneratedInterfaceBase):
          :param links: Whether or not to include links.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
-        self.validate_path_param(folder)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
+        self.validate_path_param(folder, str)
         params = {}
         if links is not None:
             params["links"] = links
@@ -89,9 +89,9 @@ class QueuesInterface(GeneratedInterfaceBase):
             f"/api/V1/getqueues/scope/{scope}/scopeowner/{scopeowner}/folder/{folder}",
             params=params,
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetQueuesScopeOwnerV1(
@@ -108,17 +108,17 @@ class QueuesInterface(GeneratedInterfaceBase):
          :param links: Whether or not to include links.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
-        self.validate_path_param(scopeowner)
+        self.validate_path_param(scope, str)
+        self.validate_path_param(scopeowner, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
             f"/api/V1/getqueues/scope/{scope}/scopeowner/{scopeowner}", params=params
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetQueuesScopeV1(
@@ -133,14 +133,14 @@ class QueuesInterface(GeneratedInterfaceBase):
          :param links: Whether or not to include links.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        self.validate_path_param(scope)
+        self.validate_path_param(scope, str)
         params = {}
         if links is not None:
             params["links"] = links
         response = await self.get(f"/api/V1/getqueues/scope/{scope}", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def GetQueuesV1(
@@ -157,9 +157,9 @@ class QueuesInterface(GeneratedInterfaceBase):
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getqueues", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData,
         )
 
     async def RemoveItemFromQueueV1(
@@ -176,7 +176,7 @@ class QueuesInterface(GeneratedInterfaceBase):
             "/api/V1/removeitemfromqueue",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.RemoveItemFromQueueResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.RemoveItemFromQueueResponse,
         )

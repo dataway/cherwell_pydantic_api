@@ -25,14 +25,14 @@ def ipython_shell():
     logger = logging.getLogger(None)
     logger.setLevel(logging.INFO)
     
-    collector = Collector(Instance.use(), verbose=True, bo_include_filter=r'ticket.*')
+    collector = Collector(Instance.use(), verbose=True, bo_include_filter=r'(?i)ticket|task|changerequest|conf.*|journal.*|spec.*|.*port*')
 
     _cfg = traitlets.config.Config()  # type: ignore
     _cfg.InteractiveShellApp.exec_lines = [
         "repo = ModelRepo(create=True)",
         "cw = Interactive(waiter=IPython.get_ipython().loop_runner)",
         "cw.authenticate()",
-        "cw.get_bo_schema(busobname='Ticket')",
+        "cw.get_service_info()",
     ]
     IPython.start_ipython(config=_cfg, user_ns=locals())
 

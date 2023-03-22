@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, cast
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
     FieldDefinition,
@@ -26,7 +26,7 @@ class ValidSchema(ApiBaseModel):
     def from_schema_response(cls, schema: SchemaResponse):
         if schema.hasError or not schema.busObId or not schema.name or not schema.fieldDefinitions:
             raise ValueError(f'SchemaResponse not valid: {schema}')
-        return cls(busObId=schema.busObId,
+        return cls(busObId=cast(BusObID, schema.busObId),
                    fieldDefinitions=schema.fieldDefinitions,
                    firstRecIdField=schema.firstRecIdField,
                    gridDefinitions=schema.gridDefinitions,

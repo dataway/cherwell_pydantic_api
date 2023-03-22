@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Literal, Optional, Union, AsyncIterable, Iterable
-from pydantic import parse_obj_as
+from typing import Any, Literal, Optional
+
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 
@@ -19,9 +19,9 @@ class UsersInterface(GeneratedInterfaceBase):
             "/api/V1/deleteuserbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteResponse,
         )
 
     async def DeleteUserBatchV2(
@@ -38,9 +38,9 @@ class UsersInterface(GeneratedInterfaceBase):
             "/api/V2/deleteuserbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteV2Response,
         )
 
     async def DeleteUserV1(
@@ -53,11 +53,11 @@ class UsersInterface(GeneratedInterfaceBase):
          :param userrecordid: Specify the record ID of the user you want to delete
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteResponse
         """
-        self.validate_path_param(userrecordid)
+        self.validate_path_param(userrecordid, str)
         response = await self.delete(f"/api/V1/deleteuser/userrecordid/{userrecordid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteResponse,
         )
 
     async def DeleteUserV2(
@@ -70,11 +70,11 @@ class UsersInterface(GeneratedInterfaceBase):
          :param userrecordid: Specify the record ID of the user you want to delete
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteV2Response
         """
-        self.validate_path_param(userrecordid)
+        self.validate_path_param(userrecordid, str)
         response = await self.delete(f"/api/V2/deleteuser/userrecordid/{userrecordid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteV2Response,
         )
 
     async def GetListOfUsers(
@@ -93,9 +93,9 @@ class UsersInterface(GeneratedInterfaceBase):
         if stoponerror is not None:
             params["stoponerror"] = stoponerror
         response = await self.get("/api/V1/getlistofusers", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserListResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserListResponse,
         )
 
     async def GetUserBatchV1(
@@ -112,9 +112,9 @@ class UsersInterface(GeneratedInterfaceBase):
             "/api/V1/getuserbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchReadResponse,
         )
 
     async def GetUserByLoginIdV1(
@@ -127,11 +127,11 @@ class UsersInterface(GeneratedInterfaceBase):
          :param loginid: Specify the user's login ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User
         """
-        self.validate_path_param(loginid)
+        self.validate_path_param(loginid, str)
         response = await self.get(f"/api/V1/getuserbyloginid/loginid/{loginid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User,
         )
 
     async def GetUserByLoginIdV2(
@@ -148,9 +148,9 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         params: dict[str, Any] = {"loginid": loginid, "loginidtype": loginidtype}
         response = await self.get("/api/V2/getuserbyloginid", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User,
         )
 
     async def GetUserByLoginIdV3(
@@ -167,9 +167,9 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         params: dict[str, Any] = {"loginid": loginid, "loginidtype": loginidtype}
         response = await self.get("/api/V3/getuserbyloginid", params=params)
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2,
         )
 
     async def GetUserByPublicIdV1(
@@ -182,11 +182,11 @@ class UsersInterface(GeneratedInterfaceBase):
          :param publicid: Specify the user's public ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadResponse
         """
-        self.validate_path_param(publicid)
+        self.validate_path_param(publicid, str)
         response = await self.get(f"/api/V1/getuserbypublicid/publicid/{publicid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadResponse,
         )
 
     async def GetUserByPublicIdV2(
@@ -199,11 +199,11 @@ class UsersInterface(GeneratedInterfaceBase):
          :param publicid: Specify the user's public ID.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response
         """
-        self.validate_path_param(publicid)
+        self.validate_path_param(publicid, str)
         response = await self.get(f"/api/V2/getuserbypublicid/publicid/{publicid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response,
         )
 
     async def GetUserByRecId(
@@ -216,11 +216,11 @@ class UsersInterface(GeneratedInterfaceBase):
          :param recid: Specify the user's record ID
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2
         """
-        self.validate_path_param(recid)
+        self.validate_path_param(recid, str)
         response = await self.get(f"/api/V1/getuserbyrecid/recid/{recid}")
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2,
         )
 
     async def SaveUserBatchV1(
@@ -237,9 +237,9 @@ class UsersInterface(GeneratedInterfaceBase):
             "/api/V1/saveuserbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveResponse,
         )
 
     async def SaveUserBatchV2(
@@ -256,9 +256,9 @@ class UsersInterface(GeneratedInterfaceBase):
             "/api/V2/saveuserbatch",
             content=request.json(exclude_unset=True, by_alias=True),
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveV2Response,
         )
 
     async def SaveUserV1(
@@ -274,9 +274,9 @@ class UsersInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V1/saveuser", content=request.json(exclude_unset=True, by_alias=True)
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveResponse,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveResponse,
         )
 
     async def SaveUserV2(
@@ -292,7 +292,7 @@ class UsersInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V2/saveuser", content=request.json(exclude_unset=True, by_alias=True)
         )
-        return parse_obj_as(
-            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveV2Response,
+        return self.parse_response(
             response,
+            cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveV2Response,
         )

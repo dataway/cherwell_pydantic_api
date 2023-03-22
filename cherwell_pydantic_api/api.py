@@ -2,17 +2,15 @@ import logging
 import time
 from typing import Any, AsyncIterable, Iterable, Literal, Mapping, Optional, Union
 
-from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import Summary
-from cherwell_pydantic_api.settings import InstanceSettingsBase
-from ._generated.api.endpoints import GeneratedInterfaces
-from .generated_api_utils import GeneratedInterfaceBase
 import httpx
 
+from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import Summary
+from cherwell_pydantic_api.settings import InstanceSettingsBase
 
-
+from ._generated.api.endpoints import GeneratedInterfaces
+from .generated_api_utils import GeneratedInterfaceBase, Response, URLType
 from .types import BusObID
 
-URLType = Union[str, httpx.URL]
 
 
 class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
@@ -58,7 +56,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
                       params: Optional[Mapping[str, Any]] = None,
                       content_type: Optional[str] = None,
                       **kwargs
-                      ) -> Any:
+                      ) -> Response:
         if content_type is not None:
             kwargs.setdefault('headers', {})['Content-Type'] = content_type
         req = self._client.build_request(
@@ -73,37 +71,28 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
                 time.sleep(self.retry_on_error_401_wait * i)
                 await self.authenticate()
                 self.reauthentication_counter += 1
-                response = await self._client.request(method, url=url, data=data, json=json, params=params, **kwargs)
+                response = await self._client.send(req)
                 self.last_response = response
-        j = response.json()
-        if not response.is_success and j is not None and j.get('hasError', None):
-            # The Cherwell API returns a 500 status code if e.g. a business object ID is invalid, but the request was otherwise OK.
-            # In this case the body contains a JSON object with a "hasError" key.
-            j['httpStatusCode'] = response.status_code
-            return j
-        if not self.raise_on_error_500 and response.status_code == 500:
-            return None
-        response.raise_for_status()
-        return j
+        return response
 
 
-    async def get(self, url: URLType, *, params: Optional[Mapping[str, Any]] = None) -> Any:
+    async def get(self, url: URLType, *, params: Optional[Mapping[str, Any]] = None) -> Response:
         return await self.request('GET', url, params=params)
 
 
-    async def post_body(self, url: URLType, *, content: Union[str, bytes, Iterable[bytes], AsyncIterable[bytes]], content_type: str = 'application/json', params: Optional[Mapping[str, Any]] = None) -> Any:
+    async def post_body(self, url: URLType, *, content: Union[str, bytes, Iterable[bytes], AsyncIterable[bytes]], content_type: str = 'application/json', params: Optional[Mapping[str, Any]] = None) -> Response:
         return await self.request('POST', url, content=content, content_type=content_type, params=params)
 
 
-    async def post_form(self, url: URLType, *, data: Optional[Mapping[str, Any]] = None, params: Optional[Mapping[str, Any]] = None) -> Any:
+    async def post_form(self, url: URLType, *, data: Optional[Mapping[str, Any]] = None, params: Optional[Mapping[str, Any]] = None) -> Response:
         return await self.request('POST', url, data=data, params=params)
 
 
-    async def post(self, url: URLType) -> Any:
+    async def post(self, url: URLType) -> Response:
         return await self.request('POST', url)
 
 
-    async def delete(self, url, **kwargs) -> Any:
+    async def delete(self, url, **kwargs) -> Response:
         return await self.request('DELETE', url, **kwargs)
 
 
