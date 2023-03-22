@@ -23,6 +23,8 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
     {%- set field_type = field.type_hint %}
     {%- if field.name.lower().endswith('busobid') %}{% set field_type = field_type.replace('str', 'ct.BusObID') %}{% endif %}
     {%- if field.name.lower().endswith('busobrecid') %}{% set field_type = field_type.replace('str', 'ct.BusObRecID') %}{% endif %}
+    {%- if field.name.lower().endswith('fieldid') %}{% set field_type = field_type.replace('str', 'ct.FieldID') %}{% endif %}
+    {%- if field.name.lower().endswith('relationshipid') %}{% set field_type = field_type.replace('str', 'ct.RelationshipID') %}{% endif %}
     {%- if not field.annotated and field.field %}
     {{ field.name }}: {{ field_type }} = {{ field.field }}
     {%- else %}

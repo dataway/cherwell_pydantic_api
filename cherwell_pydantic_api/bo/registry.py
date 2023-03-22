@@ -1,8 +1,10 @@
-from typing import Iterable, Mapping, Optional, Union
+from collections import defaultdict
+from typing import Iterable, Mapping, Optional, Union, cast
 
 from pydantic import AnyHttpUrl, BaseModel
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
+    Relationship,
     SchemaResponse,
     Summary,
 )
@@ -10,7 +12,11 @@ from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.
 from cherwell_pydantic_api.bo.valid_schema import ValidSchema
 from cherwell_pydantic_api.bo.wrapper import BusinessObjectWrapper
 from cherwell_pydantic_api.interfaces import ApiRequesterInterface
-from cherwell_pydantic_api.types import BusObID
+from cherwell_pydantic_api.types import BusObID, RelationshipID
+
+
+# Registry of business object schemas.
+# It appears that the API returns schema fields in the same order, but not the relationships.
 
 
 
@@ -25,17 +31,20 @@ class ServiceInfoModel(BaseModel):
 class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
     def __init__(self, instance: ApiRequesterInterface):
         self._instance = instance
-        self._schemas: dict[str, ValidSchema] = {}
-        self._summaries: dict[str, Summary] = {}
-        self._name_to_id: dict[str, str] = {}
-        self._wrappers: dict[str, BusinessObjectWrapper] = {}
+        self._schemas: dict[BusObID, ValidSchema] = {}
+        self._summaries: dict[BusObID, Summary] = {}
+        self._name_to_id: dict[str, BusObID] = {}
+        self._relationships: dict[RelationshipID, Relationship] = {}
+        self._bo_rels: defaultdict[BusObID,
+                                   set[RelationshipID]] = defaultdict(set)
+        self._wrappers: dict[BusObID, BusinessObjectWrapper] = {}
         self._service_info: Optional[ServiceInfoResponse] = None
 
 
     def marshal(self, include_summaries: bool = False) -> Iterable[tuple[str, str]]:
         yield ('instance_name.txt', self._instance.settings.name)
         for busobid, schema in self._schemas.items():
-            yield (f'bo.{busobid}.json', schema.json(indent=2, sort_keys=True))
+            yield (f'bo.{busobid}.json', schema.json(indent=2, exclude={'relationships'}, sort_keys=True))
         if include_summaries:
             for busobid, summary in self._summaries.items():
                 if busobid in self._schemas:
@@ -56,7 +65,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
 
 
     def get_schema(self, busobid: BusObID) -> ValidSchema:
-        return self._schemas[busobid.lower()]
+        return self._schemas[BusObID(busobid.lower())]
 
 
     def register(self, schema: SchemaResponse):
@@ -64,7 +73,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
             raise ValueError('SchemaResponse.busObId is None')
         if schema.name is None:
             raise ValueError('SchemaResponse.name is None')
-        busobid = schema.busObId.lower()
+        busobid = BusObID(schema.busObId.lower())
         name = schema.name.lower()
         valid_schema = ValidSchema.from_schema_response(schema)
         if busobid in self._schemas:
@@ -75,11 +84,30 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
                 if self._name_to_id[name] != busobid:
                     raise ValueError(
                         f'SchemaResponse.name {schema.name} already registered and new busObId is different')
-            return
-        self._schemas[busobid] = valid_schema
-        self._name_to_id[name] = busobid
-        self._wrappers[busobid] = BusinessObjectWrapper(
-            valid_schema, self._instance)
+        else:
+            self._schemas[busobid] = valid_schema
+            self._name_to_id[name] = busobid
+
+        # Register relationships
+        if schema.relationships:
+            for rel in schema.relationships:
+                relid = RelationshipID(cast(str, rel.relationshipId).lower())
+                assert relid in valid_schema.relationshipIds
+                if relid in self._relationships:
+                    if self._relationships[relid] != rel:
+                        raise ValueError(
+                            f'Relationship {relid} already registered and new relationship is different')
+                    if not relid in self._bo_rels[busobid]:
+                        raise ValueError(
+                            f"Relationship {relid} is not in busObId {busobid}")
+                else:
+                    self._relationships[relid] = rel
+                    self._bo_rels[busobid].add(relid)
+
+        # Create a wrapper if it doesn't exist
+        if busobid not in self._wrappers:
+            self._wrappers[busobid] = BusinessObjectWrapper(
+                valid_schema, self._instance)
 
 
     def register_summary(self, summary: Summary):
@@ -87,7 +115,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapper]):
             raise ValueError('Summary.busObId is None')
         if summary.name is None:
             raise ValueError('Summary.name is None')
-        busobid = summary.busObId.lower()
+        busobid = BusObID(summary.busObId.lower())
         name = summary.name.lower()
         if name in self._name_to_id:
             if self._name_to_id[name] != busobid:

@@ -75,7 +75,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         publicid: str,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
         """Delete a related Business Object by public ID
@@ -93,7 +93,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         self.validate_path_param(publicid, str)
         response = await self.delete(
             f"/api/V1/deleterelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/publicid/{publicid}"
@@ -107,7 +109,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
         """Delete a related Business Object by record ID
@@ -125,7 +127,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.delete(
             f"/api/V1/deleterelatedbusinessobject/parentbusobid/{parentbusobid}/parentbusobrecid/{parentbusobrecid}/relationshipid/{relationshipid}/busobrecid/{busobrecid}"
@@ -705,7 +709,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         pageNumber: Optional[int] = None,
         pageSize: Optional[int] = None,
         allfields: Optional[bool] = None,
@@ -731,7 +735,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         params = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
@@ -756,7 +762,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         gridid: str,
         pageNumber: Optional[int] = None,
         pageSize: Optional[int] = None,
@@ -780,7 +786,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         self.validate_path_param(gridid, str)
         params = {}
         if pageNumber is not None:
@@ -802,7 +810,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
@@ -822,7 +830,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.get(
@@ -837,7 +847,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase:
@@ -857,7 +867,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.get(
@@ -1070,7 +1082,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         parentbusobid: cherwell_pydantic_api.types.BusObIDParamType,
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
-        relationshipid: str,
+        relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
     ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
@@ -1090,7 +1102,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             parentbusobrecid, cherwell_pydantic_api.types.BusObRecID
         )
-        self.validate_path_param(relationshipid, str)
+        self.validate_path_param(
+            relationshipid, cherwell_pydantic_api.types.RelationshipID
+        )
         self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
         response = await self.delete(

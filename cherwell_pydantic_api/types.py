@@ -1,15 +1,66 @@
-from typing import Annotated, Any, AsyncIterable, Iterable, Literal, NewType, Union
+import keyword
+import re
+from typing import TYPE_CHECKING, Annotated, Any, AsyncIterable, Iterable, Literal, NewType, Union
 
+
+
+if TYPE_CHECKING:
+    IDType = NewType
+    IdentifierType = NewType
+    LCIdentifierType = NewType
+else:
+    def IDType(name, tp):
+        """Create a subtype of str with a constructor that converts identifiers to lower case. Non-hex characters
+        will throw a ValidError. For the type checker it is the same as NewType"""
+        def id_type(x):
+            x = x.lower()
+            if not re.match(r'^[0-9a-f]+$', x):
+                raise ValueError(f"Invalid {name}: {x}")
+            return x
+        id_type.__name__ = name
+        id_type.__supertype__ = tp
+        return id_type
+
+    def IdentifierType(name, tp):
+        """Create a subtype of str with a constructor that converts field names, etc. to a string
+        that can be used as a Python identifier, except python keywords and fields that begin with a digit,
+        in which case a prefix of I_ will be added (capitals). For the type checker it is the same as NewType"""
+        def identifier_type(x):
+            x = re.sub(r'[^0-9a-z_]', '_', x)
+            if x[0].isdigit() or keyword.iskeyword(x):
+                x = 'I_' + x
+            return x
+        identifier_type.__name__ = name
+        identifier_type.__supertype__ = tp
+        return identifier_type
+
+    def LCIdentifierType(name, tp):
+        """Create a subtype of str with a constructor that converts field names, etc. to a _lowercase_ string
+        that can be used as a Python identifier, except python keywords and fields that begin with a digit,
+        in which case a prefix of I_ will be added (capitals). For the type checker it is the same as NewType"""
+        def identifier_type(x):
+            x = re.sub(r'[^0-9a-z_]', '_', x.lower())
+            if x[0].isdigit() or keyword.iskeyword(x):
+                x = 'I_' + x
+            return x
+        identifier_type.__name__ = name
+        identifier_type.__supertype__ = tp
+        return identifier_type
 
 
 CherwellObjectID = dict[str, Any]
-BusObID = NewType("BusObID", str)
-BusObRecID = NewType("BusObRecID", str)
+BusObID = IDType("BusObID", str)
+BusObRecID = IDType("BusObRecID", str)
 BusObIDParamType = BusObID
+BusObIdentifier = LCIdentifierType("BusObIdentifier", str)
+FieldID = IDType("FieldID", str)
+FieldIdentifier = IdentifierType("FieldIdentifier", str)
+RelationshipID = IDType("RelationshipID", str)
 FileType = Union[str, bytes, Iterable[bytes], AsyncIterable[bytes]]
 FileUpload = Annotated[FileType, "FileUpload"]
 FileDownload = Annotated[FileType, "FileDownload"]
 StringResponse = NewType("StringResponse", str)
+
 
 BusinessObjectType = Literal["All", "Major", "Supporting", "Lookup", "Groups"]
 RecordAttachmentType = Literal[

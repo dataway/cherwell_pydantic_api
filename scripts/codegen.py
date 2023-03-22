@@ -46,6 +46,7 @@ def generate_models(input: Path, output: Path):
         custom_template_dir=Path(
             __file__).parent.joinpath('codegen_templates'),
         field_include_all_keys=True,
+        disable_timestamp=True,
         custom_class_name_generator=class_name_generator
     )
 
@@ -89,9 +90,15 @@ def get_python_type(paramspec: dict, opspec: dict, models_module: str, import_se
     if name.endswith('busobid'):
         import_set.add('cherwell_pydantic_api.types')
         return 'cherwell_pydantic_api.types.BusObIDParamType' if is_input else 'cherwell_pydantic_api.types.BusObID'
-    if name.endswith('busobrecid'):
+    elif name.endswith('busobrecid'):
         import_set.add('cherwell_pydantic_api.types')
         return 'cherwell_pydantic_api.types.BusObRecID'
+    elif name.endswith('fieldid'):
+        import_set.add('cherwell_pydantic_api.types')
+        return 'cherwell_pydantic_api.types.FieldID'
+    elif name.endswith('relationshipid'):
+        import_set.add('cherwell_pydantic_api.types')
+        return 'cherwell_pydantic_api.types.RelationshipID'
     enumvals = paramspec.get('enum', None)
     if enumvals:
         pytype = f"Literal{enumvals}"
@@ -102,11 +109,6 @@ def get_python_type(paramspec: dict, opspec: dict, models_module: str, import_se
                 import_set.add('cherwell_pydantic_api.types')
                 return f"cherwell_pydantic_api.types.{tname}"
         return pytype
-    # if 'application/octet-stream' in opspec['consumes']:
-    #    print(f"BINARY: {opspec['operationId']}: {paramspec=}")
-    # if 'application/octet-stream' in opspec['consumes'] and paramspec.get('type', '') == 'string' and paramspec.get('in', '') == 'body':
-    #    import_set.add('cherwell_pydantic_api.types')
-    #    return 'cherwell_pydantic_api.types.FileUpload'
     if opspec['operationId'] == 'Service_Token' and name in ('client_id', 'client_secret', 'password',):
         import_set.add('pydantic')
         return 'pydantic.SecretStr'
