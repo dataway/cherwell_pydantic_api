@@ -80,7 +80,7 @@ class Collector:
         model_generator = PydanticModelGenerator(self._instance.settings)
         for busobid in self.busobids:
             schema = self._instance.bo.get_schema(busobid)
-            yield (f"{schema.name.lower()}.py", model_generator.generate_model(schema))
+            yield (f"{schema.identifier}.py", model_generator.generate_model(schema))
 
 
     def save_models(self, repo: ModelRepo):

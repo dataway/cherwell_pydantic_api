@@ -75,6 +75,10 @@ class Instance(ApiRequesterInterface):
         return response
     
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}({self.settings.name})>"
+
+
     @classmethod
     def use(cls, name: Optional[str] = None, *, instance_settings: Optional[InstanceSettingsBase] = None) -> "Instance":
         """Instantiate an Instance object for the given instance name, or return an existing Instance object if one already exists."""

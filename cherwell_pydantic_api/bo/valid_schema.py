@@ -9,7 +9,7 @@ from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.
     SchemaResponse,
 )
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
-from cherwell_pydantic_api.types import BusObID, RelationshipID
+from cherwell_pydantic_api.types import BusObID, BusObIdentifier, RelationshipID
 
 
 
@@ -23,7 +23,7 @@ class ValidSchema(ApiBaseModel):
     recIdFields: Optional[str] = None
     stateFieldId: Optional[str] = None
     states: Optional[str] = None
-    name_id: str = Field(description="ASCII lowercase of name, to be used as python identifier", regex=r'^[a-z_][a-z0-9_]*$')
+    identifier: BusObIdentifier = Field(description="ASCII lowercase of name, to be used as python identifier")
     relationshipIds: list[RelationshipID]
 
     @classmethod
@@ -31,7 +31,7 @@ class ValidSchema(ApiBaseModel):
         if schema.hasError or not schema.busObId or not schema.name or not schema.fieldDefinitions:
             raise ValueError(f'SchemaResponse not valid: {schema}')
         if schema.relationships:
-            relIds = [cast(RelationshipID, cast(str, r.relationshipId).lower()) for r in schema.relationships]
+            relIds = [RelationshipID(r.relationshipId) for r in schema.relationships if r.relationshipId]
             relIds.sort()
         else:
             relIds = []
@@ -40,7 +40,7 @@ class ValidSchema(ApiBaseModel):
                    firstRecIdField=schema.firstRecIdField,
                    gridDefinitions=schema.gridDefinitions,
                    name=schema.name,
-                   name_id=schema.name.encode('ascii', 'replace').decode('ascii').lower().translate(str.maketrans('?-', '__')),
+                   identifier=BusObIdentifier(schema.name),
                    recIdFields=schema.recIdFields,
                    relationshipIds=relIds,
                    stateFieldId=schema.stateFieldId,

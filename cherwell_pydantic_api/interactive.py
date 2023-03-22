@@ -1,9 +1,13 @@
 from typing import Any, Callable, Coroutine, Literal, Optional, TypeVar
 
-from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import Summary
+from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
+    ReadResponse,
+    Summary,
+)
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core import ServiceInfoResponse
 from cherwell_pydantic_api.api import Connection
 from cherwell_pydantic_api.bo.registry import BusinessObjectRegistry
+from cherwell_pydantic_api.bo.wrapper import BusinessObjectWrapper
 from cherwell_pydantic_api.instance import Instance
 
 
@@ -32,12 +36,14 @@ def wait(amethod: Callable[..., Coroutine[Any, Any, _ReturnType]]) -> Callable[.
 
 class ConnectionProxy(RestaurantInterface):
     """A proxy for the Connection object, using the waiter method to make all methods sync."""
+
     def __init__(self, connection: Connection, waiter: _WaiterType):
         self._connection = connection
         self._waiter = waiter
 
     def __getattr__(self, name: str) -> Any:
         amethod = getattr(self._connection, name)
+
         def wrapper(*args, **kwargs):
             return self._waiter(amethod(*args, **kwargs))
         wrapper.__doc__ = amethod.__doc__
@@ -45,6 +51,18 @@ class ConnectionProxy(RestaurantInterface):
 
     def __dir__(self) -> list[str]:
         return dir(self._connection)
+
+
+def create_bo_wrapper_class(waiter: _WaiterType) -> type[BusinessObjectWrapper]:
+    class InteractiveBusinessObjectWrapper(BusinessObjectWrapper, RestaurantInterface):
+        _waiter = waiter
+
+        @wait
+        async def get(self, publicid: str) -> ReadResponse:
+            return await super().get(publicid=publicid)
+
+    return InteractiveBusinessObjectWrapper
+
 
 
 class Interactive(RestaurantInterface):
@@ -79,4 +97,6 @@ class Interactive(RestaurantInterface):
 
     @property
     def bo(self) -> BusinessObjectRegistry:
+        self.instance.bo.set_wrapper_class(
+            create_bo_wrapper_class(self._waiter))
         return self.instance.bo
