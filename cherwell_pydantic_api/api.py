@@ -9,7 +9,7 @@ from cherwell_pydantic_api.settings import InstanceSettingsBase
 
 from ._generated.api.endpoints import GeneratedInterfaces
 from .generated_api_utils import GeneratedInterfaceBase, Response, URLType
-from .types import BusObID
+from .types import BusObID, BusinessObjectType
 
 
 
@@ -117,7 +117,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         return summary.busObId
 
 
-    async def get_bo_summaries(self, type: Literal["All", "Major", "Supporting", "Lookup", "Groups"]) -> list[Summary]:
+    async def get_bo_summaries(self, type: BusinessObjectType) -> list[Summary]:
         return await self.GetBusinessObjectSummariesV1(type=type)
 
 

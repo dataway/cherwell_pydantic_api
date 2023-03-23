@@ -1,8 +1,9 @@
+import keyword
 import re
 from pathlib import Path
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseSettings, DirectoryPath, Field, SecretStr, validator
+from pydantic import AnyHttpUrl, BaseSettings, Field, SecretStr, validator
 
 
 
@@ -13,14 +14,14 @@ class InstanceSettingsBase(BaseSettings):
     username: str = Field(default='')
     password: SecretStr = Field(default='')
     timeout: float = Field(default=0.0)
-    repo_subdir: Optional[Path] = Field(
-        description='Subdirectory of repo_dir to use for this instance, if unset default to instance name')
+    subpackage: Optional[Path] = Field(
+        description='Subpackage name, corresponds to subdirectory name within repo_dir, if unset default to instance name')
     repo_branch: Optional[str] = Field(
         description='Branch to use for this instance, if unset default to main')
 
-    def get_repo_subdir(self) -> Path:
-        if self.repo_subdir:
-            return self.repo_subdir
+    def get_repo_subpackage(self) -> Path:
+        if self.subpackage:
+            return self.subpackage
         return Path(self.name)
 
     def get_repo_branch(self) -> str:
@@ -32,7 +33,7 @@ class InstanceSettings(InstanceSettingsBase):
 
 
 class Settings(InstanceSettingsBase):
-    name: str = 'default'
+    name: str = Field('default', const=True)
     inst: dict[str, InstanceSettings] = Field(default={})
     repo_dir: Path = Field(default='repo')
     repo_author: str = 'cherwell_pydantic_api <noreply@cherwell-pydantic-api.nonexistent.anthonyuk.dev>'
@@ -48,7 +49,7 @@ class Settings(InstanceSettingsBase):
     @validator('inst')
     def validate_inst(cls, v):
         for inst_name, inst in v.items():
-            if not cls._re_inst_name.match(inst_name) or inst_name == 'default':
+            if not cls._re_inst_name.match(inst_name) or inst_name == 'default' or keyword.iskeyword(inst_name):
                 raise ValueError(f"Invalid instance name: {inst_name}")
         return v
 
@@ -57,6 +58,7 @@ class Settings(InstanceSettingsBase):
         self._fixup()
 
     def _fixup(self):
+        #TODO: Use pydantic's built-in support for this
         """After instantiation, propagate the default values to the instances."""
         for inst_name, inst in self.inst.items():
             if inst.name != '_unset':

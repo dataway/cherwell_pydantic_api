@@ -62,7 +62,7 @@ class ModelRepo:
         else:
             instance_name = instance.settings.name
 
-        instance_dir = self._repo_dir / instance.settings.get_repo_subdir()
+        instance_dir = self._repo_dir / instance.settings.get_repo_subpackage()
         if not instance_dir.exists():
             logging.info(
                 f'Creating instance directory {instance_dir} for instance {instance_name}')

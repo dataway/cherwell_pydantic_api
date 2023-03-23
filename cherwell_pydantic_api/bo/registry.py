@@ -1,5 +1,6 @@
 from collections import defaultdict
-from typing import Iterable, Mapping, Optional, Union, cast
+from typing import Iterable, Mapping, Optional, Union
+from weakref import WeakValueDictionary
 
 from pydantic import AnyHttpUrl, BaseModel
 
@@ -15,6 +16,7 @@ from cherwell_pydantic_api.interfaces import ApiRequesterInterface
 from cherwell_pydantic_api.types import BusObID, BusObIdentifier, RelationshipID
 
 
+
 # Registry of business object schemas.
 # It appears that the API returns schema fields in the same order, but not the relationships.
 
@@ -27,8 +29,12 @@ class ServiceInfoModel(BaseModel):
     base_url: Optional[AnyHttpUrl] = None
 
 
+class BusinessObjectModelRegistryMixin:
+    pass
+
 
 class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
+    # There is exactly one BusinessObjectRegistry per Instance.
     # There can be more than one wrapper per BO but only one schema or summary.
 
     def __init__(self, instance: ApiRequesterInterface, wrapper_class: type[BusinessObjectWrapperBase] = BusinessObjectWrapper):
@@ -40,14 +46,17 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         self._relationships: dict[RelationshipID, Relationship] = {}
         self._bo_rels: defaultdict[BusObID,
                                    set[RelationshipID]] = defaultdict(set)
-        self._wrappers: dict[BusObID, wrapper_class] = {}
+        self._wrappers: WeakValueDictionary[BusObID,
+                                            wrapper_class] = WeakValueDictionary()
         self._service_info: Optional[ServiceInfoResponse] = None
+        self._models: WeakValueDictionary[BusObID,
+                                          type[BusinessObjectModelRegistryMixin]] = WeakValueDictionary()
 
 
     def marshal(self, include_summaries: bool = False) -> Iterable[tuple[str, str]]:
         yield ('instance_name.txt', self._instance.settings.name)
         for busobid, schema in self._schemas.items():
-            yield (f'bo.{busobid}.json', schema.json(indent=2, exclude={'relationships'}, sort_keys=True))
+            yield (f'bo.{busobid}.json', schema.json(indent=2, exclude={'relationships'}, sort_keys=True, exclude_unset=True, exclude_defaults=True))
         # TODO: include relationships
         if include_summaries:
             for busobid, summary in self._summaries.items():
@@ -132,6 +141,14 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         self._summaries[busobid] = summary
 
 
+    def register_model(self, busobid: BusObID, model: type[BusinessObjectModelRegistryMixin]):
+        self._models[busobid] = model
+
+
+    def get_model(self, busobid: BusObID) -> type[BusinessObjectModelRegistryMixin]:
+        return self._models[busobid]
+
+
     def register_service_info(self, service_info: ServiceInfoResponse):
         self._service_info = service_info
 
@@ -144,8 +161,10 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
 
     def get_wrapper(self, busobid: BusObID) -> BusinessObjectWrapperBase:
         if busobid not in self._wrappers:
-            self._wrappers[busobid] = self._wrapper_class(
+            wrapper = self._wrapper_class(
                 schema=self._schemas[busobid], instance=self._instance)
+            self._wrappers[busobid] = wrapper
+            return wrapper
         return self._wrappers[busobid]
 
 

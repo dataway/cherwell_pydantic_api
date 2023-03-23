@@ -1,5 +1,5 @@
 
-from typing import ClassVar, Literal, Optional
+from typing import Any, ClassVar, Optional
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
     ReadResponse,
@@ -11,15 +11,18 @@ from cherwell_pydantic_api.api import Connection
 from cherwell_pydantic_api.bo.registry import BusinessObjectRegistry
 from cherwell_pydantic_api.interfaces import ApiRequesterInterface
 from cherwell_pydantic_api.settings import InstanceSettingsBase, Settings
-from cherwell_pydantic_api.types import BusObID, BusObRecID
+from cherwell_pydantic_api.types import BusinessObjectType, BusObID, BusObRecID
 
 
 
 class Instance(ApiRequesterInterface):
     _instances: ClassVar[dict[str, "Instance"]] = {}
+    __call_token: ClassVar[object] = object()
 
-    def __init__(self, instance_settings: InstanceSettingsBase):
-        """Internal use only. Use Instance.use() instead."""
+    def __init__(self, instance_settings: InstanceSettingsBase, __called_from_use: Any = 'Please create Instance objects using Instance.use()'):
+        if __called_from_use is not self.__call_token:
+            raise TypeError(
+                'Please create Instance objects using Instance.use()')
         # Take into account that the settings might change under our nose
         self._settings = instance_settings.copy()
         self.bo = BusinessObjectRegistry(self)
@@ -53,7 +56,7 @@ class Instance(ApiRequesterInterface):
         return response
 
 
-    async def get_bo_summaries(self, type: Literal["All", "Major", "Supporting", "Lookup", "Groups"] = "Major") -> list[Summary]:
+    async def get_bo_summaries(self, type: BusinessObjectType = "Major") -> list[Summary]:
         response = await self._connection.get_bo_summaries(type)
         for summary in response:
             self.bo.register_summary(summary)
@@ -73,7 +76,7 @@ class Instance(ApiRequesterInterface):
         response = await self._connection.GetServiceInfoV1()
         self.bo.register_service_info(response)
         return response
-    
+
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__}({self.settings.name})>"
@@ -89,5 +92,5 @@ class Instance(ApiRequesterInterface):
             raise ValueError(f"Instance {name} not found in settings")
         name = instance_settings.name
         if name not in cls._instances:
-            cls._instances[name] = cls(instance_settings)
+            cls._instances[name] = cls(instance_settings, cls.__call_token)
         return cls._instances[name]

@@ -9,6 +9,7 @@ from cherwell_pydantic_api.api import Connection
 from cherwell_pydantic_api.bo.registry import BusinessObjectRegistry
 from cherwell_pydantic_api.bo.wrapper import BusinessObjectWrapper
 from cherwell_pydantic_api.instance import Instance
+from cherwell_pydantic_api.types import BusinessObjectType
 
 
 
@@ -66,6 +67,10 @@ def create_bo_wrapper_class(waiter: _WaiterType) -> type[BusinessObjectWrapper]:
 
 
 class Interactive(RestaurantInterface):
+    """A wrapper around various cherwell_pydantic_api objects, using the waiter method to make all methods sync (no await needed).
+    Each instance of Interactive wraps a specific Instance and indirectly the Connection object.
+    It also wraps the BusinessObjectRegistry, so that all BusinessObjectWrapper objects created by it can be accessed with using await.
+    """
     def __init__(self, *, instance_name: Optional[str] = None, waiter: Optional[_WaiterType] = None):
         self.instance = Instance.use(name=instance_name)
         if waiter is None:
@@ -88,7 +93,7 @@ class Interactive(RestaurantInterface):
         return await self.instance.get_bo_schema(busobname=busobname)
 
     @wait
-    async def get_bo_summaries(self, type: Literal["All", "Major", "Supporting", "Lookup", "Groups"] = "Major") -> list[Summary]:
+    async def get_bo_summaries(self, type: BusinessObjectType = "All") -> list[Summary]:
         return await self.instance.get_bo_summaries(type=type)
 
     @wait
@@ -100,3 +105,6 @@ class Interactive(RestaurantInterface):
         self.instance.bo.set_wrapper_class(
             create_bo_wrapper_class(self._waiter))
         return self.instance.bo
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(instance={self.instance!r})"

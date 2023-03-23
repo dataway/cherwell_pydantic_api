@@ -9,14 +9,29 @@ from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.
     SchemaResponse,
 )
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
-from cherwell_pydantic_api.types import BusObID, BusObIdentifier, RelationshipID
+from cherwell_pydantic_api.types import BusObID, BusObIdentifier, FieldID, FieldIdentifier, RelationshipID
+from cherwell_pydantic_api.utils import fieldid_parts
+
+
+
+class ValidFieldDefinition(FieldDefinition):
+    fieldId: FieldID
+    name: str
+    type: str
+    short_field_id: FieldID = Field(description="Just the field ID, without 'BO:..,FI:...'")
+    identifier: FieldIdentifier
+
+    def __init__(self, **data):
+        data['short_field_id'] = fieldid_parts(data['fieldId'])['FI']
+        data['identifier'] = FieldIdentifier(data['name'])
+        super().__init__(**data)
 
 
 
 class ValidSchema(ApiBaseModel):
     "Corresponds to the type SchemaResponse, but with stricter types and omitting relationship details"
     busObId: BusObID
-    fieldDefinitions: list[FieldDefinition]
+    fieldDefinitions: list[ValidFieldDefinition]
     firstRecIdField: Optional[str] = None
     gridDefinitions: Optional[list[GridDefinition]] = None
     name: str
@@ -36,7 +51,7 @@ class ValidSchema(ApiBaseModel):
         else:
             relIds = []
         return cls(busObId=BusObID(schema.busObId),
-                   fieldDefinitions=schema.fieldDefinitions,
+                   fieldDefinitions=[ValidFieldDefinition(**field.dict()) for field in schema.fieldDefinitions],
                    firstRecIdField=schema.firstRecIdField,
                    gridDefinitions=schema.gridDefinitions,
                    name=schema.name,

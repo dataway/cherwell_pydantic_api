@@ -26,7 +26,7 @@ else:
         that can be used as a Python identifier, except python keywords and fields that begin with a digit,
         in which case a prefix of I_ will be added (capitals). For the type checker it is the same as NewType"""
         def identifier_type(x):
-            x = re.sub(r'[^0-9a-z_]', '_', x)
+            x = re.sub(r'[^0-9A-Za-z_]', '_', x)
             if x[0].isdigit() or keyword.iskeyword(x):
                 x = 'I_' + x
             return x

@@ -4,12 +4,18 @@
 
 from typing import Optional
 from pydantic import Field
-{% for module in modules %}
+from .__base import BusinessObjectModelInstanceBase
+{% if validators %}
+from pydantic import validator
+from cherwell_pydantic_api import validators
+{% endif %}
+{% for module in modules|sort %}
 import {{ module }}
 {% endfor %}
 
-class {{ schema.name }}:
-    class Meta:
+
+class {{ schema.name }}(BusinessObjectModelInstanceBase):
+    class _ModelData:
         busobid = "{{ schema.busObId }}"
         statefieldid = "{{ schema.stateFieldId }}"
         firstrecidfield = "{{ schema.firstRecIdField }}"
@@ -23,11 +29,19 @@ class {{ schema.name }}:
         orm_mode = True
 
     {% for field in fields %}
-    {{ field.name }}: {{ field.python_type }} = Field(...,
+    {{ field.name }}: {{ field.python_type }} = Field(None,
         {% if field.displayName %}title="{{ field.displayName }}",{% endif %}
         {% if field.description %}description="""{{ field.description }}""",{% endif %}
         cw_fi="{{ field.fieldid_parts['FI'] }}",
         {% if field.category %}cw_category="{{ field.category }}",{% endif %}
         {% if field.details %}cw_details="{{ field.details }}",{% endif %}
         {{ field.pydantic_field_params }})
+    {% endfor %}
+
+    {% for validator, v_fields in validators.items() %}
+    _{{ validator }} = validator(
+        {% for field in v_fields %}
+        "{{ field.name }}",
+        {% endfor %}
+        pre=True, allow_reuse=True)(validators.{{ validator }})
     {% endfor %}
