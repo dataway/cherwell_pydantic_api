@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import ReadResponse
 from cherwell_pydantic_api.bo.registry import BusinessObjectModelRegistryMixin
 from cherwell_pydantic_api.instance import Instance
-from cherwell_pydantic_api.types import BusObID, BusObRecID, FieldID
+from cherwell_pydantic_api.types import BusObID, BusObRecID, CherwellAPIError, FieldID
 
 
 
@@ -46,8 +46,11 @@ class BusinessObjectModelBase(BaseModel, BusinessObjectModelRegistryMixin):
 
 
     @classmethod
-    async def from_api(cls: Type[BusObModel_T], publicid: Optional[str]=None, *, busobrecid: Optional[BusObRecID]=None) -> Optional[BusObModel_T]:
+    async def from_api(cls: Type[BusObModel_T], publicid: Optional[str] = None, *, busobrecid: Optional[BusObRecID] = None) -> Optional[BusObModel_T]:
         response = await cls.get_instance().get_bo(busobid=cls._ModelData.busobid, publicid=publicid, busobrecid=busobrecid)
         if response is None:
-            return None
+            raise ValueError("No response from Cherwell API")
+        if response.hasError:
+            raise CherwellAPIError(f"get_bo[{cls.__name__}]", errorMessage=response.errorMessage,
+                                   errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
         return cls.from_api_response(response)

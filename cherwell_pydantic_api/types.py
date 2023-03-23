@@ -1,6 +1,6 @@
 import keyword
 import re
-from typing import TYPE_CHECKING, Annotated, Any, AsyncIterable, Iterable, Literal, NewType, Union
+from typing import TYPE_CHECKING, Annotated, Any, AsyncIterable, Iterable, Literal, NewType, Optional, Union
 
 
 
@@ -87,3 +87,11 @@ AttachmentType.__doc__ = """For file types, select the type of attachment:
         Imported - Attachment was imported into database.
         Linked - Attachment is linked to an external file.
         URL - Attachment is a URL."""
+
+
+class CherwellAPIError(Exception):
+    def __init__(self, msg: str = "Cherwell API error", *, errorCode: Optional[str] = None,
+                 errorMessage: Optional[str] = None,
+                 httpStatusCode: Optional[Any] = None):
+        message = f"{msg}: {errorCode=} {errorMessage=} {httpStatusCode=}"
+        super().__init__(message)
