@@ -1,11 +1,11 @@
-from typing import Any, Callable, Coroutine, Literal, Optional, TypeVar
+from functools import wraps
+from typing import Any, Callable, Coroutine, Optional, TypeVar
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
     ReadResponse,
     Summary,
 )
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core import ServiceInfoResponse
-from cherwell_pydantic_api.api import Connection
 from cherwell_pydantic_api.bo.registry import BusinessObjectRegistry
 from cherwell_pydantic_api.bo.wrapper import BusinessObjectWrapper
 from cherwell_pydantic_api.instance import Instance
@@ -29,31 +29,35 @@ def wait(amethod: Callable[..., Coroutine[Any, Any, _ReturnType]]) -> Callable[.
     """Decorator to convert an async method into a sync method, using the waiter method of the Interactive instance.
     """
 
+    @wraps(amethod)
     def wrapper(self: RestaurantInterface, *args, **kwargs):
         return self._waiter(amethod(self, *args, **kwargs))
-    wrapper.__doc__ = amethod.__doc__
     return wrapper
 
 
-class ConnectionProxy(RestaurantInterface):
-    """A proxy for the Connection object, using the waiter method to make all methods sync."""
+class WaiterProxy(RestaurantInterface):
+    """A proxy around an object with async methods that uses the waiter method to make all methods sync."""
 
-    def __init__(self, connection: Connection, waiter: _WaiterType):
-        self._connection = connection
+    def __init__(self, async_obj: object, waiter: _WaiterType):
+        self._async_obj = async_obj
         self._waiter = waiter
 
     def __getattr__(self, name: str) -> Any:
-        amethod = getattr(self._connection, name)
+        amethod = getattr(self._async_obj, name)
 
+        @wraps(amethod)
         def wrapper(*args, **kwargs):
             return self._waiter(amethod(*args, **kwargs))
-        wrapper.__doc__ = amethod.__doc__
         return wrapper
 
     def __dir__(self) -> list[str]:
-        return dir(self._connection)
+        return dir(self._async_obj)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self._async_obj!r})"
 
 
+@wraps(BusinessObjectWrapper)
 def create_bo_wrapper_class(waiter: _WaiterType) -> type[BusinessObjectWrapper]:
     class InteractiveBusinessObjectWrapper(BusinessObjectWrapper, RestaurantInterface):
         _waiter = waiter
@@ -77,12 +81,19 @@ class Interactive(RestaurantInterface):
             import asyncio
             waiter = asyncio.run
         self._waiter = waiter
-        self._connection_proxy = ConnectionProxy(
+        self._connection_proxy = WaiterProxy(
             self.instance._connection, self._waiter)
 
     @property
-    def connection(self) -> ConnectionProxy:
+    def connection(self) -> WaiterProxy:
         return self._connection_proxy
+
+    def async_wrap(self, **kwargs) -> "Interactive":
+        "Wrap the given objects with WaiterProxy and add them as attributes to the Interactive instance."
+        # TODO: restrict attribute name
+        for attr, obj in kwargs.items():
+            setattr(self, attr, WaiterProxy(obj, self._waiter))
+        return self
 
     @wait
     async def authenticate(self):

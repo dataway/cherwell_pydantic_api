@@ -33,6 +33,7 @@ def ipython_shell():
         "cw = Interactive(waiter=IPython.get_ipython().loop_runner)",
         "cw.authenticate()",
         "cw.get_service_info()",
+        "cw.async_wrap(collector=collector)",
     ]
     IPython.start_ipython(config=_cfg, user_ns=locals())
 
