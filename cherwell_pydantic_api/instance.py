@@ -38,6 +38,10 @@ class Instance(ApiRequesterInterface):
         return await self._connection.authenticate()
 
 
+    async def logout(self):
+        return await self._connection.logout()
+
+
     async def get_busobid(self, busobname: str) -> Optional[BusObID]:
         return await self._connection.get_busobid(busobname)
 

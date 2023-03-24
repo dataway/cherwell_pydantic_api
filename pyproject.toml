@@ -55,6 +55,7 @@ modelgen = ["black", "dulwich", "click"]
 
 [tool.poetry.scripts]
 cherwell-pydantic-api-cli = "cherwell_pydantic_api.cli:cli"
+cwcli = "cherwell_pydantic_api.cli:cli"
 
 [build-system]
 requires = ["poetry-core"]

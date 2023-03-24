@@ -23,25 +23,14 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
                                          headers={
                                              'Content-Type': 'application/json'},
                                          params={'locale': 'en-150'},
-                                         timeout=self._settings.timeout)
+                                         timeout=self._settings.timeout,
+                                         verify=self._settings.verify)
         self._token: Optional[str] = None
         # TODO: come up with a better solution for these:
         self.raise_on_error_500 = False
         self.retry_on_error_401 = False
         self.retry_on_error_401_wait = 4.0
         self.reauthentication_counter = 0
-
-
-    async def authenticate(self):
-        # TODO: support other grant_type values
-        response = await self.Token(grant_type='password', client_id=self._client_id, username=self._username, password=self._password)
-        self._token = response.access_token
-        self._client.headers.update({'Authorization': f'Bearer {self._token}'})
-        return True
-
-
-    async def logout(self):
-        return await self.delete('/api/v1/logout')
 
 
     async def request(self,
@@ -93,6 +82,19 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
 
     async def delete(self, url, **kwargs) -> Response:
         return await self.request('DELETE', url, **kwargs)
+
+
+    async def authenticate(self):
+        # TODO: support other grant_type values
+        response = await self.Token(grant_type='password', client_id=self._client_id, username=self._username, password=self._password)
+        self._token = response.access_token
+        self._client.headers.update({'Authorization': f'Bearer {self._token}'})
+        return True
+
+
+    async def logout(self):
+        response = await self.LogoutUserV1()
+        return response
 
 
     async def get_bo_summary(self, *, busobid: Optional[BusObID] = None, busobname: Optional[str] = None) -> Optional[Summary]:

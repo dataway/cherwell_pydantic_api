@@ -19,7 +19,8 @@
             "hug"
 		],
 		"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-		"python.envFile": "${workspaceFolder}/.env"
+		"python.envFile": "${workspaceFolder}/.env",
+		"workbench.colorTheme": "Solarized Dark"
 	},
 	"launch": {
 		"version": "0.2.0",

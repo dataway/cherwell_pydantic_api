@@ -1,35 +1,10 @@
-#!/usr/bin/env python
-"""Basic CLI for cherwell_pydantic_api package"""
+"""Module for the welcoming initial setup CLI"""
 
-
-from cgi import print_form
-import sys
-
-from cherwell_pydantic_api import api
-if sys.version_info < (3, 9):
-    sys.stderr.write("Python 3.9 or higher is required.")
-    sys.exit(1)
-try:
-    import cherwell_pydantic_api
-except ImportError:
-    sys.stderr.write(
-        "cherwell_pydantic_api is not installed properly. Please check the documentation.")
-    sys.exit(1)
-try:
-    import click
-except ImportError:
-    sys.stderr.write("""cherwell_pydantic_api must be installed with the modelgen option.
-
-To fix this, run pip or poetry as follows:
-    pip install cherwell_pydantic_api[modelgen]
-    poetry add -E modelgen cherwell_pydantic_api
-
-""")
-    sys.exit(1)
-from pathlib import Path
-from getpass import getpass
-import httpx
 import time
+from pathlib import Path
+
+import click
+import httpx
 try:
     import readline
 except:
@@ -43,17 +18,23 @@ def api_detect(urls):
             click.secho(
                 f"Trying to detect Cherwell API at {url}...", fg='cyan')
             t1 = time.time()
-            response = httpx.get(
-                f"{url}/api/V1/serviceinfo", verify=False, timeout=(5.0, 60.0, 5.0, 1.0))
+            verify = True
+            try:
+                response = httpx.get(
+                    f"{url}/api/V1/serviceinfo", verify=verify, timeout=(5.0, 60.0, 5.0, 1.0))
+            except httpx.ConnectError:
+                verify = False
+                response = httpx.get(
+                    f"{url}/api/V1/serviceinfo", verify=verify, timeout=(5.0, 60.0, 5.0, 1.0))
             t2 = time.time()
             if response.is_success:
                 service_info = response.json()
-                return (url, service_info.get('apiVersion', 'unknown'), t2 - t1)
+                return (url, service_info.get('apiVersion', 'unknown'), t2 - t1, verify)
             click.secho(
                 f"HTTP Error: {response.status_code} {response.reason_phrase}", fg='red')
         except Exception as e:
             click.secho(f"Error: {e}", fg='red')
-    return (None, None, 0.0)
+    return (None, None, 0.0, False)
 
 
 def initial_setup(envpath: Path):
@@ -71,7 +52,7 @@ If you have multiple instances, set up the development instance first. You can a
                     f"http://{api_base_url}/CherwellAPI"]
         else:
             urls = [api_base_url]
-        api_base_url, api_version, duration = api_detect(urls)
+        api_base_url, api_version, duration, verify = api_detect(urls)
         if api_base_url is not None:
             break
         click.secho(
@@ -83,6 +64,10 @@ If you have multiple instances, set up the development instance first. You can a
     if duration > 5.0:
         click.secho(f"Warning: The API took {duration} seconds to respond. I will configure a timeout of {duration*2} seconds.", fg='yellow')
         envdict['cherwell_timeout'] = duration * 2
+    if not verify:
+        click.secho(
+            f"Warning: SSL certificate verification failed. Connection will be set up with verify=False", fg='red', bg='yellow')
+        envdict['cherwell_verify'] = 'off'
     click.echo(f"""
 You can now enter your client ID, username and password. You can also leave these blank and configure them later,
 however you won't be able to use the API until you do. Contact your Cherwell administrator if you don't have these details.
@@ -102,38 +87,3 @@ however you won't be able to use the API until you do. Contact your Cherwell adm
         click.secho(f"{envpath} created successfully:", fg='green')
 
 
-
-def check_envpath():
-    envpath = Path.cwd().joinpath('cherwell.env')
-    if not envpath.exists():
-        click.secho(
-            f"\nNo cherwell.env file found in the current path, {Path.cwd()}.\nYou can now create one, or press Ctrl+C to abort.\n", fg='yellow')
-        initial_setup(envpath)
-    else:
-        click.secho(f"\nFound existing cherwell.env file at {envpath}\n", fg='green')
-
-
-def welcome_banner():
-    click.echo()
-    lines = ['Welcome to cherwell_pydantic_api!', '', 'For more information, please visit:', '', 'https://github.com/dataway/cherwell_pydantic_api']
-    width = max([len(line) for line in lines])
-    hash = '\u2592'
-    style = {'fg': 'white', 'bg': 'blue'}
-    click.secho(hash * (width + 6), **style)
-    for line in lines:
-        click.secho(f"{hash}  {line}{' ' * (width - len(line))}  {hash}", **style)
-    click.secho(hash * (width + 6), **style)
-    click.echo()
-
-
-def cli():
-    welcome_banner()
-    try:
-        check_envpath()
-    except click.exceptions.Abort:
-        click.secho("\nAborted.\n", fg='red')
-        return
-
-
-if __name__ == '__main__':
-    cli()

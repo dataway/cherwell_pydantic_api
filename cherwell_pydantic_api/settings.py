@@ -1,7 +1,7 @@
 import keyword
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import AnyHttpUrl, BaseSettings, Field, SecretStr, validator
 
@@ -13,11 +13,20 @@ class InstanceSettingsBase(BaseSettings):
     client_id: SecretStr = Field(default='')
     username: str = Field(default='')
     password: SecretStr = Field(default='')
-    timeout: float = Field(default=0.0)
+    timeout: float = Field(default=5.0)
+    verify: Union[str, bool] = Field(default='on')
     subpackage: Optional[Path] = Field(
         description='Subpackage name, corresponds to subdirectory name within repo_dir, if unset default to instance name')
     repo_branch: Optional[str] = Field(
         description='Branch to use for this instance, if unset default to main')
+
+    @validator('verify')
+    def validate_verify(cls, v):
+        if v.lower() in ('off', 'false', 'no'):
+            return False
+        if v.lower() in ('', 'on', 'true', 'yes'):
+            return True
+        return v
 
     def get_repo_subpackage(self) -> Path:
         if self.subpackage:
@@ -37,6 +46,7 @@ class Settings(InstanceSettingsBase):
     inst: dict[str, InstanceSettings] = Field(default={})
     repo_dir: Path = Field(default='repo')
     repo_author: str = 'cherwell_pydantic_api <noreply@cherwell-pydantic-api.nonexistent.anthonyuk.dev>'
+    suppress_banner: bool = Field(default=False, description='Suppress the CLI welcome banner')
 
     _re_inst_name = re.compile(r'^[a-z][a-z0-9]+$')
 
