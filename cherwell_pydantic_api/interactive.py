@@ -41,6 +41,7 @@ class WaiterProxy(RestaurantInterface):
     def __init__(self, async_obj: object, waiter: _WaiterType):
         self._async_obj = async_obj
         self._waiter = waiter
+        self.__doc__ = async_obj.__doc__
 
     def __getattr__(self, name: str) -> Any:
         amethod = getattr(self._async_obj, name)
@@ -75,18 +76,26 @@ class Interactive(RestaurantInterface):
     Each instance of Interactive wraps a specific Instance and indirectly the Connection object.
     It also wraps the BusinessObjectRegistry, so that all BusinessObjectWrapper objects created by it can be accessed with using await.
     """
+
     def __init__(self, *, instance_name: Optional[str] = None, waiter: Optional[_WaiterType] = None):
-        self.instance = Instance.use(name=instance_name)
+        self._instance = Instance.use(name=instance_name)
         if waiter is None:
             import asyncio
             waiter = asyncio.run
         self._waiter = waiter
+        self._instance_proxy = WaiterProxy(self._instance, self._waiter)
         self._connection_proxy = WaiterProxy(
-            self.instance._connection, self._waiter)
+            self._instance._connection, self._waiter)
 
     @property
     def connection(self) -> WaiterProxy:
+        "WaiterProxy wrapper around the Connection object."
         return self._connection_proxy
+
+    @property
+    def instance(self) -> WaiterProxy:
+        "WaiterProxy wrapper around the Instance object."
+        return self._instance_proxy
 
     def async_wrap(self, **kwargs) -> "Interactive":
         "Wrap the given objects with WaiterProxy and add them as attributes to the Interactive instance."
@@ -97,25 +106,25 @@ class Interactive(RestaurantInterface):
 
     @wait
     async def authenticate(self):
-        await self.instance.authenticate()
+        await self._instance.authenticate()
 
     @wait
     async def get_bo_schema(self, busobname: str):
-        return await self.instance.get_bo_schema(busobname=busobname)
+        return await self._instance.get_bo_schema(busobname=busobname)
 
     @wait
     async def get_bo_summaries(self, type: BusinessObjectType = "All") -> list[Summary]:
-        return await self.instance.get_bo_summaries(type=type)
+        return await self._instance.get_bo_summaries(type=type)
 
     @wait
     async def get_service_info(self) -> ServiceInfoResponse:
-        return await self.instance.get_service_info()
+        return await self._instance.get_service_info()
 
     @property
     def bo(self) -> BusinessObjectRegistry:
-        self.instance.bo.set_wrapper_class(
+        self._instance.bo.set_wrapper_class(
             create_bo_wrapper_class(self._waiter))
-        return self.instance.bo
+        return self._instance.bo
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(instance={self.instance!r})"
+        return f"{self.__class__.__name__}(instance={self._instance!r})"

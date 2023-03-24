@@ -1,15 +1,14 @@
 import logging
-import time
+from asyncio import sleep
 from typing import Any, AsyncIterable, Iterable, Literal, Mapping, Optional, Union
 
 import httpx
 
-from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import Summary
-from cherwell_pydantic_api.settings import InstanceSettingsBase
-
 from ._generated.api.endpoints import GeneratedInterfaces
+from ._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import Summary
 from .generated_api_utils import GeneratedInterfaceBase, Response, URLType
-from .types import BusObID, BusinessObjectType
+from .settings import InstanceSettingsBase
+from .types import BusinessObjectType, BusObID
 
 
 
@@ -68,7 +67,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         for i in range(5):
             if self.retry_on_error_401 and response.status_code == 401:
                 logging.debug('401, retry {0}'.format(i + 1))
-                time.sleep(self.retry_on_error_401_wait * i)
+                await sleep(self.retry_on_error_401_wait * i)
                 await self.authenticate()
                 self.reauthentication_counter += 1
                 response = await self._client.send(req)

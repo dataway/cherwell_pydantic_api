@@ -17,7 +17,9 @@
             "120",
             "--profile",
             "hug"
-        ]
+		],
+		"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+		"python.envFile": "${workspaceFolder}/.env"
 	},
 	"launch": {
 		"version": "0.2.0",
