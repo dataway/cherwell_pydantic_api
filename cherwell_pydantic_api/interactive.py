@@ -86,6 +86,7 @@ class Interactive(RestaurantInterface):
         self._instance_proxy = WaiterProxy(self._instance, self._waiter)
         self._connection_proxy = WaiterProxy(
             self._instance._connection, self._waiter)
+        self.help: Any = ''
 
     @property
     def connection(self) -> WaiterProxy:

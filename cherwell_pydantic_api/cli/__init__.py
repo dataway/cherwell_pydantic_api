@@ -83,6 +83,8 @@ def root():
 def cli_normal():
     from . import check
     root.add_command(check.check)
+    from . import ipython
+    root.add_command(ipython.ipython_shell)
     root()
 
 

@@ -625,7 +625,7 @@ name = "dulwich"
 version = "0.21.3"
 description = "Python Git Library"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 files = [
     {file = "dulwich-0.21.3-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:25376efc6ea2ee9daa868a120d4f9c905dcb7774f68931be921fba41a657f58a"},
@@ -2860,4 +2860,4 @@ modelgen = ["black", "click", "dulwich"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "b7f941bf85014b8a819bf7224ea430e513763a43c40aa3f982f5662fd68c760f"
+content-hash = "36ebb59fcbf1934493fdd89f5b361a1a150a82de50d4eb9f838df040c65ad346"
