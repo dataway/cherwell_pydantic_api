@@ -12,6 +12,7 @@ from cherwell_pydantic_api.bo.registry import BusinessObjectRegistry
 from cherwell_pydantic_api.interfaces import ApiRequesterInterface
 from cherwell_pydantic_api.settings import InstanceSettingsBase, Settings
 from cherwell_pydantic_api.types import BusinessObjectType, BusObID, BusObRecID
+from cherwell_pydantic_api.utils import docwraps
 
 
 
@@ -34,18 +35,22 @@ class Instance(ApiRequesterInterface):
         return self._settings
 
 
+    @docwraps(Connection.authenticate)
     async def authenticate(self):
         return await self._connection.authenticate()
 
 
+    @docwraps(Connection.logout)
     async def logout(self):
         return await self._connection.logout()
 
 
+    @docwraps(Connection.get_busobid)
     async def get_busobid(self, busobname: str) -> Optional[BusObID]:
         return await self._connection.get_busobid(busobname)
 
 
+    @docwraps(Connection.GetBusinessObjectSchemaV1)
     async def get_bo_schema(self, *, busobid: Optional[BusObID] = None, busobname: Optional[str] = None) -> Optional[SchemaResponse]:
         if busobid is None:
             if busobname is None:
@@ -60,6 +65,7 @@ class Instance(ApiRequesterInterface):
         return response
 
 
+    @docwraps(Connection.get_bo_summaries)
     async def get_bo_summaries(self, type: BusinessObjectType = "Major") -> list[Summary]:
         response = await self._connection.get_bo_summaries(type)
         for summary in response:
@@ -67,6 +73,7 @@ class Instance(ApiRequesterInterface):
         return response
 
 
+    @docwraps(Connection.GetBusinessObjectByRecIdV1)
     async def get_bo(self, busobid: BusObID, *, busobrecid: Optional[BusObRecID] = None, publicid: Optional[str] = None) -> ReadResponse:
         if busobrecid is None:
             if publicid is None:
@@ -76,6 +83,7 @@ class Instance(ApiRequesterInterface):
         return await self._connection.GetBusinessObjectByRecIdV1(busobid=busobid, busobrecid=busobrecid)
 
 
+    @docwraps(Connection.GetServiceInfoV1)
     async def get_service_info(self) -> ServiceInfoResponse:
         response = await self._connection.GetServiceInfoV1()
         self.bo.register_service_info(response)

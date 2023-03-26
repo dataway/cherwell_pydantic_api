@@ -42,9 +42,12 @@ class WaiterProxy(RestaurantInterface):
         self._async_obj = async_obj
         self._waiter = waiter
         self.__doc__ = async_obj.__doc__
+        self.__wrapped__ = async_obj
 
     def __getattr__(self, name: str) -> Any:
         amethod = getattr(self._async_obj, name)
+        if not callable(amethod):
+            return amethod
 
         @wraps(amethod)
         def wrapper(*args, **kwargs):

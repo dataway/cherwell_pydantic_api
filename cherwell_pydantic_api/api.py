@@ -4,6 +4,8 @@ from typing import Any, AsyncIterable, Iterable, Literal, Mapping, Optional, Uni
 
 import httpx
 
+from cherwell_pydantic_api.utils import docwraps
+
 from ._generated.api.endpoints import GeneratedInterfaces
 from ._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import Summary
 from .generated_api_utils import GeneratedInterfaceBase, Response, URLType
@@ -84,6 +86,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         return await self.request('DELETE', url, **kwargs)
 
 
+    @docwraps(GeneratedInterfaces.Token)
     async def authenticate(self):
         # TODO: support other grant_type values
         response = await self.Token(grant_type='password', client_id=self._client_id, username=self._username, password=self._password)
@@ -97,6 +100,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         return response
 
 
+    @docwraps(GeneratedInterfaces.GetBusinessObjectSummaryByIdV1)
     async def get_bo_summary(self, *, busobid: Optional[BusObID] = None, busobname: Optional[str] = None) -> Optional[Summary]:
         if busobid is not None:
             response = await self.GetBusinessObjectSummaryByIdV1(busobid=busobid)
@@ -118,6 +122,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         return summary.busObId
 
 
+    @docwraps(GeneratedInterfaces.GetBusinessObjectSummariesV1)
     async def get_bo_summaries(self, type: BusinessObjectType) -> list[Summary]:
         return await self.GetBusinessObjectSummariesV1(type=type)
 

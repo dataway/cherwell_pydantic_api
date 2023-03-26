@@ -1,3 +1,4 @@
+from typing import Any, Callable
 from cherwell_pydantic_api.types import FieldID
 
 
@@ -12,3 +13,15 @@ def fieldid_parts(field_id: str) -> dict[str, str]:
         r[k.upper()] = FieldID(v)
     return r
 
+
+def docwraps(func: Callable[..., Any]) -> Callable[..., Any]:
+    """Decorator to copy the docstring from the wrapped function to the wrapper function."""
+    def wrapper(wrapper_func: Callable[..., Any]) -> Callable[..., Any]:
+        if wrapper_func.__doc__ is None:
+            wrapper_func.__doc__ = f"Wraps {func.__qualname__}"
+        else:
+            wrapper_func.__doc__ += f"\nWraps {func.__qualname__}"
+        if func.__doc__ is not None:
+            wrapper_func.__doc__ += ":\n" + func.__doc__
+        return wrapper_func
+    return wrapper
