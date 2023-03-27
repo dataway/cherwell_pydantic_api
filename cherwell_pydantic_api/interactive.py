@@ -1,3 +1,4 @@
+import types
 from functools import wraps
 from typing import Any, Callable, Coroutine, Optional, TypeVar
 
@@ -36,7 +37,7 @@ def wait(amethod: Callable[..., Coroutine[Any, Any, _ReturnType]]) -> Callable[.
 
 
 class WaiterProxy(RestaurantInterface):
-    """A proxy around an object with async methods that uses the waiter method to make all methods sync."""
+    """A proxy around an object with async methods that uses the waiter method to make all public methods sync."""
 
     def __init__(self, async_obj: object, waiter: _WaiterType):
         self._async_obj = async_obj
@@ -45,14 +46,31 @@ class WaiterProxy(RestaurantInterface):
         self.__wrapped__ = async_obj
 
     def __getattr__(self, name: str) -> Any:
+        if name.startswith('_'):
+            raise AttributeError(name)
         amethod = getattr(self._async_obj, name)
         if not callable(amethod):
             return amethod
 
         @wraps(amethod)
         def wrapper(*args, **kwargs):
-            return self._waiter(amethod(*args, **kwargs))
+            r = amethod(*args, **kwargs)
+            if isinstance(r, types.CoroutineType):
+                return self._waiter(r)
+            return r
         return wrapper
+
+    def __setattr__(self, name: str, value) -> None:
+        if not name.startswith('_') and hasattr(self._async_obj, name):
+            setattr(self._async_obj, name, value)
+        else:
+            super().__setattr__(name, value)
+
+    def __delattr__(self, name: str) -> None:
+        if not name.startswith('_') and hasattr(self._async_obj, name):
+            delattr(self._async_obj, name)
+        else:
+            super().__delattr__(name)
 
     def __dir__(self) -> list[str]:
         return dir(self._async_obj)
