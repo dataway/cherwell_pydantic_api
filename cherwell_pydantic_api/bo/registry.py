@@ -112,11 +112,16 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
                         raise ValueError(
                             f'Relationship {relid} already registered and new relationship is different')
                     if not relid in self._bo_rels[busobid]:
+                        # TODO: This occurs in group summaries
+                        continue
                         raise ValueError(
                             f"Relationship {relid} is not in busObId {busobid}")
                 else:
                     self._relationships[relid] = rel
                     self._bo_rels[busobid].add(relid)
+                    # TODO: Make a ValidRelationship wrapper like ValidSchema
+                    assert rel.target is not None
+                    self._bo_rels[rel.target].add(relid) # type: ignore
 
 
     def register_summary(self, summary: Summary):

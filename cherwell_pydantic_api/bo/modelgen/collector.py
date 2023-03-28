@@ -1,4 +1,5 @@
 import re
+from functools import cached_property
 from typing import Optional, Pattern, Union, cast
 
 from async_lru import alru_cache
@@ -9,6 +10,7 @@ from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.
 )
 from cherwell_pydantic_api.bo.modelgen.model_generator import PydanticModelGenerator
 from cherwell_pydantic_api.bo.modelgen.repo import FileGenerator, ModelRepo
+from cherwell_pydantic_api.bo.valid_schema import ValidSchema
 from cherwell_pydantic_api.instance import Instance
 from cherwell_pydantic_api.types import BusinessObjectType, BusObID
 from cherwell_pydantic_api.utils import docwraps
@@ -28,6 +30,8 @@ def compile_filter(filter: FilterType) -> Optional[Pattern]:
     if filter is None:
         return None
     if isinstance(filter, str):
+        if filter == '':
+            return None
         return re.compile(filter)
     return filter
 
@@ -35,18 +39,21 @@ def compile_filter(filter: FilterType) -> Optional[Pattern]:
 class CollectorItem:
     "Contains a Business Object summary, and a verdict on whether to generate a model for it."
 
-    __slots__ = ['summary', 'verdict', 'bo_type', 'schema']
-
     def __init__(self,
                  bo_type: BusinessObjectType,
                  summary: Summary,
                  verdict: Optional[bool] = None,
-                 schema: Optional[SchemaResponse] = None):
+                 schema: Optional[SchemaResponse] = None,
+                 parent_item: Optional["CollectorItem"] = None):
         assert summary.busObId is not None
         self.summary = summary
         self.verdict = verdict
         self.bo_type = bo_type
         self.schema = schema
+        self._children: set["CollectorItem"] = set()
+        self.parent_item = parent_item
+        if parent_item is not None:
+            parent_item._children.add(self)
 
     @property
     def busobid(self) -> BusObID:
@@ -56,6 +63,27 @@ class CollectorItem:
     def name(self) -> str:
         return self.summary.name  # type: ignore
 
+    @cached_property
+    def valid_schema(self) -> Optional[ValidSchema]:
+        if self.schema is None:
+            return None
+        return ValidSchema.from_schema_response(self.schema)
+
+
+    def to_dict(self) -> dict:
+        "Convert to dictionary e.g. for DataFrame use"
+        return {'name': self.name,
+                'busobid': self.busobid,
+                'verdict': self.verdict,
+                'bo_type': self.bo_type,
+                'num_fields': len(self.schema.fieldDefinitions) if (self.schema and self.schema.fieldDefinitions) else None,
+                'displayName': self.summary.displayName,
+                'lookup': self.summary.lookup,
+                'major': self.summary.major,
+                'supporting': self.summary.supporting,
+                'parent_name': self.parent_item.name if self.parent_item else None,
+                '__self': self,
+                }
 
 
 class Collector:
@@ -101,7 +129,8 @@ class Collector:
         if item.schema:
             fields = len(
                 item.schema.fieldDefinitions) if item.schema.fieldDefinitions else 0
-            rels = len(item.schema.relationships) if item.schema.relationships else 0
+            rels = len(
+                item.schema.relationships) if item.schema.relationships else 0
         else:
             fields = rels = '?'
         report = f" {item.bo_type[:3]:3} {item.name:30} {fields:>4} {rels:>4}  {item.busobid:24}"
@@ -134,6 +163,13 @@ class Collector:
                 item = CollectorItem(
                     bo_type=bo_type, summary=bo_summary, verdict=verdict)
                 items.append(item)
+                # Add group members. There is only one level of groups according to Cherwell docs.
+                if bo_summary.groupSummaries:
+                    for group_summary in bo_summary.groupSummaries:
+                        verdict = self.filter_bo(bo_type, group_summary)
+                        sub_item = CollectorItem(
+                            bo_type=bo_type, summary=group_summary, verdict=verdict, parent_item=item)
+                        items.append(sub_item)
         return items
 
 
