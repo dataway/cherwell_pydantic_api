@@ -26,6 +26,15 @@ class ValidFieldDefinition(FieldDefinition):
         data['identifier'] = FieldIdentifier(data['name'])
         super().__init__(**data)
 
+    def to_dict(self) -> dict:
+        "Convert to dictionary e.g. for DataFrame use"
+        return {'name': self.name,
+                'type': self.type,
+                'short_field_id': self.short_field_id,
+                'identifier': self.identifier,
+                '__self': self,
+                }
+
 
 
 class ValidSchema(ApiBaseModel):
