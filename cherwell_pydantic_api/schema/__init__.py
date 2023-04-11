@@ -220,7 +220,7 @@ class CherwellSchemaMetaPathFinder(importlib.abc.MetaPathFinder):
     def __init__(self):
         super(CherwellSchemaMetaPathFinder, self).__init__()
         self.schemas = dict()
-        
+
     @classmethod
     def find_spec(cls, fullname: str, path: Optional[Sequence[str]], target: Optional[types.ModuleType] = ...) -> Optional[object]:
         if fullname.startswith(cls.__module__ + '.'):

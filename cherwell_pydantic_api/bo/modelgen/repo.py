@@ -94,6 +94,7 @@ class ModelRepo:
 
     def commit(self, *, instance: Instance, file_type: FileTypeLiteral) -> Optional[bytes]:
         # Check if there are any changes to commit (because dulwich allows empty commits)
+        encoding = self._repo.get_config().encoding
         repo_status = porcelain.status(self._repo)  # type: ignore
         if not repo_status.staged['add'] and not repo_status.staged['delete'] and not repo_status.staged['modify']:
             logging.info(
@@ -102,6 +103,8 @@ class ModelRepo:
         commit = f'cherwell_pydantic_api: update {file_type} for instance {instance.settings.name}'
         author = Settings().repo_author
         branch = instance.settings.get_repo_branch()
+        if branch.encode(encoding) not in porcelain.branch_list(self._repo):
+            porcelain.branch_create(self._repo, branch.encode(encoding))
         ref = f'refs/heads/{branch}'
         porcelain.update_head(self._repo, ref)  # this is like git checkout
         logging.info(
