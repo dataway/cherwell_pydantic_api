@@ -16,32 +16,32 @@ import {{ module }}
 
 class {{ schema.name }}(BusinessObjectModelInstanceBase):
     class _ModelData:
-        busobid = "{{ schema.busObId }}"
-        statefieldid = "{{ schema.stateFieldId }}"
-        firstrecidfield = "{{ schema.firstRecIdField }}"
-        recidfields = "{{ schema.recIdFields }}"
+        busobid = {{ schema.busObId|repr }}
+        statefieldid = {{ schema.stateFieldId|repr }}
+        firstrecidfield = {{ schema.firstRecIdField|repr }}
+        recidfields = {{ schema.recIdFields|repr }}
         {% if schema.states %}
         states = {{ schema.states.split(',') }}
         {% endif %}
 
     class Config:
-        title = "{{ schema.name }}"
+        title = {{ schema.name|repr }}
         orm_mode = True
 
     {% for field in fields %}
     {{ field.name }}: {{ field.python_type }} = Field(None,
-        {% if field.displayName %}title="{{ field.displayName }}",{% endif %}
-        {% if field.description %}description="""{{ field.description }}""",{% endif %}
-        cw_fi="{{ field.fieldid_parts['FI'] }}",
-        {% if field.category %}cw_category="{{ field.category }}",{% endif %}
-        {% if field.details %}cw_details="{{ field.details }}",{% endif %}
+        {% if field.displayName %}title={{ field.displayName|repr }},{% endif %}
+        {% if field.description %}description={{ field.description|repr }},{% endif %}
+        cw_fi={{ field.fieldid_parts['FI']|repr }},
+        {% if field.category %}cw_category={{ field.category|repr }},{% endif %}
+        {% if field.details %}cw_details={{ field.details|repr }},{% endif %}
         {{ field.pydantic_field_params }})
     {% endfor %}
 
     {% for validator, v_fields in validators.items() %}
     _{{ validator }} = validator(
         {% for field in v_fields %}
-        "{{ field.name }}",
+        {{ field.name|repr }},
         {% endfor %}
         pre=True, allow_reuse=True)(validators.{{ validator }})
     {% endfor %}

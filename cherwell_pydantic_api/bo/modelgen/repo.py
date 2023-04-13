@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Iterable, Literal, Optional
+from typing import Any, Iterable, Literal, Optional, Union
 
 from dulwich import porcelain
 from dulwich.errors import NotGitRepository
@@ -19,14 +19,19 @@ FileGenerator = Iterable[tuple[str, str]]
 
 
 class ModelRepo:
-    def __init__(self, create: bool = False):
+    _repo: Repo
+
+    def __init__(self, *, create: bool = False, permit_missing: bool = False):
         is_new = False
         self._repo_dir = Settings().repo_dir.absolute()
         if not self._repo_dir.exists():
             if create:
                 self._repo_dir.mkdir(parents=True)
+            elif permit_missing:
+                self._repo = None  # type: ignore
+                return
             else:
-                raise ValueError(
+                raise FileNotFoundError(
                     f'Repo directory {self._repo_dir} does not exist')
         try:
             self._repo = Repo(root=str(self._repo_dir))
@@ -75,7 +80,7 @@ class ModelRepo:
              instance: Optional[Instance] = None,
              file_type: FileTypeLiteral = 'registry',
              file_generator: FileGenerator,
-             commit: bool = True):
+             commit: bool = True) -> Optional[bytes]:
         instance, instance_dir = self.prepare_save(
             instance_name=instance_name, instance=instance)
         file_type_dir = instance_dir / file_type
@@ -89,7 +94,8 @@ class ModelRepo:
             filepath.write_text(content)
             self._repo.stage(str(filepath.relative_to(self._repo_dir)))
         if commit:
-            self.commit(instance=instance, file_type=file_type)
+            return self.commit(instance=instance, file_type=file_type)
+        return None
 
 
     def commit(self, *, instance: Instance, file_type: FileTypeLiteral) -> Optional[bytes]:
@@ -113,6 +119,54 @@ class ModelRepo:
                                     author=author.encode(), ref=ref.encode())
 
 
-    def save_all(self):
+    def save_instance(self, instance: Instance) -> Optional[bytes]:
+        return self.save(instance=instance, file_generator=instance.bo.marshal())
+
+
+    def save_all(self) -> dict[str, Optional[bytes]]:
+        r = {}
         for instance in Instance._instances.values():
-            self.save(instance=instance, file_generator=instance.bo.marshal())
+            r[instance.settings.name] = self.save_instance(instance)
+        return r
+
+
+    def get_info(self, *,
+                 instance_name: Optional[str] = None,
+                 instance: Optional[Instance] = None) -> dict[str, Union[str, bool, dict[str, Union[str, bool]]]]:
+        # resolve arguments
+        if instance is None:
+            if instance_name is None:
+                raise ValueError(
+                    'Either instance_name or instance must be given')
+            instance = Instance._instances[instance_name]
+        else:
+            instance_name = instance.settings.name
+        instance_dir = self._repo_dir / instance.settings.get_repo_subpackage()
+        r = {'instance': {
+            'name': instance.settings.name,
+            'repo_subpackage': str(instance.settings.get_repo_subpackage()),
+            'repo_branch': instance.settings.get_repo_branch()
+        },
+            'repo': {
+                'path': self._repo.path if self._repo else None,
+                'settings_path': str(self._repo_dir),
+                'instance_path': str(instance_dir),
+                'instance_path_exists': instance_dir.exists(),
+                'author': Settings().repo_author,
+        },
+        }
+        if self._repo is not None:
+            repo_status = porcelain.status(self._repo)  # type: ignore
+            r['status'] = {
+                'dirty': repo_status.unstaged or repo_status.untracked or repo_status.staged['add'] or repo_status.staged['delete'] or repo_status.staged['modify']
+            }
+            r['ready'] = True
+        else:
+            r['ready'] = False
+        return r
+
+
+    @property
+    def directory(self) -> str:
+        "The absolute path to the repo directory"
+        return self._repo.path

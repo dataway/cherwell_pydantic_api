@@ -3,6 +3,7 @@ from functools import cached_property
 from typing import Optional, Pattern, Union, cast
 
 from async_lru import alru_cache
+from pydantic import BaseModel
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
     SchemaResponse,
@@ -82,8 +83,12 @@ class CollectorItem:
                 'major': self.summary.major,
                 'supporting': self.summary.supporting,
                 'parent_name': self.parent_item.name if self.parent_item else None,
-                '__self': self,
                 }
+
+
+class CollectorSettings(BaseModel):
+    bo_include_filter: Optional[Pattern]
+    bo_exclude_filter: Optional[Pattern]
 
 
 class Collector:
@@ -192,12 +197,31 @@ class Collector:
         model_generator = PydanticModelGenerator(self._instance.settings)
         yield ('__base.py', model_generator.generate_base())
         for item in self.items:
+            if not item.verdict:
+                continue
             schema = self._instance.bo.get_schema(item.busobid)
             yield (f"{schema.identifier}.py", model_generator.generate_model(schema))
 
 
     def save_models(self, repo: ModelRepo):
         return repo.save(instance=self._instance, file_type='model', file_generator=self.generate_models())
+
+
+    def generate_settings(self) -> FileGenerator:
+        collector_settings = CollectorSettings(
+            bo_include_filter=self.bo_include_filter, bo_exclude_filter=self.bo_exclude_filter)
+        yield ('collector_settings.json', collector_settings.json(indent=2, sort_keys=True))
+
+
+    def save_settings(self, repo: ModelRepo):
+        return repo.save(instance=self._instance, file_type='registry', file_generator=self.generate_settings())
+
+
+    def load_settings(self, repo: ModelRepo):
+        collector_settings = CollectorSettings.parse_file(
+            repo._repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
+        self.bo_include_filter = collector_settings.bo_include_filter
+        self.bo_exclude_filter = collector_settings.bo_exclude_filter
 
 
     def clear_caches(self):
@@ -207,4 +231,3 @@ class Collector:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self._instance}, bo_include_filter={self._bo_include_filter}, bo_exclude_filter={self._bo_exclude_filter})"
-

@@ -1,4 +1,3 @@
-
 from collections import defaultdict
 from typing import Any, Optional, cast
 
@@ -60,7 +59,8 @@ class ParsedFieldDefinition(FieldDefinition):
                 self.python_type_modules.add('decimal')
                 self.pydantic_field_args['decimal_places'] = self.decimalDigits
                 if self.wholeDigits:
-                    self.pydantic_field_args['max_digits'] = self.wholeDigits + cast(int, self.decimalDigits)
+                    self.pydantic_field_args['max_digits'] = self.wholeDigits + \
+                        cast(int, self.decimalDigits)
         elif self.type == 'Logical':
             self.python_type = 'bool'
         else:
@@ -76,11 +76,13 @@ class PydanticModelGenerator:
         self._instance_settings = instance_settings
         self._jinja_env = Environment(loader=PackageLoader('cherwell_pydantic_api.bo', 'templates'),
                                       autoescape=select_autoescape(['py']), trim_blocks=True, lstrip_blocks=True)
+        self._jinja_env.filters['repr'] = repr
 
     def generate_base(self) -> str:
         template = self._jinja_env.get_template('base.py.j2')
         base_str = template.render(settings=self._instance_settings)
-        base_str = black.format_str(base_str, mode=black.FileMode(preview=True))
+        base_str = black.format_str(
+            base_str, mode=black.FileMode(preview=True))
         return base_str
 
     def generate_model(self, schema: ValidSchema) -> str:
@@ -96,6 +98,8 @@ class PydanticModelGenerator:
             if field.python_type_validator:
                 validators[field.python_type_validator].append(field)
             assert field.fieldid_parts['BO'] == schema.busObId
-        model_str = template.render(schema=schema, fields=fields, modules=modules, validators=validators, settings=self._instance_settings)
-        model_str = black.format_str(model_str, mode=black.FileMode(preview=True))
+        model_str = template.render(schema=schema, fields=fields, modules=modules,
+                                    validators=validators, settings=self._instance_settings)
+        model_str = black.format_str(
+            model_str, mode=black.FileMode(preview=True))
         return model_str
