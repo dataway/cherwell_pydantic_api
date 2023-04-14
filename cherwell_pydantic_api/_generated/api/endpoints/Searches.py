@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches
@@ -10,7 +10,9 @@ class SearchesInterface(GeneratedInterfaceBase):
     async def GetQuickSearchConfigurationForBusObsV1(
         self,
         dataRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse
+    ):
         """Get a Quick Search from a list of Business Object IDs
 
         Operation to build a Quick Search configuration that you can use to execute a Quick Search for multiple Business Objects. The configuration  includes supplied Business Object IDs and specific search items with the following options. Use the Option Key to determine if you can change the options.
@@ -59,7 +61,9 @@ class SearchesInterface(GeneratedInterfaceBase):
 
     async def GetQuickSearchConfigurationForBusObsWithViewRightsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchConfigurationResponse
+    ):
         """Get a Quick Search by Business Objects with view rights
 
         Operation to get a Quick Search configuration that you can use to execute a Quick Search based the current user's Business Object view rights. The configuration  includes supplied Business Object IDs and specific search items with the following options. Use the Option Key to determine if you can change the options.
@@ -107,7 +111,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         self,
         dataRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchRequest,
         includeLinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SimpleResultsList:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SimpleResultsList
+    ):
         """Execute a Quick Search from a list of Business Object IDs and search text
 
         Operation to execute a Quick Search using a list of Business Object IDs and search text.
@@ -115,7 +121,7 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param includeLinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SimpleResultsList
         """
-        params = {}
+        params: dict[str, Any] = {}
         if includeLinks is not None:
             params["includeLinks"] = includeLinks
         response = await self.post_body(
@@ -134,7 +140,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         includeSchema: Optional[bool] = None,
         includeLocationFields: Optional[bool] = None,
         includeLinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsTableResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsTableResponse
+    ):
         """Execute a Quick Search on a specific Business Object
 
         Operation to execute a Quick Search for a specific Business Object ID. Use "Get a Quick Search from a list of Business Object IDs" to find values for specific search item options, such as NonFinalStateOption.
@@ -144,7 +152,7 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param includeLinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsTableResponse
         """
-        params = {}
+        params: dict[str, Any] = {}
         if includeSchema is not None:
             params["includeSchema"] = includeSchema
         if includeLocationFields is not None:
@@ -167,7 +175,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         includeSchema: Optional[bool] = None,
         includeLocationFields: Optional[bool] = None,
         includeLinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchResponse
+    ):
         """Execute a Quick Search on a specific Business Object
 
         Operation to execute a Quick Search for a specific Business Object ID. Use "Get a Quick Search from a list of Business Object IDs" to find values for specific search item options, such as NonFinalStateOption.
@@ -177,7 +187,7 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param includeLinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.QuickSearchResponse
         """
-        params = {}
+        params: dict[str, Any] = {}
         if includeSchema is not None:
             params["includeSchema"] = includeSchema
         if includeLocationFields is not None:
@@ -201,7 +211,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         scopeowner: str,
         folder: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
+    ):
         """Get all saved searches by Folder ID
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -216,7 +228,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(folder, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -235,7 +247,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         scopeowner: str,
         folder: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get all saved searches by Folder ID
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -250,7 +264,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(folder, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -268,7 +282,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         scope: str,
         scopeowner: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
+    ):
         """Get all saved searches by scope owner (sub scope)
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -281,7 +297,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         self.validate_path_param(association, str)
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -299,7 +315,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         scope: str,
         scopeowner: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get all saved searches by scope owner (sub scope)
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -312,7 +330,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         self.validate_path_param(association, str)
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -329,7 +347,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         association: str,
         scope: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
+    ):
         """Get all saved searches by scope
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -340,7 +360,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(association, str)
         self.validate_path_param(scope, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -357,7 +377,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         association: str,
         scope: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get all saved searches by scope
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -368,7 +390,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(association, str)
         self.validate_path_param(scope, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -384,7 +406,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         self,
         association: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
+    ):
         """Get all saved searches by Business Object association
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -393,7 +417,7 @@ class SearchesInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
         """
         self.validate_path_param(association, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -408,7 +432,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         self,
         association: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get all saved searches by Business Object association
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
@@ -417,7 +443,7 @@ class SearchesInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
         self.validate_path_param(association, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -431,14 +457,16 @@ class SearchesInterface(GeneratedInterfaceBase):
     async def GetSearchItemsV1(
         self,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
+    ):
         """Get all saved searches by default Business Object association
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchItemResponse
         """
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getsearchitems", params=params)
@@ -450,14 +478,16 @@ class SearchesInterface(GeneratedInterfaceBase):
     async def GetSearchItemsV2(
         self,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get all saved searches by default Business Object association
 
         Operation that returns a tree of saved queries, including scope, search name, IDs, and location within the tree.
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V2/getsearchitems", params=params)
@@ -469,7 +499,9 @@ class SearchesInterface(GeneratedInterfaceBase):
     async def GetSearchResultsAdHocV1(
         self,
         dataRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse
+    ):
         """Run an ad-hoc search
 
         Operation that runs an ad-hoc Business Object search. To execute a search with Prompts, the PromptId and Value are required in the Prompt request object.
@@ -513,7 +545,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         pagesize: Optional[int] = None,
         includeschema: Optional[bool] = None,
         resultsAsSimpleResultsList: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse
+    ):
         """Run a saved search by internal ID
 
         Operation that returns the paged results of a saved search. When the search contains Prompts, the response contains the Prompt. Send the Prompt and the original operation parameters to  SearchResultsRequest to the getsearchresults ad-hoc http post operation.
@@ -549,7 +583,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(searchid, str)
-        params = {}
+        params: dict[str, Any] = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
         if pagenumber is not None:
@@ -580,7 +614,9 @@ class SearchesInterface(GeneratedInterfaceBase):
         pagesize: Optional[int] = None,
         includeschema: Optional[bool] = None,
         resultsAsSimpleResultsList: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.SearchResultsResponse
+    ):
         """Run a saved search by name
 
         Operation that returns the paged results of a saved search. When the search contains Prompts, the response contains the Prompt. Send the Prompt and the original operation parameters to  SearchResultsRequest to the getsearchresults ad-hoc http post operation.
@@ -616,7 +652,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(searchname, str)
-        params = {}
+        params: dict[str, Any] = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
         if pagenumber is not None:
@@ -716,7 +752,7 @@ class SearchesInterface(GeneratedInterfaceBase):
             exportformat,
             Literal["CSV", "Excel", "Tab", "Word", "CustomSeparator", "Json"],
         )
-        params = {}
+        params: dict[str, Any] = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
         if pagenumber is not None:
@@ -777,7 +813,7 @@ class SearchesInterface(GeneratedInterfaceBase):
             exportformat,
             Literal["CSV", "Excel", "Tab", "Word", "CustomSeparator", "Json"],
         )
-        params = {}
+        params: dict[str, Any] = {}
         if searchTerm is not None:
             params["searchTerm"] = searchTerm
         if pagenumber is not None:
@@ -796,7 +832,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         associationName: str,
         searchName: str,
         scopeOwner: Optional[str] = None,
-    ) -> list[dict]:
+    ) -> list[cherwell_pydantic_api.types.CherwellObjectID]:
         """Get results of a saved search
 
         Operation that returns the results of a saved search in JSON format.
@@ -811,18 +847,20 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param associationName: Specify the Business Object association Name for the saved search.
          :param searchName: Specify the name of the saved search.
          :param scopeOwner: Specify the scope owner ID for the saved search. Use (None) when no scope owner exists.
-         :return: list[dict]"""
+         :return: list[cherwell_pydantic_api.types.CherwellObjectID]"""
         self.validate_path_param(scope, str)
         self.validate_path_param(associationName, str)
         self.validate_path_param(searchName, str)
-        params = {}
+        params: dict[str, Any] = {}
         if scopeOwner is not None:
             params["scopeOwner"] = scopeOwner
         response = await self.get(
             f"/api/V1/storedsearches/{scope}/{associationName}/{searchName}",
             params=params,
         )
-        return self.parse_response(response, list[dict])
+        return self.parse_response(
+            response, list[cherwell_pydantic_api.types.CherwellObjectID]
+        )
 
     async def GetSearchResultsAsStringByNameV2(
         self,
@@ -830,7 +868,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         associationName: str,
         searchName: str,
         scopeOwner: Optional[str] = None,
-    ) -> list[dict]:
+    ) -> list[cherwell_pydantic_api.types.CherwellObjectID]:
         """Get results of a saved search
 
         Operation that returns the results of a saved search in JSON format.
@@ -847,23 +885,27 @@ class SearchesInterface(GeneratedInterfaceBase):
          :param associationName: Specify the Business Object association Name for the saved search.
          :param searchName: Specify the name of the saved search.
          :param scopeOwner: Specify the scope owner ID for the saved search. Use (None) when no scope owner exists.
-         :return: list[dict]"""
+         :return: list[cherwell_pydantic_api.types.CherwellObjectID]"""
         self.validate_path_param(scope, str)
         self.validate_path_param(associationName, str)
         self.validate_path_param(searchName, str)
-        params = {}
+        params: dict[str, Any] = {}
         if scopeOwner is not None:
             params["scopeOwner"] = scopeOwner
         response = await self.get(
             f"/api/V2/storedsearches/{scope}/{associationName}/{searchName}",
             params=params,
         )
-        return self.parse_response(response, list[dict])
+        return self.parse_response(
+            response, list[cherwell_pydantic_api.types.CherwellObjectID]
+        )
 
     async def GetSearchResultsAsStringByIdV2(
         self,
         searchRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.StoredSearchRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.StoredSearchResults:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.StoredSearchResults
+    ):
         """Get results of a saved search
 
         Operation that returns the results of a saved search in JSON format.

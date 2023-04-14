@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
 import cherwell_pydantic_api.types
@@ -19,7 +19,7 @@ class CoreInterface(GeneratedInterfaceBase):
         response = await self.delete(
             f"/api/V1/deletegalleryimage/standinkey/{standinkey}"
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def GetGalleryImagesFolderV1(
         self,
@@ -27,7 +27,9 @@ class CoreInterface(GeneratedInterfaceBase):
         scopeowner: str,
         folder: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get gallery images by scope, scopeowner, and folder
 
         Get gallery images for the specified scope, scopeowner, and folder.
@@ -40,7 +42,7 @@ class CoreInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(folder, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -57,7 +59,9 @@ class CoreInterface(GeneratedInterfaceBase):
         scope: str,
         scopeowner: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get gallery images by scope and scopeowner
 
         Get all gallery images for the specified scope and scope owner.
@@ -68,7 +72,7 @@ class CoreInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -84,7 +88,9 @@ class CoreInterface(GeneratedInterfaceBase):
         self,
         scope: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get gallery images by scope
 
         Get all gallery images for the specified scope.
@@ -93,7 +99,7 @@ class CoreInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
         self.validate_path_param(scope, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -107,14 +113,16 @@ class CoreInterface(GeneratedInterfaceBase):
     async def GetGalleryImagesV1(
         self,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get all gallery images
 
         Get all the gallery images in the system.
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getgalleryimages", params=params)
@@ -137,7 +145,7 @@ class CoreInterface(GeneratedInterfaceBase):
          :param height: Specify the height (icons only).
          :return: cherwell_pydantic_api.types.StringResponse"""
         self.validate_path_param(name, str)
-        params = {}
+        params: dict[str, Any] = {}
         if width is not None:
             params["width"] = width
         if height is not None:
@@ -151,7 +159,9 @@ class CoreInterface(GeneratedInterfaceBase):
         scopeowner: str,
         folder: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get stored values by folder
 
         Get stored values for the specified folder.
@@ -164,7 +174,7 @@ class CoreInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(folder, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -181,7 +191,9 @@ class CoreInterface(GeneratedInterfaceBase):
         scope: str,
         scopeowner: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get stored values by scope owner
 
         Get stored values for the specified scope and scope owner.
@@ -192,7 +204,7 @@ class CoreInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -207,7 +219,9 @@ class CoreInterface(GeneratedInterfaceBase):
         self,
         scope: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get stored values by scope
 
         Get all the stored values for the specified scope.
@@ -216,7 +230,7 @@ class CoreInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
         self.validate_path_param(scope, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(f"/api/V1/storedvalues/scope/{scope}", params=params)
@@ -228,14 +242,16 @@ class CoreInterface(GeneratedInterfaceBase):
     async def GetStoredValuesV1(
         self,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Gets all the stored values in the system
 
         Get all the stored values in the system.
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/storedvalues", params=params)
@@ -247,7 +263,9 @@ class CoreInterface(GeneratedInterfaceBase):
     async def GetStoredValueV1(
         self,
         standInKey: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse
+    ):
         """Get a  stored value
 
         Get a stored value by its StandIn key.
@@ -263,7 +281,9 @@ class CoreInterface(GeneratedInterfaceBase):
 
     async def GetViewsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ViewsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ViewsResponse
+    ):
         """Get a list of the views
 
         Operation to get a list of views that are configured in the system.
@@ -278,7 +298,9 @@ class CoreInterface(GeneratedInterfaceBase):
     async def SaveGalleryImageV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.SaveGalleryImageRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.SaveGalleryImageResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.SaveGalleryImageResponse
+    ):
         """Create or update a gallery image
 
         Endpoint to Create or update a gallery image. To create a new gallery image leave the StandIn key blank. To update a gallery image provide the StandIn key of the gallery image you want to update.
@@ -307,7 +329,9 @@ class CoreInterface(GeneratedInterfaceBase):
     async def SaveStoredValueV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.SaveStoredValueRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.StoredValueResponse
+    ):
         """Create or update a stored value
 
         Operation to create or update a stored value. To update, specify the StandIn key for the stored value to update. To create leave StandIn key blank, and provide a name, a scope, a type, and a value.

@@ -15,6 +15,13 @@ from .... import CherwellObjectID
 from . import BusinessObject, Core
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class FilterInfo(ApiBaseModel):
     fieldId: Optional[ct.FieldID] = None
     operator: Optional[str] = None
@@ -24,12 +31,26 @@ class FilterInfo(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SortInfo(ApiBaseModel):
     fieldId: Optional[ct.FieldID] = None
     sortDirection: Optional[int] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchConfigSavedRequest(ApiBaseModel):
@@ -91,6 +112,13 @@ class SortByOption(Enum):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class ChangedLimit(ApiBaseModel):
     displayName: Optional[str] = None
     units: Optional[str] = None
@@ -100,11 +128,25 @@ class ChangedLimit(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class QuickSearchConfigurationRequest(ApiBaseModel):
     busObIds: Optional[List[str]] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchByIdRequest(ApiBaseModel):
@@ -115,6 +157,13 @@ class QuickSearchByIdRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SimpleResultsListItem(ApiBaseModel):
@@ -134,12 +183,26 @@ class SimpleResultsListItem(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class QuickSearchRequest(ApiBaseModel):
     busObIds: Optional[List[str]] = None
     searchText: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchSpecificByIdRequest(ApiBaseModel):
@@ -160,6 +223,13 @@ class QuickSearchSpecificByIdRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class FieldModel(ApiBaseModel):
@@ -191,6 +261,13 @@ class FieldModel(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SearchResultsRow(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -201,6 +278,13 @@ class SearchResultsRow(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchSpecificRequest(ApiBaseModel):
@@ -221,12 +305,26 @@ class QuickSearchSpecificRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class Association(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObName: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SearchItem(ApiBaseModel):
@@ -250,6 +348,13 @@ class ExportFormat(Enum):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class ExportSearchResultsRequest(ApiBaseModel):
@@ -280,6 +385,13 @@ class ExportSearchResultsRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class StoredSearchRequest(ApiBaseModel):
     associationId: Optional[str] = None
     associationName: Optional[str] = None
@@ -305,6 +417,13 @@ class Type(Enum):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class ColumnSchema(ApiBaseModel):
     name: Optional[str] = None
     fieldId: Optional[ct.FieldID] = None
@@ -312,6 +431,13 @@ class ColumnSchema(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class RelatedBusinessObjectRequest(ApiBaseModel):
@@ -329,6 +455,13 @@ class RelatedBusinessObjectRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchItem(ApiBaseModel):
@@ -354,6 +487,13 @@ class QuickSearchItem(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SimpleResultsListGroup(ApiBaseModel):
     isBusObTarget: Optional[bool] = None
     simpleResultsListItems: Optional[List[SimpleResultsListItem]] = None
@@ -367,6 +507,13 @@ class SimpleResultsListGroup(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SearchResultsTableResponse(ApiBaseModel):
@@ -383,6 +530,13 @@ class SearchResultsTableResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SearchFolder(ApiBaseModel):
     association: Optional[str] = None
     childFolders: Optional[List[SearchFolder]] = None
@@ -397,6 +551,13 @@ class SearchFolder(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SearchResultsRequest(ApiBaseModel):
@@ -424,12 +585,26 @@ class SearchResultsRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class StoredSearchResults(ApiBaseModel):
     columns: Optional[List[ColumnSchema]] = None
     rows: Optional[List[List[CherwellObjectID]]] = Field(None, readOnly=True)
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class RelatedBusinessObjectResponse(ApiBaseModel):
@@ -448,6 +623,13 @@ class RelatedBusinessObjectResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchConfigurationResponse(ApiBaseModel):
@@ -476,6 +658,13 @@ class QuickSearchConfigurationResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SimpleResultsList(ApiBaseModel):
     groups: Optional[List[SimpleResultsListGroup]] = None
     title: Optional[str] = None
@@ -486,6 +675,13 @@ class SimpleResultsList(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class QuickSearchResponse(ApiBaseModel):
@@ -500,6 +696,13 @@ class QuickSearchResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SearchItemResponse(ApiBaseModel):
     root: Optional[SearchFolder] = None
     supportedAssociations: Optional[List[Association]] = None
@@ -510,6 +713,13 @@ class SearchItemResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SearchResultsResponse(ApiBaseModel):

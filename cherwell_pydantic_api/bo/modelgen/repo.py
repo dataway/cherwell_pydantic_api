@@ -132,7 +132,7 @@ class ModelRepo:
 
     def get_info(self, *,
                  instance_name: Optional[str] = None,
-                 instance: Optional[Instance] = None) -> dict[str, Union[str, bool, dict[str, Union[str, bool]]]]:
+                 instance: Optional[Instance] = None) -> dict[str, Union[str, bool, dict[str, Union[str, bool, None]]]]:
         # resolve arguments
         if instance is None:
             if instance_name is None:
@@ -142,7 +142,7 @@ class ModelRepo:
         else:
             instance_name = instance.settings.name
         instance_dir = self._repo_dir / instance.settings.get_repo_subpackage()
-        r = {'instance': {
+        r: dict[str, Union[str, bool, dict[str, Union[str, bool, None]]]] = {'instance': {
             'name': instance.settings.name,
             'repo_subpackage': str(instance.settings.get_repo_subpackage()),
             'repo_branch': instance.settings.get_repo_branch()
@@ -170,3 +170,8 @@ class ModelRepo:
     def directory(self) -> str:
         "The absolute path to the repo directory"
         return self._repo.path
+
+    @property
+    def repo_dir(self) -> Path:
+        "The absolute path to the repo directory as a Path object"
+        return self._repo_dir

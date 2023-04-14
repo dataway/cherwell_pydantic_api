@@ -11,6 +11,13 @@ from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
 from .. import CherwellObjectID
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class CherwellNameValuePair(ApiBaseModel):
     name: Optional[str] = None
     valueObject: Optional[CherwellObjectID] = None

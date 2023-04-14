@@ -10,6 +10,13 @@ import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class AddItemToQueueRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -18,6 +25,13 @@ class AddItemToQueueRequest(ApiBaseModel):
 
 import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import HttpStatusCode
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class AddItemToQueueResponse(ApiBaseModel):
@@ -33,6 +47,13 @@ class AddItemToQueueResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class CheckInQueueItemRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -41,6 +62,13 @@ class CheckInQueueItemRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class CheckInQueueItemResponse(ApiBaseModel):
@@ -56,6 +84,13 @@ class CheckInQueueItemResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class CheckOutQueueItemRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -64,6 +99,13 @@ class CheckOutQueueItemRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class CheckOutQueueItemResponse(ApiBaseModel):
@@ -79,6 +121,13 @@ class CheckOutQueueItemResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class RemoveItemFromQueueRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -87,6 +136,13 @@ class RemoveItemFromQueueRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class RemoveItemFromQueueResponse(ApiBaseModel):

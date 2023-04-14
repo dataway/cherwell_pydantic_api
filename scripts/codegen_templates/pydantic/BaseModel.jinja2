@@ -1,9 +1,13 @@
 import cherwell_pydantic_api.types as ct
+ct # type: ignore
+from enum import Enum
+Enum # type: ignore
 {% for decorator in decorators -%}
 {{ decorator }}
 {% endfor -%}
 {%- if class_name  == 'CherwellObjectID' %}
 from cherwell_pydantic_api.types import {{ class_name }}
+{{ class_name }} # type: ignore
 {%- else %}
 class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comment }}{% endif %}
 {%- if description %}

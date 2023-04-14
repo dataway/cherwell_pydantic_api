@@ -13,6 +13,13 @@ from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
 from . import BusinessObject
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class User(ApiBaseModel):
     accountLocked: Optional[bool] = None
     createDateTime: Optional[datetime] = None
@@ -35,6 +42,13 @@ class User(ApiBaseModel):
 
 import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import HttpStatusCode
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserV2(ApiBaseModel):
@@ -61,12 +75,26 @@ class UserV2(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserBatchDeleteRequest(ApiBaseModel):
     stopOnError: Optional[bool] = None
     userRecordIds: Optional[List[str]] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserDeleteResponse(ApiBaseModel):
@@ -77,6 +105,13 @@ class UserDeleteResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserDeleteV2Response(ApiBaseModel):
@@ -90,6 +125,13 @@ class UserDeleteV2Response(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserListResponse(ApiBaseModel):
     users: Optional[List[UserV2]] = None
     errorCode: Optional[str] = None
@@ -101,12 +143,26 @@ class UserListResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserReadRequest(ApiBaseModel):
     loginId: Optional[str] = None
     publicId: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserReadResponse(ApiBaseModel):
@@ -117,6 +173,13 @@ class UserReadResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserSaveRequest(ApiBaseModel):
@@ -143,6 +206,13 @@ class UserSaveRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserSaveResponse(ApiBaseModel):
     busObPublicId: Optional[str] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -152,6 +222,13 @@ class UserSaveResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserSaveV2Request(ApiBaseModel):
@@ -177,6 +254,13 @@ class UserSaveV2Request(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserSaveV2Response(ApiBaseModel):
     busObPublicId: Optional[str] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -187,6 +271,13 @@ class UserSaveV2Response(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserReadV2Response(ApiBaseModel):
@@ -200,11 +291,25 @@ class UserReadV2Response(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserBatchDeleteResponse(ApiBaseModel):
     responses: Optional[List[UserDeleteResponse]] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserBatchDeleteV2Response(ApiBaseModel):
@@ -218,12 +323,26 @@ class UserBatchDeleteV2Response(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserBatchReadRequest(ApiBaseModel):
     readRequests: Optional[List[UserReadRequest]] = None
     stopOnError: Optional[bool] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserBatchReadResponse(ApiBaseModel):
@@ -237,12 +356,26 @@ class UserBatchReadResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserBatchSaveRequest(ApiBaseModel):
     saveRequests: Optional[List[UserSaveRequest]] = None
     stopOnError: Optional[bool] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserBatchSaveResponse(ApiBaseModel):
@@ -252,12 +385,26 @@ class UserBatchSaveResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class UserBatchSaveV2Request(ApiBaseModel):
     saveRequests: Optional[List[UserSaveV2Request]] = None
     stopOnError: Optional[bool] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class UserBatchSaveV2Response(ApiBaseModel):

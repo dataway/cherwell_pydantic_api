@@ -12,6 +12,13 @@ from cherwell_pydantic_api.generated_api_utils import ApiBaseModel, HttpStatusCo
 from . import Core
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class OneStepActionResponse(ApiBaseModel):
     completed: Optional[bool] = None
     currentPrimaryBusObId: Optional[ct.BusObID] = None
@@ -25,6 +32,13 @@ class OneStepActionResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class OneStepActionRequest(ApiBaseModel):

@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import pydantic
 
@@ -10,7 +10,9 @@ from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
 class ServiceInterface(GeneratedInterfaceBase):
     async def GetServiceInfoV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ServiceInfoResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ServiceInfoResponse
+    ):
         """Get information about the REST Api and CSM
 
         Operation to get information about the REST API and CSM.  The response is latest REST API operation version, CSM version, and CSM system date and time.
@@ -28,7 +30,7 @@ class ServiceInterface(GeneratedInterfaceBase):
         Operation that logs out the user referenced in the authentication token.
          :return: None"""
         response = await self.delete("/api/V1/logout")
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def Token(
         self,
@@ -42,7 +44,9 @@ class ServiceInterface(GeneratedInterfaceBase):
             Literal["Internal", "Windows", "LDAP", "SAML", "Auto"]
         ] = None,
         site_name: Optional[str] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.TokenResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.TokenResponse
+    ):
         """Get an access token
 
         Operation to request an access token for one of the following authentication modes. Or, you can request an access token using a refresh token. An API client key is required in both cases, and the authentication mode you use must be the mode used by the CSM Browser Client.
@@ -67,7 +71,7 @@ class ServiceInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.TokenResponse
         """
         post = {"grant_type": grant_type, "client_id": client_id.get_secret_value()}
-        params = {}
+        params: dict[str, Any] = {}
         if client_secret is not None:
             post["client_secret"] = client_secret.get_secret_value()
         if username is not None:

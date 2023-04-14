@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
@@ -8,7 +8,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def DeleteUserBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteResponse
+    ):
         """Delete a batch of users
 
         Operation to delete a batch of users. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -27,7 +29,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def DeleteUserBatchV2(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchDeleteV2Response
+    ):
         """Delete a batch of users
 
         Operation to delete a batch of users. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -46,7 +50,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def DeleteUserV1(
         self,
         userrecordid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteResponse
+    ):
         """Delete a user by record ID
 
         Operation to delete a user by record ID. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -63,7 +69,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def DeleteUserV2(
         self,
         userrecordid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserDeleteV2Response
+    ):
         """Delete a user by record ID
 
         Operation to delete a user by record ID. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -81,7 +89,9 @@ class UsersInterface(GeneratedInterfaceBase):
         self,
         loginidfilter: Literal["Internal", "Windows", "Both"],
         stoponerror: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserListResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserListResponse
+    ):
         """Get a list of all system users.
 
         Operation to get a list of all system users.
@@ -101,7 +111,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def GetUserBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchReadRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchReadResponse
+    ):
         """Get user information in a batch
 
         Operation to get user information in a batch. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -120,7 +132,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def GetUserByLoginIdV1(
         self,
         loginid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User
+    ):
         """Get a user by login ID
 
         Operation to get detailed user information by login ID. Use to get user record IDs and account settings, for example. This operation has been deprecated by a V2 operation of the same name, but with query string parameters.
@@ -138,7 +152,9 @@ class UsersInterface(GeneratedInterfaceBase):
         self,
         loginid: str,
         loginidtype: Literal["Internal", "Windows"],
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.User
+    ):
         """Get a user by login ID and login ID type
 
         Operation to get detailed user information by login ID. Use to get user record IDs and account settings, for example.
@@ -157,7 +173,9 @@ class UsersInterface(GeneratedInterfaceBase):
         self,
         loginid: str,
         loginidtype: Literal["Internal", "Windows"],
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2
+    ):
         """Get a user by login ID and login ID type
 
         Operation to get detailed user information by login ID. Use to get user record IDs and account settings, for example.
@@ -175,7 +193,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def GetUserByPublicIdV1(
         self,
         publicid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadResponse
+    ):
         """Get a user by public ID
 
         Operation to get detailed user information by public ID. Use to get user record IDs and account settings, for example.
@@ -192,7 +212,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def GetUserByPublicIdV2(
         self,
         publicid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response
+    ):
         """Get a user by public ID
 
         Operation to get detailed user information by public ID. Use to get user record IDs and account settings, for example.
@@ -209,7 +231,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def GetUserByRecId(
         self,
         recid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserV2
+    ):
         """Get a user by record ID
 
         Operation to get detailed user information by record ID.  Use to get user public IDs and account settings, for example.
@@ -226,7 +250,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def SaveUserBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveResponse
+    ):
         """Create or update users in a batch
 
         Operation to create or update users in a batch. To update, specify record ID. To create, leave record ID empty.
@@ -245,7 +271,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def SaveUserBatchV2(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveV2Request,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserBatchSaveV2Response
+    ):
         """Create or update users in a batch
 
         Operation to create or update users in a batch. To update, specify record ID. To create, leave record ID empty.
@@ -264,7 +292,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def SaveUserV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveResponse
+    ):
         """Create or update a user
 
         Operation to create or update a user.  The response is a collection because if you use a public ID, more than one user could be updated since public IDs may not be unique.
@@ -282,7 +312,9 @@ class UsersInterface(GeneratedInterfaceBase):
     async def SaveUserV2(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveV2Request,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveV2Response
+    ):
         """Create or update a user
 
         Operation to create or update a user.  The response is a collection because if you use a public ID, more than one user could be updated since public IDs may not be unique.

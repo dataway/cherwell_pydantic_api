@@ -1,9 +1,10 @@
 import keyword
 import re
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseSettings, Field, SecretStr, validator
+from pydantic import validator  # type: ignore # pylance doesn't like it
+from pydantic import AnyHttpUrl, BaseSettings, Field, SecretStr
 
 
 
@@ -21,7 +22,7 @@ class InstanceSettingsBase(BaseSettings):
         description='Branch to use for this instance, if unset default to main')
 
     @validator('verify')
-    def validate_verify(cls, v):
+    def validate_verify(cls, v: str) -> Union[str, bool]:
         if v.lower() in ('off', 'false', 'no'):
             return False
         if v.lower() in ('', 'on', 'true', 'yes'):
@@ -57,13 +58,13 @@ class Settings(InstanceSettingsBase):
         return self.inst.get(instance_name, None)
 
     @validator('inst')
-    def validate_inst(cls, v):
-        for inst_name, inst in v.items():
+    def validate_inst(cls, v: dict[str, InstanceSettings]) -> dict[str, InstanceSettings]:
+        for inst_name in v:
             if not cls._re_inst_name.match(inst_name) or inst_name == 'default' or keyword.iskeyword(inst_name):
                 raise ValueError(f"Invalid instance name: {inst_name}")
         return v
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
         self._fixup()
 
@@ -87,7 +88,7 @@ class Settings(InstanceSettingsBase):
                 inst.timeout = self.timeout
 
 
-    class Config:
+    class Config: # type: ignore
         env_file = ['cherwell.env']
         env_file_encoding = 'utf-8'
         env_prefix = 'cherwell_'

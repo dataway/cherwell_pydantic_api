@@ -84,6 +84,8 @@ however you won't be able to use the API until you do. Contact your Cherwell adm
     click.echo(' with the above settings?')
     if click.confirm('Create file?', default=None):
         envpath.write_text(''.join([f"{k}={v}\n" for k, v in envdict.items()]))
-        click.secho(f"{envpath} created successfully:", fg='green')
-
+        click.secho(f"{envpath} created successfully.\n", fg='green')
+        click.secho("If you are a first-time user, I recommend the Getting Started JupyterLab notebook.", bg='green', fg='black')
+        click.secho("Run it with", nl=False, bg='green', fg='black')
+        click.secho(" cwcli getting-started", fg='cyan')
 

@@ -10,6 +10,13 @@ import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel, HttpStatusCode
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class ResponseBase(ApiBaseModel):
     errorCode: Optional[str] = None
     errorMessage: Optional[str] = None

@@ -21,13 +21,13 @@ from cherwell_pydantic_api.utils import docwraps
 try:
     import click
 except ImportError:
-    click = None
+    click = None # type: ignore
 
 
-FilterType = Union[Pattern, str, None]
+FilterType = Union[Pattern[str], str, None]
 
 
-def compile_filter(filter: FilterType) -> Optional[Pattern]:
+def compile_filter(filter: FilterType) -> Optional[Pattern[str]]:
     if filter is None:
         return None
     if isinstance(filter, str):
@@ -71,7 +71,7 @@ class CollectorItem:
         return ValidSchema.from_schema_response(self.schema)
 
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Union[str, int, None]]:
         "Convert to dictionary e.g. for DataFrame use"
         return {'name': self.name,
                 'busobid': self.busobid,
@@ -87,8 +87,9 @@ class CollectorItem:
 
 
 class CollectorSettings(BaseModel):
-    bo_include_filter: Optional[Pattern]
-    bo_exclude_filter: Optional[Pattern]
+    # mypy wants to see Pattern[str] but Pydantic requires Pattern
+    bo_include_filter: Optional[Pattern] # type: ignore
+    bo_exclude_filter: Optional[Pattern] # type: ignore
 
 
 class Collector:
@@ -103,7 +104,7 @@ class Collector:
 
 
     @property
-    def bo_include_filter(self) -> Optional[Pattern]:
+    def bo_include_filter(self) -> Optional[Pattern[str]]:
         return self._bo_include_filter
 
     @bo_include_filter.setter
@@ -111,7 +112,7 @@ class Collector:
         self._bo_include_filter = compile_filter(value)
 
     @property
-    def bo_exclude_filter(self) -> Optional[Pattern]:
+    def bo_exclude_filter(self) -> Optional[Pattern[str]]:
         return self._bo_exclude_filter
 
     @bo_exclude_filter.setter
@@ -120,6 +121,8 @@ class Collector:
 
 
     def filter_bo(self, type: str, summary: Summary) -> bool:
+        if summary.name is None:
+            return False
         if self._bo_exclude_filter is not None:
             if self._bo_exclude_filter.match(summary.name):
                 return False
@@ -132,9 +135,9 @@ class Collector:
     def verbose_report(self, item: CollectorItem):
         icon = "[**]" if item.verdict else "[  ]"
         if item.schema:
-            fields = len(
+            fields: Union[str, int] = len(
                 item.schema.fieldDefinitions) if item.schema.fieldDefinitions else 0
-            rels = len(
+            rels: Union[str, int] = len(
                 item.schema.relationships) if item.schema.relationships else 0
         else:
             fields = rels = '?'
@@ -147,7 +150,7 @@ class Collector:
             print(icon, report)
 
 
-    @alru_cache
+    @alru_cache()
     @docwraps(Instance.get_bo_summaries)
     async def get_bo_summaries(self, bo_type: BusinessObjectType) -> list[Summary]:
         return await self._instance.get_bo_summaries(bo_type)
@@ -161,7 +164,7 @@ class Collector:
 
     async def select(self) -> list[CollectorItem]:
         "Get all the business object summaries from Cherwell and filter them."
-        items = []
+        items: list[CollectorItem] = []
         for bo_type in cast(list[BusinessObjectType], ['Major', 'Supporting', 'Lookup', 'Groups']):
             for bo_summary in await self.get_bo_summaries(bo_type):
                 verdict = self.filter_bo(bo_type, bo_summary)
@@ -219,9 +222,9 @@ class Collector:
 
     def load_settings(self, repo: ModelRepo):
         collector_settings = CollectorSettings.parse_file(
-            repo._repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
-        self.bo_include_filter = collector_settings.bo_include_filter
-        self.bo_exclude_filter = collector_settings.bo_exclude_filter
+            repo.repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
+        self.bo_include_filter = collector_settings.bo_include_filter # type: ignore
+        self.bo_exclude_filter = collector_settings.bo_exclude_filter # type: ignore
 
 
     def clear_caches(self):

@@ -16075,4 +16075,15 @@ class CherwellModel(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
 from cherwell_pydantic_api.types import CherwellObjectID
+
+
+CherwellObjectID  # type: ignore

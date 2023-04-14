@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Annotated, Any, AsyncIterable, Iterable, Liter
 
 
 
+# TODO: There must be a better solution here
 if TYPE_CHECKING:
     IDType = NewType
     IdentifierType = NewType

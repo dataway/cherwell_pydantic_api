@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions
@@ -14,7 +14,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         scopeowner: str,
         folder: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get One-Step Actions by Folder
 
         Operation to get One-Step Actions by Association, Scope, Scope Owner in a specific folder.
@@ -29,7 +31,7 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(folder, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -47,7 +49,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         scope: str,
         scopeowner: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get One-Step Actions by Scope Owner
 
         Operation to get One-Step Actions by Association, Scope, Scope Owner
@@ -60,7 +64,7 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         self.validate_path_param(association, str)
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -77,7 +81,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         association: str,
         scope: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get One-Step Actions by Scope
 
         Operation to get One-Step Actions by Association, Scope
@@ -88,7 +94,7 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(association, str)
         self.validate_path_param(scope, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -104,7 +110,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         self,
         association: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get One-Step Actions by Association
 
         Operation to get One-Step Actions by Association
@@ -113,7 +121,7 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
         self.validate_path_param(association, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -127,14 +135,16 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
     async def GetOneStepActionsV1(
         self,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get One-Step Actions by default Association
 
         Operation to get One-Step Actions by default Association
          :param links: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getonestepactions", params=params)
@@ -148,7 +158,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
         standinkey: str,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse
+    ):
         """Run a One-Step Action for a Business Object record
 
         Operation to run a One-Step Action for a Business Object record by Business Object ID and Business Object Record ID.
@@ -171,7 +183,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
     async def RunOneStepActionByStandInKeyV1(
         self,
         standinkey: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse
+    ):
         """Run a stand alone One-Step Action
 
         Operation to run a One-Step Action that doesn't run against a Business Object Record.
@@ -188,7 +202,9 @@ class OneStepActionsInterface(GeneratedInterfaceBase):
     async def RunOneStepActionV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.OneStepActions.OneStepActionResponse
+    ):
         """Run a One-Step Action using a OneStepActionRequest
 
         Operation to run a One-Step Action using a OneStepActionRequest. This request is used to start a One-Step Action run with additional information such as prompt values.

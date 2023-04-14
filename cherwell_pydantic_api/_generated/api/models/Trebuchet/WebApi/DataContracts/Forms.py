@@ -13,6 +13,13 @@ from .... import CherwellObjectID
 from . import BusinessObject, Core
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SectionField(ApiBaseModel):
     attributes: Optional[List[CherwellObjectID]] = None
     fieldId: Optional[ct.FieldID] = None
@@ -25,6 +32,13 @@ class SectionField(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class Section(ApiBaseModel):
     sectionFields: Optional[List[SectionField]] = None
     galleryImage: Optional[str] = None
@@ -35,6 +49,13 @@ class Section(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class MobileFormResponse(ApiBaseModel):

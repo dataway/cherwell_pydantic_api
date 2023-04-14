@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject
@@ -11,7 +11,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def DeleteBusinessObjectBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchDeleteRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchDeleteResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchDeleteResponse
+    ):
         """Delete Business Objects in a batch
 
         Operation to delete a batch of Business Objects.
@@ -31,7 +33,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         publicid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse
+    ):
         """Delete a Business Object by public ID
 
         Operation to delete a Business Object by Business Object ID.
@@ -53,7 +57,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.DeleteResponse
+    ):
         """Delete a Business Object by record ID
 
         Operation to delete a single Business Object.
@@ -77,7 +83,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
         relationshipid: cherwell_pydantic_api.types.RelationshipID,
         publicid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """Delete a related Business Object by public ID
 
         Operation to delete a related Business Object. (Use "Unlink Related Business Object" to unlink two Business Objects rather that deleting the related Business Object.)
@@ -111,7 +119,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         parentbusobrecid: cherwell_pydantic_api.types.BusObRecID,
         relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """Delete a related Business Object by record ID
 
         Operation to delete a related Business Object. (Use "Unlink Related Business Object" to unlink two Business Objects rather that deleting the related Business Object.)
@@ -142,7 +152,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def FieldValuesLookupV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.FieldValuesLookupRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.FieldValuesLookupResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.FieldValuesLookupResponse
+    ):
         """Get lookup values for fields
 
         Operation to get potentially valid values for Business Object fields.
@@ -182,7 +194,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
-        params = {}
+        params: dict[str, Any] = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
         if activityType is not None:
@@ -217,7 +229,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         response = await self.get(
             f"/api/V1/getbusinessobjectattachment/attachmentid/{attachmentid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return self.parse_response(response, cherwell_pydantic_api.types.FileDownload)
+        return self.download_response(response)
 
     async def GetBusinessObjectAttachmentsByIdAndPublicIdV1(
         self,
@@ -226,7 +238,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         type: cherwell_pydantic_api.types.RecordAttachmentType,
         attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Get attachments by Business Object public ID
 
         Operation to get attachments for a Business Object by Business Object ID and public ID.
@@ -262,7 +276,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             attachmenttype, cherwell_pydantic_api.types.AttachmentType
         )
-        params = {}
+        params: dict[str, Any] = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
         response = await self.get(
@@ -281,7 +295,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         type: cherwell_pydantic_api.types.RecordAttachmentType,
         attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Get attachments by Business Object record ID
 
         Operation to get attachments for a Business Object by Business Object ID and record ID.
@@ -317,7 +333,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             attachmenttype, cherwell_pydantic_api.types.AttachmentType
         )
-        params = {}
+        params: dict[str, Any] = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
         response = await self.get(
@@ -336,7 +352,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         type: cherwell_pydantic_api.types.RecordAttachmentType,
         attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Get attachments by Business Object name and public ID
 
         Operation to get attachments for a Business Object by Business Object Name and public ID.
@@ -372,7 +390,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             attachmenttype, cherwell_pydantic_api.types.AttachmentType
         )
-        params = {}
+        params: dict[str, Any] = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
         response = await self.get(
@@ -391,7 +409,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         type: cherwell_pydantic_api.types.RecordAttachmentType,
         attachmenttype: cherwell_pydantic_api.types.AttachmentType,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Get attachments by Business Object name and record ID
 
         Operation to get attachments for a Business Object by name and record ID.
@@ -427,7 +447,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             attachmenttype, cherwell_pydantic_api.types.AttachmentType
         )
-        params = {}
+        params: dict[str, Any] = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
         response = await self.get(
@@ -442,7 +462,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def GetBusinessObjectAttachmentsV1(
         self,
         attachmentsRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Get Business Object attachments by request object
 
         Operation to get attachments for a Business Object by attachments request object.
@@ -461,7 +483,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def GetBusinessObjectBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchReadRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchReadResponse
+    ):
         """Get a batch of Business Object records
 
         Operation that returns a batch of Business Object records that includes a list of field record IDs, display names, and values for each record.
@@ -481,7 +505,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         publicid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse
+    ):
         """Get a Business Object record
 
         Operation that returns a Business Object record that includes a list of fields and their record IDs, names, and set values.
@@ -503,7 +529,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.ReadResponse
+    ):
         """Get a Business Object record
 
         Operation that returns a Business Object record that includes a list of fields and their record IDs, names, and set values.
@@ -525,7 +553,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         scanCode: str,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse
+    ):
         """Get a Business Object by its scan code and Business Object ID
 
         Operation to get a Business Object based on its associated scan code and Business Object ID.
@@ -547,7 +577,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         scanCode: str,
         busobname: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BarcodeLookupResponse
+    ):
         """Get a Business Object by its scan code and Business Object name
 
         Operation to get a Business Object based on its associated scan code and Business Object name.
@@ -569,7 +601,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         busobId: cherwell_pydantic_api.types.BusObIDParamType,
         includerelationships: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SchemaResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SchemaResponse
+    ):
         """Get a Business Object schema
 
         Operation that returns the schema for a Business Object and, optionally, its related Business Objects.
@@ -578,7 +612,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SchemaResponse
         """
         self.validate_path_param(busobId, cherwell_pydantic_api.types.BusObIDParamType)
-        params = {}
+        params: dict[str, Any] = {}
         if includerelationships is not None:
             params["includerelationships"] = includerelationships
         response = await self.get(
@@ -662,7 +696,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def GetBusinessObjectTemplateV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.TemplateRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.TemplateResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.TemplateResponse
+    ):
         """Get Business Object templates for create
 
         Operation that returns a template to create Business Objects.  The template includes placeholders for field values. You can then send the template with these values to the Business Object Save operation.
@@ -682,7 +718,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self,
         relatedBusinessObjectRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectRequest,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """Get related Business Objects using a request object
 
         Operation to get related Business Objects for a specific relationship. Specify a list of fields to include in the response. The order of parameter usage and overrides is: all fields set to true overrides default overrides;  custom grid overrides field list settings.
@@ -690,7 +728,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
          :param includelinks: Flag to include hyperlinks in results. Default is false.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
         """
-        params = {}
+        params: dict[str, Any] = {}
         if includelinks is not None:
             params["includelinks"] = includelinks
         response = await self.post_body(
@@ -715,7 +753,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         allfields: Optional[bool] = None,
         usedefaultgrid: Optional[bool] = None,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """Get related Business Objects by ID
 
         Operation to get the related objects for a Business Object relationship specifying all fields or default grid as the field to return.
@@ -738,7 +778,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(
             relationshipid, cherwell_pydantic_api.types.RelationshipID
         )
-        params = {}
+        params: dict[str, Any] = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
         if pageSize is not None:
@@ -767,7 +807,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         pageNumber: Optional[int] = None,
         pageSize: Optional[int] = None,
         includelinks: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """Get related Business Objects custom grid
 
         Operation to get related Business Objects for a specific relationship. Specify a custom grid ID as the fields to return.
@@ -790,7 +832,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
             relationshipid, cherwell_pydantic_api.types.RelationshipID
         )
         self.validate_path_param(gridid, str)
-        params = {}
+        params: dict[str, Any] = {}
         if pageNumber is not None:
             params["pageNumber"] = pageNumber
         if pageSize is not None:
@@ -813,7 +855,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """Link related Business Objects
 
         Operation to link related Business Objects.
@@ -850,7 +894,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.ResponseBase
+    ):
         """Link related Business Objects
 
         Operation to link related Business Objects.
@@ -899,7 +945,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobid/{busobid}/publicid/{publicid}"
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def RemoveBusinessObjectAttachmentByIdAndRecIdV1(
         self,
@@ -920,7 +966,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobid/{busobid}/busobrecid/{busobrecid}"
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def RemoveBusinessObjectAttachmentByNameAndPublicIdV1(
         self,
@@ -941,7 +987,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobname/{busobname}/publicid/{publicid}"
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def RemoveBusinessObjectAttachmentByNameAndRecIdV1(
         self,
@@ -962,12 +1008,14 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         response = await self.delete(
             f"/api/V1/removebusinessobjectattachment/attachmentid/{attachmentid}/busobname/{busobname}/busobrecid/{busobrecid}"
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def SaveBusinessObjectAttachmentBusObV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveBusObAttachmentRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Attach a Business Object to a Business Object
 
         Operation to attach a Business Object to a Business Object. This links the Business Object but does not create a relationship between the two. (Use "Link Related Business Objects" to create a relationship.)
@@ -986,7 +1034,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def SaveBusinessObjectAttachmentLinkV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveLinkAttachmentRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Attach a file via UNC
 
         Operation to attach a file to a Business Object via a path (UNC recommended).
@@ -1005,7 +1055,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def SaveBusinessObjectAttachmentUrlV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveUrlAttachmentRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.AttachmentsResponse
+    ):
         """Attach a URL path
 
         Operation to attach a URL path to a Business Object.
@@ -1024,7 +1076,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def SaveBusinessObjectBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchSaveRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchSaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.BatchSaveResponse
+    ):
         """Create or update a batch of Business Objects
 
         Operation that creates or updates an array of Business Objects in a batch. To update, specify record ID or public ID. To create, leave record ID and public ID empty.
@@ -1043,7 +1097,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def SaveBusinessObjectV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse
+    ):
         """Create or Update a Business Object
 
         Operation that creates a new Business Object or updates an existing Business Object. To create, leave record ID and public ID empty. Upon creating or saving, a cache key is returned to use for subsequent requests. If the object is not found in the cache with said cache key, specify record ID or public ID to save and return a new cache key. Set persist = true, to actually save the Business Object to disk, persist = false will just cache it.
@@ -1062,7 +1118,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
     async def SaveRelatedBusinessObjectV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.RelatedSaveRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.RelatedSaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.RelatedSaveResponse
+    ):
         """Create or update a related Business Object
 
         Operation that creates or updates a related Business Object. To update, specify record ID or public ID. To create, leave record ID and public ID empty.
@@ -1085,7 +1143,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         relationshipid: cherwell_pydantic_api.types.RelationshipID,
         busobid: cherwell_pydantic_api.types.BusObIDParamType,
         busobrecid: cherwell_pydantic_api.types.BusObRecID,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches.RelatedBusinessObjectResponse
+    ):
         """UnLink related Business Objects
 
         Operation to unlink related Business Objects.
@@ -1141,7 +1201,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(filename, str)
         self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         self.validate_path_param(publicid, str)
-        params = {}
+        params: dict[str, Any] = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
@@ -1180,7 +1240,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(filename, str)
         self.validate_path_param(busobid, cherwell_pydantic_api.types.BusObIDParamType)
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
-        params = {}
+        params: dict[str, Any] = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
@@ -1219,7 +1279,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(filename, str)
         self.validate_path_param(busobname, str)
         self.validate_path_param(publicid, str)
-        params = {}
+        params: dict[str, Any] = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:
@@ -1258,7 +1318,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         self.validate_path_param(filename, str)
         self.validate_path_param(busobname, str)
         self.validate_path_param(busobrecid, cherwell_pydantic_api.types.BusObRecID)
-        params = {}
+        params: dict[str, Any] = {}
         if attachmentid is not None:
             params["attachmentid"] = attachmentid
         if displaytext is not None:

@@ -6,7 +6,8 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import FieldDefinition
 from cherwell_pydantic_api.bo.valid_schema import ValidSchema
-from cherwell_pydantic_api.settings import InstanceSettingsBase, Settings
+from cherwell_pydantic_api.settings import InstanceSettingsBase
+from cherwell_pydantic_api.types import FieldID
 from cherwell_pydantic_api.utils import fieldid_parts
 
 
@@ -16,7 +17,7 @@ class ParsedFieldDefinition(FieldDefinition):
     python_type_modules: set[str] = set()
     python_type_validator: Optional[str] = None
     pydantic_field_args: dict[str, Any] = {}
-    fieldId: str  # override Optional[str] with str
+    fieldId: FieldID  # override Optional[FieldID] with FieldID
 
     @property
     def pydantic_field_params(self) -> str:
@@ -76,7 +77,7 @@ class PydanticModelGenerator:
         self._instance_settings = instance_settings
         self._jinja_env = Environment(loader=PackageLoader('cherwell_pydantic_api.bo', 'templates'),
                                       autoescape=select_autoescape(['py']), trim_blocks=True, lstrip_blocks=True)
-        self._jinja_env.filters['repr'] = repr
+        self._jinja_env.filters['repr'] = repr # type: ignore
 
     def generate_base(self) -> str:
         template = self._jinja_env.get_template('base.py.j2')
@@ -89,8 +90,8 @@ class PydanticModelGenerator:
         template = self._jinja_env.get_template('model.py.j2')
         fields = [ParsedFieldDefinition(**field.dict())
                   for field in schema.fieldDefinitions]
-        modules = set()
-        validators = defaultdict(list)
+        modules: set[str] = set()
+        validators: dict[str, list[ParsedFieldDefinition]] = defaultdict(list)
         for field in fields:
             field.resolve_type()
             if field.python_type_modules:

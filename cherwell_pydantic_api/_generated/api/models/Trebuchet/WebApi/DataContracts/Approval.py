@@ -13,6 +13,13 @@ from .... import CherwellObjectID
 from . import Core
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class ApprovalReadResponse(ApiBaseModel):
     properties: Optional[Dict[str, CherwellObjectID]] = None
     links: Optional[List[Core.CherwellLink]] = None
@@ -23,6 +30,13 @@ class ApprovalReadResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class GetApprovalsResponse(ApiBaseModel):

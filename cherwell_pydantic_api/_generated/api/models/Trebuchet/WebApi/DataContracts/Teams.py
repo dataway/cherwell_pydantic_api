@@ -12,6 +12,13 @@ from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
 from . import BusinessObject
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class AddUserToTeamRequest(ApiBaseModel):
     teamId: Optional[str] = None
     userIsTeamManager: Optional[bool] = None
@@ -20,6 +27,13 @@ class AddUserToTeamRequest(ApiBaseModel):
 
 import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import HttpStatusCode
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class AddUserToTeamResponse(ApiBaseModel):
@@ -32,12 +46,26 @@ class AddUserToTeamResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class Team(ApiBaseModel):
     teamId: Optional[str] = None
     teamName: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class TeamsV2Response(ApiBaseModel):
@@ -54,6 +82,13 @@ class TeamType(Enum):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class TeamResponse(ApiBaseModel):
@@ -73,6 +108,13 @@ class TeamResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class RemoveUserFromTeamResponse(ApiBaseModel):
     teamId: Optional[str] = None
     userRecordId: Optional[str] = None
@@ -83,6 +125,13 @@ class RemoveUserFromTeamResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class RemoveCustomerFromWorkgroupResponse(ApiBaseModel):
@@ -97,6 +146,13 @@ class RemoveCustomerFromWorkgroupResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class TeamSaveRequest(ApiBaseModel):
     description: Optional[str] = None
     emailAlias: Optional[str] = None
@@ -107,6 +163,13 @@ class TeamSaveRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class TeamSaveResponse(ApiBaseModel):
@@ -120,6 +183,13 @@ class TeamSaveResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SaveTeamMemberRequest(ApiBaseModel):
     isTeamManager: Optional[bool] = None
     setAsDefaultTeam: Optional[bool] = None
@@ -128,6 +198,13 @@ class SaveTeamMemberRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SaveTeamMemberResponse(ApiBaseModel):
@@ -140,6 +217,13 @@ class SaveTeamMemberResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SaveWorkgroupMemberRequest(ApiBaseModel):
     customerRecordId: Optional[str] = None
     workgroupId: Optional[str] = None
@@ -147,6 +231,13 @@ class SaveWorkgroupMemberRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SaveWorkgroupMemberResponse(ApiBaseModel):
@@ -159,12 +250,26 @@ class SaveWorkgroupMemberResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class AddUserToTeamByBatchRequest(ApiBaseModel):
     addUserToTeamRequests: Optional[List[AddUserToTeamRequest]] = None
     stopOnError: Optional[bool] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class AddUserToTeamByBatchResponse(ApiBaseModel):
@@ -176,6 +281,13 @@ class AddUserToTeamByBatchResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class TeamsResponse(ApiBaseModel):

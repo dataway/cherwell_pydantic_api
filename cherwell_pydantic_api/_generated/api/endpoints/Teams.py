@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams
 from cherwell_pydantic_api.generated_api_utils import GeneratedInterfaceBase
@@ -8,7 +8,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def AddUserToTeamByBatchV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamByBatchRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamByBatchResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamByBatchResponse
+    ):
         """Add users to a team by batch
 
         Operation to add users to a Team by batch. To get internal IDs for users, use “Get User Information in a Batch.” To get a Team's internal ID, use "Get all available Teams."
@@ -37,12 +39,14 @@ class TeamsInterface(GeneratedInterfaceBase):
             "/api/V1/addusertoteam",
             content=dataRequest.json(exclude_unset=True, by_alias=True),
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def AddUserToTeamV2(
         self,
         dataRequest: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.AddUserToTeamResponse
+    ):
         """Add a user to a team
 
         Operation to add a user to a Team. To get the user's internal ID, use "Get a user by login ID" or "Get a user by public ID." To get a Team's internal ID, use "Get all available Teams."
@@ -69,11 +73,13 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: None"""
         self.validate_path_param(teamid, str)
         response = await self.delete(f"/api/V1/deleteteam/{teamid}")
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def GetTeamsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse
+    ):
         """Get all available Teams
 
         Operation to get IDs and names for all available Teams.
@@ -87,7 +93,9 @@ class TeamsInterface(GeneratedInterfaceBase):
 
     async def GetTeamsV2(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response
+    ):
         """Get all available Teams
 
         Operation to get IDs and names for all available Teams.
@@ -102,7 +110,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def GetTeamV1(
         self,
         teamid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamResponse
+    ):
         """Get a team by its TeamId
 
         Operation to get Team Info for a  single Team using its Team ID. To get a Team's internal ID, use "Get all available Teams." Note that TeamType has two possible values, where TeamType = 0 for User (CSM Users), or TeamType = 1 for Workgroup (CSM Customers).
@@ -119,7 +129,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def GetUsersTeamsV1(
         self,
         userRecordId: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse
+    ):
         """Get Team assignments for a user
 
         Operation to get Team assignments for a user. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -136,7 +148,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def GetUsersTeamsV2(
         self,
         userRecordId: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response
+    ):
         """Get Team assignments for a user
 
         Operation to get Team assignments for a user. To get record IDs, use "Get a user by login ID" or "Get a user by public id."
@@ -152,7 +166,9 @@ class TeamsInterface(GeneratedInterfaceBase):
 
     async def GetWorkgroupsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsResponse
+    ):
         """Get all available Workgroups
 
         Operation to get IDs and names for all available Workgroups.
@@ -166,7 +182,9 @@ class TeamsInterface(GeneratedInterfaceBase):
 
     async def GetWorkgroupsV2(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamsV2Response
+    ):
         """Get all available Workgroups
 
         Operation to get IDs and names for all available Workgroups.
@@ -194,13 +212,15 @@ class TeamsInterface(GeneratedInterfaceBase):
         response = await self.delete(
             f"/api/V1/removeuserfromteam/teamid/{teamId}/userrecordid/{userrecordid}"
         )
-        return self.parse_response(response, None)
+        self.check_response(response)
 
     async def RemoveUserFromTeamV2(
         self,
         teamId: str,
         userrecordid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveUserFromTeamResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveUserFromTeamResponse
+    ):
         """Operation to remove a User from a Team.
 
         Operation to remove a User from a Team. To get the User's record ID, use "Get a User by login ID" or "Get a User by public ID." To get a Team's internal ID, use "Get all available Teams."
@@ -222,7 +242,9 @@ class TeamsInterface(GeneratedInterfaceBase):
         self,
         workgroupid: str,
         customerrecordid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveCustomerFromWorkgroupResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.RemoveCustomerFromWorkgroupResponse
+    ):
         """Remove a customer from a Workgroup
 
         Operation to remove a Customer from a Workgroup.  To remove, specify the Workgroup ID and the Customer Record ID.
@@ -243,7 +265,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def SaveTeamV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamSaveRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamSaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamSaveResponse
+    ):
         """Create or update a team
 
         Operation to create or update a Team or Workgroup.
@@ -261,7 +285,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def SaveTeamMemberV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveTeamMemberRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveTeamMemberResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveTeamMemberResponse
+    ):
         """Add or Update a team member
 
         Operation to add or update a Team Member. To add or update, specify User ID, Team ID, and if Team Manager.   Optionally, set the Team as the User's default Team.
@@ -280,7 +306,9 @@ class TeamsInterface(GeneratedInterfaceBase):
     async def SaveWorkgroupMemberV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveWorkgroupMemberRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveWorkgroupMemberResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.SaveWorkgroupMemberResponse
+    ):
         """Save the membership status of a Workgroup member.
 
         Operation to add or update a Workgroup Member.  To add or update, specify Customer Record ID, Workgroup ID, and if Workgroup Manager.

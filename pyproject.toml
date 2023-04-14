@@ -50,6 +50,8 @@ rich = "^13.3.2"
 pre-commit = "^3.2.2"
 cherwell_pydantic_api = {path = ".", extras = ["modelgen", "jupyter"]}
 autopep8 = "^2.0.2"
+pytest = "^7.3.0"
+mypy = "^1.2.0"
 
 [tool.poetry.extras]
 modelgen = ["black", "dulwich", "click", "jinja2"]
@@ -73,3 +75,7 @@ profile = "hug"
 line_length = 120
 lines_after_imports = 3
 
+[tool.pyright]
+reportUnknownArgumentType = false
+reportUnknownParameterType = false
+reportMissingParameterType = false

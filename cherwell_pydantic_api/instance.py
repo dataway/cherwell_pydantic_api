@@ -34,6 +34,10 @@ class Instance(ApiRequesterInterface):
     def settings(self) -> InstanceSettingsBase:
         return self._settings
 
+    @property
+    def connection(self) -> Connection:
+        return self._connection
+
 
     @docwraps(Connection.authenticate)
     async def authenticate(self):

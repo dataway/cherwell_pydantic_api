@@ -1,8 +1,24 @@
 import re
-from typing import TYPE_CHECKING, Any, AsyncIterable, Iterable, Literal, Mapping, Optional, Type, Union, get_origin
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncIterable,
+    Iterable,
+    Literal,
+    Mapping,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    get_args,
+    get_origin,
+)
 
 import httpx
 import pydantic
+
+from cherwell_pydantic_api.types import CherwellObjectID, FileDownload
+from cherwell_pydantic_api.utils import issubclass_noexcept
 
 
 
@@ -18,10 +34,10 @@ class ApiBaseModel(pydantic.BaseModel):
 
     # Methods to improve IPython experience
 
-    def __dir__(self):
-        return [arg[0] for arg in self.__repr_args__()]
+    def __dir__(self) -> list[str]:
+        return [arg[0] for arg in self.__repr_args__()] # type: ignore # I don't think None will ever be returned
 
-    def _repr_pretty_(self, p, cycle):
+    def _repr_pretty_(self, p: Any, cycle: Any) -> None:
         if cycle:
             p.text(f"{self.__class__.__name__}(...)")
         else:
@@ -63,29 +79,28 @@ else:
         pass
 
 
+ApiBaseModel_co = TypeVar('ApiBaseModel_co', bound=ApiBaseModel, covariant=True)
+
 class GeneratedInterfaceBase(GeneratedInterfaceBaseType):
     """Generated Cherwell API interface"""
 
-    def validate_path_param(self, value: str, type: Type = str):
+    def validate_path_param(self, value: str, type: Union[Type[Union[str, int]], object] = str) -> None:
+        # Literal types can be passed in and mypy sees them as object
         if not _re_path_param.match(value):
             raise ValueError(f"Invalid path parameter: {value!r}")
         type_origin = get_origin(type)
         if type_origin is Literal:
-            if value.lower() not in [a.lower() for a in type.__args__]:
+            if value.lower() not in [a.lower() for a in get_args(type)]:
                 raise ValueError(
                     f"Parameter mismatch with literal: {value} not in {type}")
 
 
-    def parse_response(self, response: Response, rtype: Type) -> Any:
+    def parse_response(self, response: Response, rtype: Type[Union[ApiBaseModel, list[ApiBaseModel_co], list[CherwellObjectID], str, bytes]]) -> Any:
         # If the response type has a `httpStatusCode` field, set it to the actual HTTP status code
         # and don't raise an exception if the HTTP request failed
-        try:
-            # issubclass can fail especially with types
-            is_api = issubclass(rtype, ApiBaseModel)
-        except:
-            is_api = False
-
-        if is_api:
+        if issubclass_noexcept(rtype, ApiBaseModel):
+            if TYPE_CHECKING:
+                assert issubclass(rtype, ApiBaseModel)
             status_code = None
             try:
                 # The Cherwell server sends the header: "Content-Type: application/json;charset=UTF-8"
@@ -98,8 +113,7 @@ class GeneratedInterfaceBase(GeneratedInterfaceBaseType):
                     status_code = response.status_code
             except pydantic.ValidationError:
                 # Maybe the pydantic validation failed because the HTTP request failed
-                if not response.is_success:
-                    response.raise_for_status()
+                response.raise_for_status()
                 raise
             # HTTP error: if we can respond with a httpStatusCode in the response, do so, otherwise raise an exception
             if not response.is_success:
@@ -110,15 +124,12 @@ class GeneratedInterfaceBase(GeneratedInterfaceBaseType):
             return obj
 
         # Reach here if the type isn't a pydantic model
-        if not response.is_success:
-            response.raise_for_status()
+        response.raise_for_status()
 
         if rtype is str:
             return response.text
         if rtype is bytes:
             return response.content
-        if rtype is None:
-            return None
 
         return pydantic.parse_raw_as(rtype,
                                      response.content,
@@ -126,3 +137,11 @@ class GeneratedInterfaceBase(GeneratedInterfaceBaseType):
                                          'content-type').split(';', 1)[0],
                                      encoding=response.encoding or 'utf-8')
 
+
+    def download_response(self, response: Response) -> FileDownload:
+        response.raise_for_status()
+        return response.aiter_bytes()
+
+    def check_response(self, response: Response) -> None:
+        "Raise an exception if the HTTP request failed"
+        response.raise_for_status()

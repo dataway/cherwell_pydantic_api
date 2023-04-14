@@ -45,7 +45,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
                       json: Optional[Any] = None,
                       params: Optional[Mapping[str, Any]] = None,
                       content_type: Optional[str] = None,
-                      **kwargs
+                      **kwargs: Any
                       ) -> Response:
         if content_type is not None:
             kwargs.setdefault('headers', {})['Content-Type'] = content_type
@@ -82,7 +82,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         return await self.request('POST', url)
 
 
-    async def delete(self, url, **kwargs) -> Response:
+    async def delete(self, url: URLType, **kwargs: Any) -> Response:
         return await self.request('DELETE', url, **kwargs)
 
 
@@ -128,6 +128,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
 
 
     # TODO: legacy, remove
+    __LEGACY = r"""
     bo_name_to_id = get_busobid
 
 
@@ -193,3 +194,4 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
 
     def get_search_results_eq(self, bo_dict, fields=None):
         return self.get_search_results_operator(bo_dict=bo_dict, op_dict={}, fields=fields)
+"""

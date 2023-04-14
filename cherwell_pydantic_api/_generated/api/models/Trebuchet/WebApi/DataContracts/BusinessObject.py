@@ -13,6 +13,13 @@ from cherwell_pydantic_api.generated_api_utils import ApiBaseModel, HttpStatusCo
 from . import Core
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class FieldValidationError(ApiBaseModel):
     error: Optional[str] = None
     errorCode: Optional[str] = None
@@ -20,6 +27,13 @@ class FieldValidationError(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class NotificationTrigger(ApiBaseModel):
@@ -32,6 +46,13 @@ class NotificationTrigger(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class DeleteRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObPublicId: Optional[str] = None
@@ -39,6 +60,13 @@ class DeleteRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class DeleteResponse(ApiBaseModel):
@@ -54,6 +82,13 @@ class DeleteResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class FieldTemplateItem(ApiBaseModel):
     dirty: Optional[bool] = None
     displayName: Optional[str] = None
@@ -65,6 +100,13 @@ class FieldTemplateItem(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class FieldValuesLookupRequest(ApiBaseModel):
@@ -79,6 +121,13 @@ class FieldValuesLookupRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class FieldValuesLookupResponse(ApiBaseModel):
     values: Optional[List[str]] = None
     errorCode: Optional[str] = None
@@ -88,6 +137,13 @@ class FieldValuesLookupResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class BusObActivity(ApiBaseModel):
@@ -143,6 +199,13 @@ class Type(Enum):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class Attachment(ApiBaseModel):
     attachedBusObId: Optional[ct.BusObID] = None
     attachedBusObRecId: Optional[ct.BusObRecID] = None
@@ -166,6 +229,13 @@ class Attachment(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class AttachmentsRequest(ApiBaseModel):
     attachmentId: Optional[str] = None
     attachmentTypes: Optional[List[AttachmentType]] = None
@@ -180,6 +250,13 @@ class AttachmentsRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class ReadRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObPublicId: Optional[str] = None
@@ -187,6 +264,13 @@ class ReadRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class BarcodeLookupResponse(ApiBaseModel):
@@ -199,6 +283,13 @@ class BarcodeLookupResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class FieldDefinition(ApiBaseModel):
@@ -227,6 +318,13 @@ class FieldDefinition(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GridDefinition(ApiBaseModel):
     gridId: Optional[str] = None
     name: Optional[str] = None
@@ -234,6 +332,13 @@ class GridDefinition(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class Relationship(ApiBaseModel):
@@ -246,6 +351,13 @@ class Relationship(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class Summary(ApiBaseModel):
@@ -266,6 +378,13 @@ class Summary(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class TemplateRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     fieldNames: Optional[List[str]] = None
@@ -277,6 +396,13 @@ class TemplateRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class TemplateResponse(ApiBaseModel):
     fields: Optional[List[FieldTemplateItem]] = None
     errorCode: Optional[str] = None
@@ -286,6 +412,13 @@ class TemplateResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class ViewSummary(ApiBaseModel):
@@ -304,6 +437,13 @@ class ViewSummary(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SaveBusObAttachmentRequest(ApiBaseModel):
     attachBusObId: Optional[ct.BusObID] = None
     attachBusObName: Optional[str] = None
@@ -320,6 +460,13 @@ class SaveBusObAttachmentRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SaveLinkAttachmentRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObName: Optional[str] = None
@@ -332,6 +479,13 @@ class SaveLinkAttachmentRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SaveUrlAttachmentRequest(ApiBaseModel):
@@ -354,6 +508,13 @@ class CacheScope(Enum):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SaveRequest(ApiBaseModel):
     busObId: Optional[ct.BusObID] = None
     busObPublicId: Optional[str] = None
@@ -365,6 +526,13 @@ class SaveRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class RelatedSaveRequest(ApiBaseModel):
@@ -382,6 +550,13 @@ class RelatedSaveRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class RelatedSaveResponse(ApiBaseModel):
@@ -403,6 +578,13 @@ class RelatedSaveResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SaveResponse(ApiBaseModel):
     busObPublicId: Optional[str] = None
     busObRecId: Optional[ct.BusObRecID] = None
@@ -418,6 +600,13 @@ class SaveResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class BatchDeleteRequest(ApiBaseModel):
     deleteRequests: Optional[List[DeleteRequest]] = None
     stopOnError: Optional[bool] = None
@@ -426,11 +615,25 @@ class BatchDeleteRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class BatchDeleteResponse(ApiBaseModel):
     responses: Optional[List[DeleteResponse]] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class ReadResponse(ApiBaseModel):
@@ -448,6 +651,13 @@ class ReadResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class AttachmentsResponse(ApiBaseModel):
     attachments: Optional[List[Attachment]] = None
     errorCode: Optional[str] = None
@@ -459,6 +669,13 @@ class AttachmentsResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class BatchReadRequest(ApiBaseModel):
     readRequests: Optional[List[ReadRequest]] = None
     stopOnError: Optional[bool] = None
@@ -467,11 +684,25 @@ class BatchReadRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class BatchReadResponse(ApiBaseModel):
     responses: Optional[List[ReadResponse]] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SchemaResponse(ApiBaseModel):
@@ -493,11 +724,25 @@ class SchemaResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class BusObsForViewResponse(ApiBaseModel):
     summaries: Optional[List[ViewSummary]] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class BatchSaveRequest(ApiBaseModel):
@@ -506,6 +751,13 @@ class BatchSaveRequest(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class BatchSaveResponse(ApiBaseModel):

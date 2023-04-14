@@ -10,6 +10,13 @@ import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel, HttpStatusCode
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetStagesResponseStages(ApiBaseModel):
     id: Optional[str] = None
     isFinal: Optional[bool] = None
@@ -17,6 +24,13 @@ class GetStagesResponseStages(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class GetStatusesResponseStatuses(ApiBaseModel):
@@ -29,6 +43,13 @@ class GetStatusesResponseStatuses(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetTransitionsResponseTransition(ApiBaseModel):
     id: Optional[str] = None
     name: Optional[str] = None
@@ -37,6 +58,13 @@ class GetTransitionsResponseTransition(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class GetRecordStatusResponse(ApiBaseModel):
@@ -51,6 +79,13 @@ class GetRecordStatusResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetTransitionOptionsResponseTransition(ApiBaseModel):
     name: Optional[str] = None
     id: Optional[str] = None
@@ -61,11 +96,25 @@ class GetTransitionOptionsResponseTransition(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class TransitionRecordRequest(ApiBaseModel):
     transitionOptionId: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class GetStagesResponse(ApiBaseModel):
@@ -79,6 +128,13 @@ class GetStagesResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetStatusesResponse(ApiBaseModel):
     statuses: Optional[List[GetStatusesResponseStatuses]] = None
     errorCode: Optional[str] = None
@@ -90,6 +146,13 @@ class GetStatusesResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetTransitionsResponse(ApiBaseModel):
     transitions: Optional[List[GetTransitionsResponseTransition]] = None
     errorCode: Optional[str] = None
@@ -99,6 +162,13 @@ class GetTransitionsResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class GetTransitionOptionsResponse(ApiBaseModel):

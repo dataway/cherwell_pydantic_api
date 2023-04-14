@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject
@@ -10,7 +10,9 @@ class ApprovalInterface(GeneratedInterfaceBase):
         self,
         approvalRecId: str,
         approvalAction: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject.SaveResponse
+    ):
         """Action an Approval
 
         Operation that actions an Approval Business Object. Use this method, passing either approve, abstain or deny to update the Business Object's state
@@ -29,7 +31,9 @@ class ApprovalInterface(GeneratedInterfaceBase):
     async def GetApprovalByRecIdV1(
         self,
         approvalRecId: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.ApprovalReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.ApprovalReadResponse
+    ):
         """Get Approval
 
         Operation that returns an Approval Business Object.  Use the provided links to action the Approval
@@ -45,7 +49,9 @@ class ApprovalInterface(GeneratedInterfaceBase):
 
     async def GetMyApprovalsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse
+    ):
         """Get all waiting Approvals for the current user
 
         Operation that returns a list of Approval Business Objects that are in a state of 'Waiting' for the current user.  Use the provided links to action the Approval
@@ -59,7 +65,9 @@ class ApprovalInterface(GeneratedInterfaceBase):
 
     async def GetMyPendingApprovalsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Approval.GetApprovalsResponse
+    ):
         """Get all waiting approvals that were created by the current user
 
         Operation that returns a list of Approval Business Objects that are in a state of 'Waiting' that were created by the current user.  Use the provided links to action the Approval

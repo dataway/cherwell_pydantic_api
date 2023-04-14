@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues
@@ -9,7 +9,9 @@ class QueuesInterface(GeneratedInterfaceBase):
     async def AddItemToQueueV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.AddItemToQueueRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.AddItemToQueueResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.AddItemToQueueResponse
+    ):
         """Add a Business Object to a queue
 
         Operation to add a Business Object to a queue
@@ -28,7 +30,9 @@ class QueuesInterface(GeneratedInterfaceBase):
     async def CheckInQueueItemV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckInQueueItemRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckInQueueItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckInQueueItemResponse
+    ):
         """Check a Business Object in to a queue
 
         Operation to check in a queue item
@@ -47,7 +51,9 @@ class QueuesInterface(GeneratedInterfaceBase):
     async def CheckOutQueueItemV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckOutQueueItemRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckOutQueueItemResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.CheckOutQueueItemResponse
+    ):
         """Check a Business Object out of a queue
 
         Operation to check out a queue item
@@ -69,7 +75,9 @@ class QueuesInterface(GeneratedInterfaceBase):
         scopeowner: str,
         folder: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get available queues.
 
         Get available queues for a specific Business Object type based on scope, scope owner, and folder.
@@ -82,7 +90,7 @@ class QueuesInterface(GeneratedInterfaceBase):
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
         self.validate_path_param(folder, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -99,7 +107,9 @@ class QueuesInterface(GeneratedInterfaceBase):
         scope: str,
         scopeowner: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get available queues.
 
         Get available queues for a specific Business Object type based on scope, and scope owner.
@@ -110,7 +120,7 @@ class QueuesInterface(GeneratedInterfaceBase):
         """
         self.validate_path_param(scope, str)
         self.validate_path_param(scopeowner, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(
@@ -125,7 +135,9 @@ class QueuesInterface(GeneratedInterfaceBase):
         self,
         scope: str,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get available queues.
 
         Get available queues for a specific Business Object type based on scope.
@@ -134,7 +146,7 @@ class QueuesInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
         self.validate_path_param(scope, str)
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get(f"/api/V1/getqueues/scope/{scope}", params=params)
@@ -146,14 +158,16 @@ class QueuesInterface(GeneratedInterfaceBase):
     async def GetQueuesV1(
         self,
         links: Optional[bool] = None,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
+    ):
         """Get available queues.
 
         Get available queues for a specific Business Object.
          :param links: Whether or not to include links.
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core.ManagerData
         """
-        params = {}
+        params: dict[str, Any] = {}
         if links is not None:
             params["links"] = links
         response = await self.get("/api/V1/getqueues", params=params)
@@ -165,7 +179,9 @@ class QueuesInterface(GeneratedInterfaceBase):
     async def RemoveItemFromQueueV1(
         self,
         request: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.RemoveItemFromQueueRequest,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.RemoveItemFromQueueResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Queues.RemoveItemFromQueueResponse
+    ):
         """Remove an item from a queue
 
         Operation to remove an item from a queue

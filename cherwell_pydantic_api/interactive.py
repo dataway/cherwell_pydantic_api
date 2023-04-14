@@ -19,11 +19,16 @@ __all__ = ['Interactive']
 
 _ReturnType = TypeVar("_ReturnType")
 _WaiterType = Callable[[Coroutine[Any, Any, _ReturnType]], _ReturnType]
+_Waiter = _WaiterType[Any]
 
 
 class RestaurantInterface:
     "A restaurant contains a waiter."
-    _waiter: _WaiterType
+    _waiter: _Waiter
+
+    @property
+    def waiter(self) -> _Waiter:
+        return self._waiter
 
 
 def wait(amethod: Callable[..., Coroutine[Any, Any, _ReturnType]]) -> Callable[..., _ReturnType]:
@@ -31,15 +36,15 @@ def wait(amethod: Callable[..., Coroutine[Any, Any, _ReturnType]]) -> Callable[.
     """
 
     @wraps(amethod)
-    def wrapper(self: RestaurantInterface, *args, **kwargs):
-        return self._waiter(amethod(self, *args, **kwargs))
+    def wrapper(self: RestaurantInterface, *args: Any, **kwargs: Any) -> _ReturnType:
+        return self.waiter(amethod(self, *args, **kwargs))
     return wrapper
 
 
 class WaiterProxy(RestaurantInterface):
     """A proxy around an object with async methods that uses the waiter method to make all public methods sync."""
 
-    def __init__(self, async_obj: object, waiter: _WaiterType):
+    def __init__(self, async_obj: object, waiter: _Waiter):
         self._async_obj = async_obj
         self._waiter = waiter
         self.__doc__ = async_obj.__doc__
@@ -53,7 +58,7 @@ class WaiterProxy(RestaurantInterface):
             return amethod
 
         @wraps(amethod)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any):
             r = amethod(*args, **kwargs)
             if isinstance(r, types.CoroutineType):
                 return self._waiter(r)
@@ -80,12 +85,12 @@ class WaiterProxy(RestaurantInterface):
 
 
 @wraps(BusinessObjectWrapper)
-def create_bo_wrapper_class(waiter: _WaiterType) -> type[BusinessObjectWrapper]:
+def create_bo_wrapper_class(waiter: _Waiter) -> type[BusinessObjectWrapper]:
     class InteractiveBusinessObjectWrapper(BusinessObjectWrapper, RestaurantInterface):
         _waiter = waiter
 
         @wait
-        async def get(self, publicid: str) -> ReadResponse:
+        async def get(self, publicid: str) -> ReadResponse: # type: ignore
             return await super().get(publicid=publicid)
 
     return InteractiveBusinessObjectWrapper
@@ -98,7 +103,7 @@ class Interactive(RestaurantInterface):
     It also wraps the BusinessObjectRegistry, so that all BusinessObjectWrapper objects created by it can be accessed with using await.
     """
 
-    def __init__(self, *, instance_name: Optional[str] = None, waiter: Optional[_WaiterType] = None):
+    def __init__(self, *, instance_name: Optional[str] = None, waiter: Optional[_Waiter] = None):
         self._instance = Instance.use(name=instance_name)
         if waiter is None:
             import asyncio
@@ -106,7 +111,7 @@ class Interactive(RestaurantInterface):
         self._waiter = waiter
         self._instance_proxy = WaiterProxy(self._instance, self._waiter)
         self._connection_proxy = WaiterProxy(
-            self._instance._connection, self._waiter)
+            self._instance.connection, self._waiter)
         self.help: Any = ''
 
     @property
@@ -119,7 +124,7 @@ class Interactive(RestaurantInterface):
         "WaiterProxy wrapper around the Instance object."
         return self._instance_proxy
 
-    def async_wrap(self, **kwargs) -> "Interactive":
+    def async_wrap(self, **kwargs: object) -> "Interactive":
         "Wrap the given objects with WaiterProxy and add them as attributes to the Interactive instance."
         # TODO: restrict attribute name
         for attr, obj in kwargs.items():

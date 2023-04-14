@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional  # type: ignore
 
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security
 import cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users
@@ -17,7 +17,9 @@ class SecurityInterface(GeneratedInterfaceBase):
             "MobileClient",
             "ServiceMonitor",
         ],
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.ClientSecuritySettingsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.ClientSecuritySettingsResponse
+    ):
         """Get client security settings
 
         Operation to get the configured client security settings. Returns true if internal, Windows, LDAP, or SAML are enabled as authentication methods.
@@ -45,7 +47,9 @@ class SecurityInterface(GeneratedInterfaceBase):
 
     async def GetRolesV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadResponse
+    ):
         """Get all available Roles
 
         Operation to get all available Roles.
@@ -59,7 +63,9 @@ class SecurityInterface(GeneratedInterfaceBase):
 
     async def GetRolesV2(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.RoleReadV2Response
+    ):
         """Get all available Roles
 
         Operation to get all available Roles.
@@ -101,7 +107,9 @@ class SecurityInterface(GeneratedInterfaceBase):
         self,
         groupid: str,
         busObId: cherwell_pydantic_api.types.BusObIDParamType,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
+    ):
         """Get Business Object permissions by Security Group
 
         Operation to get specific Business Object permissions for a Security Group.
@@ -149,7 +157,9 @@ class SecurityInterface(GeneratedInterfaceBase):
         self,
         groupname: str,
         busobname: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
+    ):
         """Get Business Object permissions by Security Group
 
         Operation to get specific Business Object permissions for a Security Group.
@@ -193,7 +203,9 @@ class SecurityInterface(GeneratedInterfaceBase):
     async def GetSecurityGroupBusinessObjectPermissionsForCurrentUserByBusObIdV2(
         self,
         busObId: cherwell_pydantic_api.types.BusObIDParamType,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
+    ):
         """Get Business Object permission for current user
 
         Operation to get Business Object permissions for the currently logged-in user's Security Group.
@@ -235,7 +247,9 @@ class SecurityInterface(GeneratedInterfaceBase):
     async def GetSecurityGroupBusinessObjectPermissionsForCurrentUserByBusObNameV2(
         self,
         busobname: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.GetSecurityGroupBusinessObjectPermissionsResponse
+    ):
         """Get Business Object permissions for current user
 
         Operation to get Business Object permissions for currently logged in user's Security Group.
@@ -271,7 +285,9 @@ class SecurityInterface(GeneratedInterfaceBase):
 
     async def GetSecurityGroupCategoriesV2(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightCategoriesResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightCategoriesResponse
+    ):
         """Get all Security Group categories
 
         Operation to get IDs and names for all available Security Group categories.
@@ -313,7 +329,9 @@ class SecurityInterface(GeneratedInterfaceBase):
         self,
         groupid: str,
         categoryid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
+    ):
         """Get permissions for a Security Group by category
 
         Operation to get permissions for a Security Group by category. To get Security Group IDs, use "Get all available Security Groups." To get Security Group category IDs, use "Get all Security Group categories."
@@ -361,7 +379,9 @@ class SecurityInterface(GeneratedInterfaceBase):
         self,
         groupname: str,
         categoryname: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
+    ):
         """Get permissions for a Security Group by category
 
         Operation to get permissions for a Security Group by category.
@@ -405,7 +425,9 @@ class SecurityInterface(GeneratedInterfaceBase):
     async def GetSecurityGroupRightsForCurrentUserByCategoryIdV2(
         self,
         categoryid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
+    ):
         """Get current user's permissions by Security Group category by ID
 
         Operation to get permissions for the current user's Security Group by category. To get Security Group category IDs, use "Get all Security Group categories."
@@ -447,7 +469,9 @@ class SecurityInterface(GeneratedInterfaceBase):
     async def GetSecurityGroupRightsForCurrentUserByCategoryNameV2(
         self,
         categoryname: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityRightsResponse
+    ):
         """Get current user's permissions by Security Group category by name
 
         Operation to get permissions for the current user's Security Group by category.
@@ -465,7 +489,9 @@ class SecurityInterface(GeneratedInterfaceBase):
 
     async def GetSecurityGroupsV1(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupResponse:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupResponse
+    ):
         """Get all available Security Groups
 
         Operation to get IDs, names, and descriptions for all available Security Groups.
@@ -479,7 +505,9 @@ class SecurityInterface(GeneratedInterfaceBase):
 
     async def GetSecurityGroupsV2(
         self,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Security.SecurityGroupV2Response
+    ):
         """Get all available Security Groups
 
         Operation to get IDs, names, and descriptions for all available Security Groups.
@@ -515,7 +543,9 @@ class SecurityInterface(GeneratedInterfaceBase):
     async def GetUsersInSecurityGroupV2(
         self,
         groupid: str,
-    ) -> cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response:
+    ) -> (
+        cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserReadV2Response
+    ):
         """Get users in a Security Group
 
         Operation to get the users in a specified Security Group. Use "Get all available Security Groups" to get Security Group record IDs.

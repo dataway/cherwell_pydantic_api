@@ -12,6 +12,13 @@ import cherwell_pydantic_api.types as ct
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel, HttpStatusCode
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class DeleteApiClientSettingsResponse(ApiBaseModel):
     errorCode: Optional[str] = None
     errorMessage: Optional[str] = None
@@ -22,12 +29,26 @@ class DeleteApiClientSettingsResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetApiClientSettingsResponseItem(ApiBaseModel):
     name: Optional[str] = None
     standInKey: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class ApiClientSettingResponse(ApiBaseModel):
@@ -49,6 +70,13 @@ class ApiClientSettingResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class ClientSecuritySettingsResponse(ApiBaseModel):
     internalLoginAllowed: Optional[bool] = None
     ldapLoginAllowed: Optional[bool] = None
@@ -57,6 +85,13 @@ class ClientSecuritySettingsResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class MobileCredentialsModeResponse(ApiBaseModel):
@@ -68,6 +103,13 @@ class MobileCredentialsModeResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class Role(ApiBaseModel):
@@ -85,6 +127,13 @@ class Role(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class RoleReadV2Response(ApiBaseModel):
     roles: Optional[List[Role]] = None
     errorCode: Optional[str] = None
@@ -94,6 +143,13 @@ class RoleReadV2Response(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class FieldPermission(ApiBaseModel):
@@ -116,6 +172,13 @@ class FieldPermission(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class RightCategory(ApiBaseModel):
     categoryDescription: Optional[str] = None
     categoryId: Optional[str] = None
@@ -123,6 +186,13 @@ class RightCategory(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SecurityRightCategoriesResponse(ApiBaseModel):
@@ -134,6 +204,13 @@ class SecurityRightCategoriesResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class Right(ApiBaseModel):
@@ -158,6 +235,13 @@ class Right(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SecurityRightsResponse(ApiBaseModel):
     rights: Optional[List[Right]] = None
     errorCode: Optional[str] = None
@@ -169,6 +253,13 @@ class SecurityRightsResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class SecurityGroup(ApiBaseModel):
     description: Optional[str] = None
     groupId: Optional[str] = None
@@ -176,6 +267,13 @@ class SecurityGroup(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SecurityGroupV2Response(ApiBaseModel):
@@ -187,6 +285,13 @@ class SecurityGroupV2Response(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SaveApiClientSettingRequest(ApiBaseModel):
@@ -204,12 +309,26 @@ class SaveApiClientSettingRequest(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class CloneSecurityGroupRequest(ApiBaseModel):
     securityGroupName: Optional[str] = None
     sourceSecurityGroupNameOrId: Optional[str] = None
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class CloneSecurityGroupResponse(ApiBaseModel):
@@ -221,6 +340,13 @@ class CloneSecurityGroupResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class TokenResponse(ApiBaseModel):
@@ -237,6 +363,13 @@ class TokenResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetApiClientSettingsResponse(ApiBaseModel):
     settings: Optional[List[GetApiClientSettingsResponseItem]] = None
     errorCode: Optional[str] = None
@@ -248,6 +381,13 @@ class GetApiClientSettingsResponse(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class RoleReadResponse(ApiBaseModel):
     error: Optional[str] = None
     errorCode: Optional[str] = None
@@ -256,6 +396,13 @@ class RoleReadResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class BusinessObjectPermission(ApiBaseModel):
@@ -279,6 +426,13 @@ class BusinessObjectPermission(ApiBaseModel):
 import cherwell_pydantic_api.types as ct
 
 
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
+
+
 class GetSecurityGroupBusinessObjectPermissionsResponse(ApiBaseModel):
     businessObjectPermissions: Optional[List[BusinessObjectPermission]] = None
     errorCode: Optional[str] = None
@@ -288,6 +442,13 @@ class GetSecurityGroupBusinessObjectPermissionsResponse(ApiBaseModel):
 
 
 import cherwell_pydantic_api.types as ct
+
+
+ct  # type: ignore
+from enum import Enum
+
+
+Enum  # type: ignore
 
 
 class SecurityGroupResponse(ApiBaseModel):
