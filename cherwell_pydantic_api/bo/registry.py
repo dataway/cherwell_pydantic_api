@@ -44,9 +44,11 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         self._parents: dict[BusObID, BusObID] = {}
         self._name_to_id: dict[BusObIdentifier, BusObID] = {}
         self._relationships: dict[RelationshipID, ValidRelationship] = {}
+        self._unresolved_relationships: defaultdict[BusObID, set[RelationshipID]] = defaultdict(set)
         self._bo_rels: defaultdict[BusObID,
                                    set[RelationshipID]] = defaultdict(set)
-        self._wrappers: WeakValueDictionary[BusObID, BusinessObjectWrapperBase] = WeakValueDictionary()
+        self._wrappers: WeakValueDictionary[BusObID,
+                                            BusinessObjectWrapperBase] = WeakValueDictionary()
         self._service_info: Optional[ServiceInfoResponse] = None
         self._models: WeakValueDictionary[BusObID,
                                           type[BusinessObjectModelRegistryMixin]] = WeakValueDictionary()
@@ -108,17 +110,24 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
                 raise ValueError(
                     f'busObId {busobid} ({valid_schema.name}) has relationships but no summary was registered')
             for rel in schema.relationships:
-                valid_rel = ValidRelationship.from_relationship(valid_schema, rel)
+                valid_rel = ValidRelationship.from_relationship(
+                    valid_schema, rel)
                 relid = valid_rel.relationshipId
                 assert relid in valid_schema.relationshipIds
                 valid_rel.source_schema = valid_schema
+                valid_schema.relationships[relid] = valid_rel
                 if valid_rel.target in self._schemas:
                     valid_rel.target_schema = self.get_schema(valid_rel.target)
+                    valid_rel.target_name = valid_rel.target_schema.identifier
+                else:
+                    self._unresolved_relationships[valid_rel.target].add(relid)
+                    if valid_rel.target in self._summaries:
+                        valid_rel.target_name = self._summaries[valid_rel.target].name
                 if relid in self._relationships:
                     existing_rel = self._relationships[relid]
                     if existing_rel.source != busobid:
                         if self._parents.get(busobid) == existing_rel.source:
-                            #print(f"Skipping child relationship {relid} on {identifier} < {existing_rel.source_schema.identifier}")
+                            # print(f"Skipping child relationship {relid} on {identifier} < {existing_rel.source_schema.identifier}")
                             continue
                     if existing_rel != valid_rel:
                         raise ValueError(
@@ -132,6 +141,13 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
                     self._relationships[relid] = valid_rel
                     self._bo_rels[busobid].add(relid)
                     self._bo_rels[valid_rel.target].add(relid)
+
+        # Fixup relationships of which this bo is a target
+        if self._unresolved_relationships[busobid]:
+            for relid in self._unresolved_relationships[busobid]:
+                urel = self._relationships[relid]
+                urel.target_schema = valid_schema
+            del self._unresolved_relationships[busobid]
 
 
     def register_summary(self, summary: Summary):
@@ -157,7 +173,8 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         if summary.groupSummaries:
             for sub_summary in summary.groupSummaries:
                 if sub_summary.busObId is None:
-                    raise ValueError('Summary.busObId is None in groupSummaries')
+                    raise ValueError(
+                        'Summary.busObId is None in groupSummaries')
                 self.register_summary(sub_summary)
                 self._parents[sub_summary.busObId] = busobid
 

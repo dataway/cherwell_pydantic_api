@@ -39,6 +39,7 @@ class ValidSchema(ApiBaseModel):
     states: Optional[str] = None
     identifier: BusObIdentifier = Field(description="ASCII lowercase of name, to be used as python identifier")
     relationshipIds: list[RelationshipID]
+    relationships: dict[RelationshipID, "ValidRelationship"] = {}
 
     @classmethod
     def from_schema_response(cls, schema: SchemaResponse):
@@ -70,6 +71,7 @@ class ValidRelationship(ApiBaseModel):
     fieldDefinitions: list[ValidFieldDefinition]
     target: BusObID
     target_schema: Optional[ValidSchema] = None
+    target_name: Optional[str] = None
     source: BusObID
     source_schema: ValidSchema
 
@@ -86,5 +88,3 @@ class ValidRelationship(ApiBaseModel):
                    source=source_schema.busObId,
                    source_schema=source_schema,
                    )
-
-

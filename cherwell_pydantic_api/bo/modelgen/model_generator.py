@@ -6,7 +6,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import FieldDefinition
 from cherwell_pydantic_api.bo.valid_schema import ValidSchema
-from cherwell_pydantic_api.settings import InstanceSettingsBase
+from cherwell_pydantic_api.instance import Instance
 from cherwell_pydantic_api.types import FieldID
 from cherwell_pydantic_api.utils import fieldid_parts
 
@@ -73,15 +73,15 @@ class ParsedFieldDefinition(FieldDefinition):
 
 
 class PydanticModelGenerator:
-    def __init__(self, instance_settings: InstanceSettingsBase):
-        self._instance_settings = instance_settings
+    def __init__(self, instance: Instance):
+        self._instance = instance
         self._jinja_env = Environment(loader=PackageLoader('cherwell_pydantic_api.bo', 'templates'),
                                       autoescape=select_autoescape(['py']), trim_blocks=True, lstrip_blocks=True)
         self._jinja_env.filters['repr'] = repr # type: ignore
 
     def generate_base(self) -> str:
         template = self._jinja_env.get_template('base.py.j2')
-        base_str = template.render(settings=self._instance_settings)
+        base_str = template.render(settings=self._instance.settings)
         base_str = black.format_str(
             base_str, mode=black.FileMode(preview=True))
         return base_str
@@ -92,15 +92,22 @@ class PydanticModelGenerator:
                   for field in schema.fieldDefinitions]
         modules: set[str] = set()
         validators: dict[str, list[ParsedFieldDefinition]] = defaultdict(list)
+        statefield: Optional[str] = None
+        firstrecfield: Optional[str] = None
         for field in fields:
             field.resolve_type()
+            if field.fieldid_parts['FI'] == schema.stateFieldId:
+                statefield = field.name
+            if field.fieldid_parts['FI'] == schema.firstRecIdField:
+                firstrecfield = field.name
             if field.python_type_modules:
                 modules.update(field.python_type_modules)
             if field.python_type_validator:
                 validators[field.python_type_validator].append(field)
             assert field.fieldid_parts['BO'] == schema.busObId
         model_str = template.render(schema=schema, fields=fields, modules=modules,
-                                    validators=validators, settings=self._instance_settings)
+                                    validators=validators, settings=self._instance.settings,
+                                    statefield=statefield, firstrecfield=firstrecfield)
         model_str = black.format_str(
             model_str, mode=black.FileMode(preview=True))
         return model_str

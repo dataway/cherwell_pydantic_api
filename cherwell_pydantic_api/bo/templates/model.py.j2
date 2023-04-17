@@ -4,10 +4,14 @@
 
 from typing import Optional
 from pydantic import Field
-from .__base import BusinessObjectModelInstanceBase
+from .__base import BusinessObjectModelInstanceBase, BusinessObjectModelData
 {% if validators %}
-from pydantic import validator
 from cherwell_pydantic_api import validators
+{% endif %}
+from cherwell_pydantic_api.types import BusObID, FieldID
+{% if schema.relationships %}
+from .__base import BusinessObjectRelationship
+from cherwell_pydantic_api.types import RelationshipID
 {% endif %}
 {% for module in modules|sort %}
 import {{ module }}
@@ -15,18 +19,32 @@ import {{ module }}
 
 
 class {{ schema.name }}(BusinessObjectModelInstanceBase):
-    class _ModelData:
-        busobid = {{ schema.busObId|repr }}
-        statefieldid = {{ schema.stateFieldId|repr }}
-        firstrecidfield = {{ schema.firstRecIdField|repr }}
-        recidfields = {{ schema.recIdFields|repr }}
+    class _ModelData(BusinessObjectModelData):
+        busobid = BusObID({{ schema.busObId|repr }})
+        firstrecidfield = FieldID({{ schema.firstRecIdField|repr }})
+        recidfields = FieldID({{ schema.recIdFields|repr }})
+        firstrecfield = {{ firstrecfield|repr }}
+        {% if schema.stateFieldId %}
+        statefieldid = FieldID({{ schema.stateFieldId|repr }})
+        statefield = {{ statefield|repr }}
+        {% endif %}
         {% if schema.states %}
         states = {{ schema.states.split(',') }}
+        {% endif %}
+        {% if schema.relationships %}
+        relationships = {
+            {% for rel_id, relationship in schema.relationships.items()|sort(attribute='0') %}
+            RelationshipID({{ rel_id|repr }}):  # {{ relationship.target_name }}
+                BusinessObjectRelationship({{ relationship.target|repr }},
+                oneToMany={% if relationship.cardinality == 'OneToMany' %}True{% else %}False{% endif %},
+                description={{ relationship.description|repr }},
+                displayName={{ relationship.displayName|repr }}),
+            {% endfor %}
+        }
         {% endif %}
 
     class Config:
         title = {{ schema.name|repr }}
-        orm_mode = True
 
     {% for field in fields %}
     {{ field.name }}: {{ field.python_type }} = Field(None,
@@ -39,9 +57,9 @@ class {{ schema.name }}(BusinessObjectModelInstanceBase):
     {% endfor %}
 
     {% for validator, v_fields in validators.items() %}
-    _{{ validator }} = validator(
+    _{{ validator }} = validators.{{ validator }}(
         {% for field in v_fields %}
         {{ field.name|repr }},
         {% endfor %}
-        pre=True, allow_reuse=True)(validators.{{ validator }})
+        pre=True, allow_reuse=True)
     {% endfor %}

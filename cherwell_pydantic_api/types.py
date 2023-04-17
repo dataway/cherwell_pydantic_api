@@ -91,8 +91,19 @@ AttachmentType.__doc__ = """For file types, select the type of attachment:
 
 
 class CherwellAPIError(Exception):
+    extras: dict[str, Any]
+
     def __init__(self, msg: str = "Cherwell API error", *, errorCode: Optional[str] = None,
                  errorMessage: Optional[str] = None,
-                 httpStatusCode: Optional[Any] = None):
+                 httpStatusCode: Optional[Any] = None,
+                 **kwargs):
         message = f"{msg}: {errorCode=} {errorMessage=} {httpStatusCode=}"
+        self.errorCode = errorCode
+        self.errorMessage = errorMessage
+        self.httpStatusCode = httpStatusCode
+        self.extras = kwargs
         super().__init__(message)
+
+
+class SaveBusinessObjectError(CherwellAPIError):
+    pass

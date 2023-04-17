@@ -1,9 +1,9 @@
 {
 	"folders": [
-		{
-			"path": ".."
-		}
-	],
+        {
+            "path": ".."
+        }
+    ],
 	"settings": {
 		"python.analysis.autoImportCompletions": true,
 		"python.analysis.autoImportUserSymbols": true,

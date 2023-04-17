@@ -80,9 +80,9 @@ lines_after_imports = 3
 reportUnknownArgumentType = false
 reportUnknownParameterType = false
 reportMissingParameterType = false
-ignore = ['cherwell_pydantic_api/cli/', 'repo/']
+ignore = ['cherwell_pydantic_api/cli/']
 
 [tool.mypy]
 plugins = "pydantic.mypy"
 ignore_missing_imports = true
-exclude = ['cherwell_pydantic_api/cli/', 'repo/']
+exclude = ['cherwell_pydantic_api/cli/']
