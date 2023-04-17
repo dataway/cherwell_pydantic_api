@@ -4,6 +4,9 @@ from typing import Optional
 
 
 
+# TODO: Take locale into account
+
+
 def validator_datetime(value: str) -> Optional[datetime.datetime]:
     if not value:
         return None

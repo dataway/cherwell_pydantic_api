@@ -1,4 +1,5 @@
-
+# pyright: basic, reportMissingImports=false, reportGeneralTypeIssues=false
+# mypy: ignore-errors
 import sys
 import importlib.abc
 import importlib.machinery

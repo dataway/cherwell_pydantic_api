@@ -1,6 +1,7 @@
 from typing import ClassVar, Optional, Type, TypeVar, cast
 
 from pydantic import BaseModel
+from pydantic_changedetect.changedetect import ChangeDetectionMixin
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import ReadResponse
 from cherwell_pydantic_api.bo.registry import BusinessObjectModelRegistryMixin
@@ -12,7 +13,7 @@ from cherwell_pydantic_api.types import BusObID, BusObRecID, CherwellAPIError, F
 BusObModel_T = TypeVar("BusObModel_T", bound="BusinessObjectModelBase")
 
 
-class BusinessObjectModelBase(BaseModel, BusinessObjectModelRegistryMixin):
+class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectModelRegistryMixin):
     _instance_name: ClassVar[str]
 
     def __init_subclass__(cls) -> None:

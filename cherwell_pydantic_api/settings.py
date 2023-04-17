@@ -11,9 +11,9 @@ from pydantic import AnyHttpUrl, BaseSettings, Field, SecretStr
 class InstanceSettingsBase(BaseSettings):
     name: str = Field(default='_unset')
     base_url: Optional[AnyHttpUrl] = Field(default=None)
-    client_id: SecretStr = Field(default='')
+    client_id: SecretStr = Field(default=SecretStr(''))
     username: str = Field(default='')
-    password: SecretStr = Field(default='')
+    password: SecretStr = Field(default=SecretStr(''))
     timeout: float = Field(default=5.0)
     verify: Union[str, bool] = Field(default='on')
     subpackage: Optional[Path] = Field(
@@ -45,7 +45,7 @@ class InstanceSettings(InstanceSettingsBase):
 class Settings(InstanceSettingsBase):
     name: str = Field('default', const=True)
     inst: dict[str, InstanceSettings] = Field(default={})
-    repo_dir: Path = Field(default='repo')
+    repo_dir: Path = Field(default=Path('repo'))
     repo_author: str = 'cherwell_pydantic_api <noreply@cherwell-pydantic-api.nonexistent.anthonyuk.dev>'
     suppress_banner: bool = Field(default=False, description='Suppress the CLI welcome banner')
 

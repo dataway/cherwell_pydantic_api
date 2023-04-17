@@ -1,6 +1,7 @@
+# pyright: strict, reportUnknownMemberType=false
 import logging
 from pathlib import Path
-from typing import Any, Iterable, Literal, Optional, Union
+from typing import Iterable, Literal, Optional, Union
 
 from dulwich import porcelain
 from dulwich.errors import NotGitRepository
@@ -19,7 +20,7 @@ FileGenerator = Iterable[tuple[str, str]]
 
 
 class ModelRepo:
-    _repo: Repo
+    _repo: Optional[Repo]
 
     def __init__(self, *, create: bool = False, permit_missing: bool = False):
         is_new = False
@@ -28,7 +29,7 @@ class ModelRepo:
             if create:
                 self._repo_dir.mkdir(parents=True)
             elif permit_missing:
-                self._repo = None  # type: ignore
+                self._repo = None
                 return
             else:
                 raise FileNotFoundError(
@@ -52,8 +53,10 @@ class ModelRepo:
 
 
     def prepare_save(self, *, instance_name: Optional[str] = None, instance: Optional[Instance] = None) -> tuple[Instance, Path]:
+        if self._repo is None:
+            raise ValueError('Repository is missing')
         # ensure repo is clean
-        repo_status = porcelain.status(self._repo)  # type: ignore
+        repo_status = porcelain.status(self._repo) # type: ignore
         if repo_status.unstaged or repo_status.untracked or repo_status.staged['add'] or repo_status.staged['delete'] or repo_status.staged['modify']:
             raise ValueError(
                 'Repo is not clean, please commit or stash your changes before saving')
@@ -63,7 +66,7 @@ class ModelRepo:
             if instance_name is None:
                 raise ValueError(
                     'Either instance_name or instance must be given')
-            instance = Instance._instances[instance_name]
+            instance = Instance.use(instance_name)
         else:
             instance_name = instance.settings.name
 
@@ -81,6 +84,8 @@ class ModelRepo:
              file_type: FileTypeLiteral = 'registry',
              file_generator: FileGenerator,
              commit: bool = True) -> Optional[bytes]:
+        if self._repo is None:
+            raise ValueError('Repository is missing')
         instance, instance_dir = self.prepare_save(
             instance_name=instance_name, instance=instance)
         file_type_dir = instance_dir / file_type
@@ -99,6 +104,8 @@ class ModelRepo:
 
 
     def commit(self, *, instance: Instance, file_type: FileTypeLiteral) -> Optional[bytes]:
+        if self._repo is None:
+            raise ValueError('Repository is missing')
         # Check if there are any changes to commit (because dulwich allows empty commits)
         encoding = self._repo.get_config().encoding
         repo_status = porcelain.status(self._repo)  # type: ignore
@@ -116,7 +123,7 @@ class ModelRepo:
         logging.info(
             f'Committing {file_type} to {branch} for instance {instance.settings.name}')
         return self._repo.do_commit(message=commit.encode(),
-                                    author=author.encode(), ref=ref.encode())
+                                    author=author.encode(), ref=ref.encode()) # type: ignore
 
 
     def save_instance(self, instance: Instance) -> Optional[bytes]:
@@ -124,8 +131,8 @@ class ModelRepo:
 
 
     def save_all(self) -> dict[str, Optional[bytes]]:
-        r = {}
-        for instance in Instance._instances.values():
+        r: dict[str, Optional[bytes]] = {}
+        for instance in Instance.all_instances():
             r[instance.settings.name] = self.save_instance(instance)
         return r
 
@@ -138,7 +145,7 @@ class ModelRepo:
             if instance_name is None:
                 raise ValueError(
                     'Either instance_name or instance must be given')
-            instance = Instance._instances[instance_name]
+            instance = Instance.use(instance_name)
         else:
             instance_name = instance.settings.name
         instance_dir = self._repo_dir / instance.settings.get_repo_subpackage()
@@ -155,7 +162,7 @@ class ModelRepo:
                 'author': Settings().repo_author,
         },
         }
-        if self._repo is not None:
+        if self._repo is not None: # type: ignore # could be None if permit_missing is True
             repo_status = porcelain.status(self._repo)  # type: ignore
             r['status'] = {
                 'dirty': repo_status.unstaged or repo_status.untracked or repo_status.staged['add'] or repo_status.staged['delete'] or repo_status.staged['modify']
@@ -169,6 +176,8 @@ class ModelRepo:
     @property
     def directory(self) -> str:
         "The absolute path to the repo directory"
+        if self._repo is None:
+            return str(self._repo_dir)
         return self._repo.path
 
     @property

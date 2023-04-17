@@ -26,9 +26,12 @@ def ipython_shell(ctx, instance_name: Optional[str] = None, quiet: bool = False)
     from cherwell_pydantic_api.interactive import Interactive
     from cherwell_pydantic_api.settings import Settings
 
-    collector = Collector(Instance.use(instance_name
-                                       ), verbose=True, bo_include_filter=r'(?i)ticket|task|changerequest|conf.*|journal.*|spec.*|.*port*')
+    collector = Collector(Instance.use(instance_name), verbose=True, bo_include_filter=r'(?i)ticket$')
     repo = ModelRepo(create=True)
+    try:
+        collector.load_settings(repo)
+    except:
+        pass
 
     def startup(objs):
         cw = Interactive(instance_name=instance_name,

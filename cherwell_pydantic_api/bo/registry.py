@@ -1,16 +1,15 @@
 from collections import defaultdict
-from typing import Iterable, Mapping, Optional, Union
+from typing import Iterable, Iterator, Mapping, Optional, Union
 from weakref import WeakValueDictionary
 
 from pydantic import AnyHttpUrl, BaseModel
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
-    Relationship,
     SchemaResponse,
     Summary,
 )
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core import ServiceInfoResponse
-from cherwell_pydantic_api.bo.valid_schema import ValidSchema
+from cherwell_pydantic_api.bo.valid_schema import ValidRelationship, ValidSchema
 from cherwell_pydantic_api.bo.wrapper import BusinessObjectWrapper, BusinessObjectWrapperBase
 from cherwell_pydantic_api.interfaces import ApiRequesterInterface
 from cherwell_pydantic_api.types import BusObID, BusObIdentifier, RelationshipID
@@ -42,12 +41,12 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         self._wrapper_class = wrapper_class
         self._schemas: dict[BusObID, ValidSchema] = {}
         self._summaries: dict[BusObID, Summary] = {}
+        self._parents: dict[BusObID, BusObID] = {}
         self._name_to_id: dict[BusObIdentifier, BusObID] = {}
-        self._relationships: dict[RelationshipID, Relationship] = {}
+        self._relationships: dict[RelationshipID, ValidRelationship] = {}
         self._bo_rels: defaultdict[BusObID,
                                    set[RelationshipID]] = defaultdict(set)
-        self._wrappers: WeakValueDictionary[BusObID,
-                                            wrapper_class] = WeakValueDictionary()
+        self._wrappers: WeakValueDictionary[BusObID, BusinessObjectWrapperBase] = WeakValueDictionary()
         self._service_info: Optional[ServiceInfoResponse] = None
         self._models: WeakValueDictionary[BusObID,
                                           type[BusinessObjectModelRegistryMixin]] = WeakValueDictionary()
@@ -56,8 +55,9 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
     def marshal(self, include_summaries: bool = False) -> Iterable[tuple[str, str]]:
         yield ('instance_name.txt', self._instance.settings.name)
         for busobid, schema in self._schemas.items():
-            yield (f'bo.{busobid}.json', schema.json(indent=2, exclude={'relationships'}, sort_keys=True, exclude_unset=True, exclude_defaults=True))
-        # TODO: include relationships
+            yield (f'bo.{busobid}.json', schema.json(indent=2, sort_keys=True, exclude_unset=True, exclude_defaults=True))
+        for relid, rel in self._relationships.items():
+            yield (f'rel.{relid}.json', rel.json(indent=2, exclude={'target_schema', 'source_schema'}, sort_keys=True, exclude_unset=True, exclude_defaults=True))
         if include_summaries:
             for busobid, summary in self._summaries.items():
                 if busobid in self._schemas:
@@ -86,8 +86,8 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
             raise ValueError('SchemaResponse.busObId is None')
         if schema.name is None:
             raise ValueError('SchemaResponse.name is None')
-        busobid = BusObID(schema.busObId)
         valid_schema = ValidSchema.from_schema_response(schema)
+        busobid = valid_schema.busObId
         identifier = valid_schema.identifier
         if busobid in self._schemas:
             if self._schemas[busobid] != valid_schema:
@@ -103,25 +103,35 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
 
         # Register relationships
         if schema.relationships:
+            summary = self._summaries.get(busobid)
+            if summary is None:
+                raise ValueError(
+                    f'busObId {busobid} ({valid_schema.name}) has relationships but no summary was registered')
             for rel in schema.relationships:
-                assert rel.relationshipId is not None
-                relid = RelationshipID(rel.relationshipId)
+                valid_rel = ValidRelationship.from_relationship(valid_schema, rel)
+                relid = valid_rel.relationshipId
                 assert relid in valid_schema.relationshipIds
+                valid_rel.source_schema = valid_schema
+                if valid_rel.target in self._schemas:
+                    valid_rel.target_schema = self.get_schema(valid_rel.target)
                 if relid in self._relationships:
-                    if self._relationships[relid] != rel:
+                    existing_rel = self._relationships[relid]
+                    if existing_rel.source != busobid:
+                        if self._parents.get(busobid) == existing_rel.source:
+                            #print(f"Skipping child relationship {relid} on {identifier} < {existing_rel.source_schema.identifier}")
+                            continue
+                    if existing_rel != valid_rel:
                         raise ValueError(
-                            f'Relationship {relid} already registered and new relationship is different')
+                            f'Relationship {relid} already registered ({existing_rel.source_schema.name} to {existing_rel.target_schema and existing_rel.target_schema.name}) and new relationship is different ({valid_schema.name} to {valid_rel.target_schema and valid_rel.target_schema.name})')
                     if not relid in self._bo_rels[busobid]:
                         # TODO: This occurs in group summaries
                         continue
                         raise ValueError(
                             f"Relationship {relid} is not in busObId {busobid}")
                 else:
-                    self._relationships[relid] = rel
+                    self._relationships[relid] = valid_rel
                     self._bo_rels[busobid].add(relid)
-                    # TODO: Make a ValidRelationship wrapper like ValidSchema
-                    assert rel.target is not None
-                    self._bo_rels[rel.target].add(relid) # type: ignore
+                    self._bo_rels[valid_rel.target].add(relid)
 
 
     def register_summary(self, summary: Summary):
@@ -144,6 +154,12 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
                     f'Summary busObId {summary.busObId} already registered and new summary is different')
             return
         self._summaries[busobid] = summary
+        if summary.groupSummaries:
+            for sub_summary in summary.groupSummaries:
+                if sub_summary.busObId is None:
+                    raise ValueError('Summary.busObId is None in groupSummaries')
+                self.register_summary(sub_summary)
+                self._parents[sub_summary.busObId] = busobid
 
 
     def register_model(self, busobid: BusObID, model: type[BusinessObjectModelRegistryMixin]):
@@ -185,7 +201,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         return self.get_wrapper(busobid)
 
 
-    def __iter__(self) -> Iterable[str]:
+    def __iter__(self) -> Iterator[str]:
         """Iterate over the names of the registered business objects. Don't include summaries. (Not the business object IDs)"""
         return iter([k for k, v in self._name_to_id.items() if v in self._schemas])
 

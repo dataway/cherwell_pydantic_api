@@ -1,5 +1,5 @@
 
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar, Iterator, Optional
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
     ReadResponse,
@@ -110,3 +110,9 @@ class Instance(ApiRequesterInterface):
         if name not in cls._instances:
             cls._instances[name] = cls(instance_settings, cls.__call_token)
         return cls._instances[name]
+
+
+    @classmethod
+    def all_instances(cls) -> Iterator["Instance"]:
+        """Return an iterator over all existing Instance objects."""
+        return iter(cls._instances.values())

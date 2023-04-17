@@ -1,6 +1,6 @@
-from typing import Optional, cast
+from typing import Optional
 
-from pydantic import Field, constr
+from pydantic import Field
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
     FieldDefinition,
@@ -25,7 +25,6 @@ class ValidFieldDefinition(FieldDefinition):
         data['short_field_id'] = fieldid_parts(data['fieldId'])['FI']
         data['identifier'] = FieldIdentifier(data['name'])
         super().__init__(**data)
-
 
 
 class ValidSchema(ApiBaseModel):
@@ -60,3 +59,32 @@ class ValidSchema(ApiBaseModel):
                    relationshipIds=relIds,
                    stateFieldId=schema.stateFieldId,
                    states=schema.states,)
+
+
+class ValidRelationship(ApiBaseModel):
+    "Corresponds to the type Relationship, but with stricter types and links to source and target ValidSchema objects"
+    relationshipId: RelationshipID
+    cardinality: str
+    description: Optional[str] = None
+    displayName: Optional[str] = None
+    fieldDefinitions: list[ValidFieldDefinition]
+    target: BusObID
+    target_schema: Optional[ValidSchema] = None
+    source: BusObID
+    source_schema: ValidSchema
+
+    @classmethod
+    def from_relationship(cls, source_schema: ValidSchema, relationship: Relationship):
+        if not relationship.relationshipId or not relationship.cardinality or not relationship.target or not relationship.fieldDefinitions:
+            raise ValueError(f'Relationship not valid: {relationship}')
+        return cls(relationshipId=RelationshipID(relationship.relationshipId),
+                   cardinality=relationship.cardinality,
+                   description=relationship.description,
+                   displayName=relationship.displayName,
+                   fieldDefinitions=[ValidFieldDefinition(**field.dict()) for field in relationship.fieldDefinitions],
+                   target=BusObID(relationship.target),
+                   source=source_schema.busObId,
+                   source_schema=source_schema,
+                   )
+
+

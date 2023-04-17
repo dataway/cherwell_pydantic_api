@@ -5,7 +5,8 @@ Generates Python models and endpoints from the Cherwell API Swagger schema.
 This is NOT intended as a general purpose code generator. It will be tested only
 against the Cherwell Swagger schema and may not work with other schemas.
 """
-
+# no type stubs for datamodel-code-generator
+# pyright: reportMissingTypeStubs=false
 
 import re
 from collections import defaultdict

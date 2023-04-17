@@ -1,3 +1,6 @@
+# pyright: basic, reportMissingImports=false, reportGeneralTypeIssues=false
+# mypy: ignore-errors
+
 from marshmallow import fields
 import datetime
 import re
