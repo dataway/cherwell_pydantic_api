@@ -43,7 +43,7 @@ jinja2 = { version = "^3.1.2", optional = true }
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.11.0"
 dulwich = "^0.21.3"
-datamodel-code-generator = "^0.17.2"
+datamodel-code-generator = ">=0.17.2,<0.19.0"
 black = "^23.1.0"
 pdoc = "^13.0.0"
 rich = "^13.3.2"
