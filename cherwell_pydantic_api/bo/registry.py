@@ -36,22 +36,33 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
     # There is exactly one BusinessObjectRegistry per Instance.
     # There can be more than one wrapper per BO but only one schema or summary.
 
+    _instance: ApiRequesterInterface
+    _wrapper_class: type[BusinessObjectWrapperBase]
+    _schemas: dict[BusObID, ValidSchema]
+    _summaries: dict[BusObID, Summary]
+    _parents: dict[BusObID, BusObID]
+    _name_to_id: dict[BusObIdentifier, BusObID]
+    _relationships: dict[RelationshipID, ValidRelationship]
+    _unresolved_relationships: dict[BusObID, set[RelationshipID]]
+    _bo_rels: defaultdict[BusObID, set[RelationshipID]] = defaultdict(set)
+    _wrappers: WeakValueDictionary[BusObID, BusinessObjectWrapperBase] = WeakValueDictionary()
+    _service_info: Optional[ServiceInfoResponse] = None
+    _models: WeakValueDictionary[BusObID, type[BusinessObjectModelRegistryMixin]] = WeakValueDictionary()
+
+
     def __init__(self, instance: ApiRequesterInterface, wrapper_class: type[BusinessObjectWrapperBase] = BusinessObjectWrapper):
         self._instance = instance
         self._wrapper_class = wrapper_class
-        self._schemas: dict[BusObID, ValidSchema] = {}
-        self._summaries: dict[BusObID, Summary] = {}
-        self._parents: dict[BusObID, BusObID] = {}
-        self._name_to_id: dict[BusObIdentifier, BusObID] = {}
-        self._relationships: dict[RelationshipID, ValidRelationship] = {}
-        self._unresolved_relationships: defaultdict[BusObID, set[RelationshipID]] = defaultdict(set)
-        self._bo_rels: defaultdict[BusObID,
-                                   set[RelationshipID]] = defaultdict(set)
-        self._wrappers: WeakValueDictionary[BusObID,
-                                            BusinessObjectWrapperBase] = WeakValueDictionary()
-        self._service_info: Optional[ServiceInfoResponse] = None
-        self._models: WeakValueDictionary[BusObID,
-                                          type[BusinessObjectModelRegistryMixin]] = WeakValueDictionary()
+        self._schemas = {}
+        self._summaries = {}
+        self._parents = {}
+        self._name_to_id = {}
+        self._relationships = {}
+        self._unresolved_relationships = defaultdict(set)
+        self._bo_rels = defaultdict(set)
+        self._wrappers = WeakValueDictionary()
+        self._service_info = None
+        self._models = WeakValueDictionary()
 
 
     def marshal(self, include_summaries: bool = False) -> Iterable[tuple[str, str]]:
@@ -59,7 +70,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         for busobid, schema in self._schemas.items():
             yield (f'bo.{busobid}.json', schema.json(indent=2, sort_keys=True, exclude_unset=True, exclude_defaults=True))
         for relid, rel in self._relationships.items():
-            yield (f'rel.{relid}.json', rel.json(indent=2, exclude={'target_schema', 'source_schema'}, sort_keys=True, exclude_unset=True, exclude_defaults=True))
+            yield (f'rel.{relid}.json', rel.json(indent=2, exclude={'target_schema', 'source_schema', 'fieldDefinitions'}, sort_keys=True, exclude_unset=True, exclude_defaults=True))
         if include_summaries:
             for busobid, summary in self._summaries.items():
                 if busobid in self._schemas:
@@ -118,7 +129,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
                 valid_schema.relationships[relid] = valid_rel
                 if valid_rel.target in self._schemas:
                     valid_rel.target_schema = self.get_schema(valid_rel.target)
-                    valid_rel.target_name = valid_rel.target_schema.identifier
+                    valid_rel.target_name = valid_rel.target_schema.name
                 else:
                     self._unresolved_relationships[valid_rel.target].add(relid)
                     if valid_rel.target in self._summaries:

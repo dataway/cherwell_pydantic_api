@@ -69,7 +69,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.autopep8]
 ignore = ['E303']
-line-length = 120
+max-line-length = 120
 
 [tool.isort]
 profile = "hug"

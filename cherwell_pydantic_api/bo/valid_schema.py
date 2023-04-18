@@ -9,7 +9,7 @@ from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.
     SchemaResponse,
 )
 from cherwell_pydantic_api.generated_api_utils import ApiBaseModel
-from cherwell_pydantic_api.types import BusObID, BusObIdentifier, FieldID, FieldIdentifier, RelationshipID
+from cherwell_pydantic_api.types import BusObID, BusObIdentifier, FieldID, FieldIdentifier, RelationshipID, ShortFieldID
 from cherwell_pydantic_api.utils import fieldid_parts
 
 
@@ -18,7 +18,7 @@ class ValidFieldDefinition(FieldDefinition):
     fieldId: FieldID
     name: str
     type: str
-    short_field_id: FieldID = Field(description="Just the field ID, without 'BO:..,FI:...'")
+    short_field_id: ShortFieldID = Field(description="Just the field ID, without 'BO:..,FI:...'")
     identifier: FieldIdentifier
 
     def __init__(self, **data):

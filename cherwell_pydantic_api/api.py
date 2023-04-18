@@ -24,7 +24,7 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         self._client = httpx.AsyncClient(base_url=str(self._base_url),
                                          headers={
                                              'Content-Type': 'application/json'},
-                                         params={'locale': 'en-150'},
+                                         #params={'locale': 'en-US'},
                                          timeout=self._settings.timeout,
                                          verify=self._settings.verify)
         self._token: Optional[str] = None

@@ -26,7 +26,7 @@ URLType = Union[str, httpx.URL]
 HttpStatusCode = httpx.codes
 Response = httpx.Response
 
-_re_path_param = re.compile(r'^[a-zA-Z0-9_-]+$')
+_re_path_param = re.compile(r'^[a-zA-Z0-9_.-]+$')
 
 
 class ApiBaseModel(pydantic.BaseModel):

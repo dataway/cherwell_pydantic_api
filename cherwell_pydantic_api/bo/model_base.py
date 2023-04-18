@@ -15,9 +15,10 @@ from cherwell_pydantic_api.types import (
     BusObID,
     BusObRecID,
     CherwellAPIError,
-    FieldID,
+    FieldIdentifier,
     RelationshipID,
     SaveBusinessObjectError,
+    ShortFieldID,
 )
 
 
@@ -36,13 +37,16 @@ class BusinessObjectApiData(BaseModel):
 
 
 class BusinessObjectRelationship(BaseModel):
-    target: BusObID
+    target_busobid: BusObID
+    target_class_name: Optional[str]
     oneToMany: bool
     description: str
     displayName: str
+    target: Optional[Type["BusinessObjectModelBase"]] = None
 
-    def __init__(self, target: Union[str, BusObID], oneToMany: bool, description: str, displayName: str):
-        super().__init__(target=BusObID(target), oneToMany=oneToMany, description=description, displayName=displayName)
+    def __init__(self, target_busobid: Union[str, BusObID], oneToMany: bool, description: str, displayName: str, target_class_name: Optional[str] = None):
+        super().__init__(target_busobid=BusObID(target_busobid), target_class_name=target_class_name,
+                         oneToMany=oneToMany, description=description, displayName=displayName)
 
 
 class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectModelRegistryMixin):
@@ -60,9 +64,9 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
 
     class _ModelData:
         busobid: BusObID
-        statefieldid: Optional[FieldID]
-        firstrecidfield: Optional[FieldID]
-        recidfields: Optional[FieldID]
+        statefieldid: Optional[ShortFieldID]
+        firstrecidfield: Optional[ShortFieldID]
+        recidfields: Optional[ShortFieldID]
         statefield: Optional[str]
         firstrecfield: Optional[str]
         states: Optional[list[str]]
@@ -78,19 +82,21 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
     @classmethod
     def from_api_response(cls: Type[BusObModel_T], response: ReadResponse) -> BusObModel_T:
         assert response.fields is not None
-        assert response.busObId == cls._ModelData.busobid
+        assert response.busObId == cls.get_busobid()
         assert all([f.name is not None for f in response.fields])
         api_data = BusinessObjectApiData(source='load', busObRecId=response.busObRecId,
                                          busObPublicId=response.busObPublicId, fields=response.fields, links=response.links or [])
         vals: dict[str, Any] = {
-            cast(str, f.name): f.value for f in response.fields}
-        return cls(_api_data=api_data, **vals)
+            FieldIdentifier(cast(str, f.name)): f.value for f in response.fields}
+        ob = cls(**vals)
+        ob._api_data = api_data
+        return ob
 
 
     @classmethod
     async def from_api(cls: Type[BusObModel_T], publicid: Optional[str] = None, *, busobrecid: Optional[BusObRecID] = None) -> Optional[BusObModel_T]:
         "Get a Business Object from the Cherwell API."
-        response = await cls.get_instance().get_bo(busobid=cls._ModelData.busobid, publicid=publicid, busobrecid=busobrecid)
+        response = await cls.get_instance().get_bo(busobid=cls.get_busobid(), publicid=publicid, busobrecid=busobrecid)
         if response is None:
             raise ValueError("No response from Cherwell API")
         if response.hasError:
@@ -100,21 +106,29 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
     get = from_api
 
 
+    @classmethod
+    def get_busobid(cls) -> BusObID:
+        return cls._ModelData.busobid
+
+    def get_busobrecid(self) -> BusObRecID:
+        """Get the BusObRecID of the Business Object. Raises ValueError if BusObRecID is not set."""
+        if self._api_data.busObRecId is None:
+            raise ValueError("BusObRecID is not set")
+        return self._api_data.busObRecId
+
+
     def _prepare_changes_for_save(self) -> list[FieldTemplateItem]:
         if not self._api_data.fields:
             r: list[FieldTemplateItem] = []
             for fname, field in self.__fields__.items():
                 v = getattr(self, fname)
                 if v:
-                    r.append(FieldTemplateItem(
-                        dirty=True, value=v,
-                        fieldId=field.field_info.extra['cw_fi']
-                    ))
+                    r.append(FieldTemplateItem(dirty=True, value=str(v), fieldId=field.field_info.extra['cw_fi']))
             return r
 
         for fld in self._api_data.fields:
             if fld.name in self.__self_changed_fields__:
-                fld.value = getattr(self, fld.name)
+                fld.value = str(getattr(self, fld.name))
                 fld.dirty = True
         return self._api_data.fields
 
@@ -133,8 +147,7 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
             if response.busObRecId is not None:
                 self._api_data.source = 'save'
                 self._api_data.busObRecId = response.busObRecId
-                setattr(self, self._ModelData.firstrecfield, # type: ignore
-                        response.busObRecId)
+                setattr(self, self._ModelData.firstrecfield, response.busObRecId)  # type: ignore
                 self._api_data.busObPublicId = response.busObPublicId
                 self._api_data.cacheKey = response.cacheKey
         if response.hasError:
@@ -163,7 +176,98 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
         self._api_data.fields = response.fields
         self._api_data.links = response.links or []
         self._api_data.cacheKey = None
+        # HACK: Enable validate_assignment for the duration of the update
+        save_validate_assignment = self.__config__.validate_assignment
+        self.__config__.validate_assignment = True
         for f in response.fields:
-            setattr(self, f.name, f.value)
+            setattr(self, FieldIdentifier(f.name), f.value)
         self.reset_changed()
+        self.__config__.validate_assignment = save_validate_assignment
         return self
+
+
+    @classmethod
+    def _get_relationships(cls) -> dict[RelationshipID, BusinessObjectRelationship]:
+        if not hasattr(cls, '_ModelData') or not hasattr(cls._ModelData, 'relationships') or not cls._ModelData.relationships:
+            raise KeyError(f"Business object {cls.__name__} (busobid={cls._ModelData.busobid}) has no relationships")
+        return cls._ModelData.relationships
+
+    @classmethod
+    def get_relationship(cls, relationship_id: str) -> BusinessObjectRelationship:
+        "Get the relationship definition for the specified relationship ID. Raises KeyError if not found."
+        relationship_id = RelationshipID(relationship_id)
+        rel = cls._get_relationships()[relationship_id]
+        if rel.target is None:
+            try:
+                rel.target = cls.get_instance().bo.get_model(rel.target_busobid)  # type: ignore
+            except KeyError:
+                pass
+        return rel
+
+    @classmethod
+    def relationships_to(cls, *,
+                         target_busobid: Optional[str] = None,
+                         target: Union[Type["BusinessObjectModelBase"], "BusinessObjectModelBase", None] = None
+                         ) -> dict[RelationshipID, BusinessObjectRelationship]:
+        "Find relationships linking to the specified target model."
+        if target_busobid is None:
+            if target is None:
+                raise ValueError("Must specify either target or target_busobid")
+            target_busobid = target._ModelData.busobid
+        else:
+            target_busobid = BusObID(target_busobid)
+        rels = cls._get_relationships()
+        r = {relid: cls.get_relationship(relid)
+             for relid, rel in rels.items()
+             if rel.target_busobid == target_busobid}
+        return r
+
+    @classmethod
+    def resolve_relationship(cls, *,
+                          target_busobid: Optional[str] = None,
+                          target: Union[Type["BusinessObjectModelBase"], "BusinessObjectModelBase", None] = None,
+                          keyword: Optional[str] = None) -> RelationshipID:
+        """Find the relationship linking to the specified target model.
+        If multiple relationships are found, the keyword parameter can be used to resolve the relationship by searching the displayName field (case-insensitive)."""
+        rels = cls.relationships_to(target_busobid=target_busobid, target=target)
+        if len(rels) == 0:
+            raise ValueError(f"No relationships found from {cls.__name__} to {target_busobid=} {target=}")
+        if keyword is None:
+            if len(rels) == 1:
+                return next(iter(rels.keys()))
+            raise ValueError(f"Multiple relationships found from {cls.__name__} to {target_busobid=} {target=}. Specify a keyword to resolve the relationship.")
+        keyword = keyword.lower()
+        matching_rels = {relid: rel for relid, rel in rels.items() if keyword in rel.displayName.lower()}
+        if len(matching_rels) == 0:
+            raise ValueError(f"No relationships found from {cls.__name__} to {target_busobid=} {target=} with keyword '{keyword}'.")
+        if len(matching_rels) > 1:
+            raise ValueError(f"Multiple relationships found from {cls.__name__} to {target_busobid=} {target=} with keyword '{keyword}'. Specify a more specific keyword to resolve the relationship.")
+        return next(iter(matching_rels.keys()))
+
+
+    async def link_related(self, target: "BusinessObjectModelBase", relationship_id: Optional[RelationshipID] = None,
+                           *, keyword: Optional[str] = None):
+        if relationship_id is None:
+            relationship_id = self.resolve_relationship(target=target, keyword=keyword)
+        response = await self.get_instance().connection.LinkRelatedBusinessObjectByRecIdV2(
+            parentbusobid=self.get_busobid(),
+            parentbusobrecid=self.get_busobrecid(),
+            relationshipid=relationship_id,
+            busobid=target.get_busobid(),
+            busobrecid=target.get_busobrecid())
+        if response.hasError:
+            raise CherwellAPIError(f"link_related[{type(self).__name__}]", errorMessage=response.errorMessage,
+                                   errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
+        return response
+
+
+    async def attach_file(self, filename: str, filedata: bytes, description: Optional[str] = None):
+        response = await self.get_instance().connection.UploadBusinessObjectAttachmentByIdAndRecIdV1(
+            body=filedata,
+            filename=filename,
+            busobid=self.get_busobid(),
+            busobrecid=self.get_busobrecid(),
+            offset=0,
+            totalsize=len(filedata),
+            displaytext=description)
+        return response

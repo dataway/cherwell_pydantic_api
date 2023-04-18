@@ -4,28 +4,23 @@ from typing import Any, Optional, cast
 import black
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import FieldDefinition
-from cherwell_pydantic_api.bo.valid_schema import ValidSchema
+from cherwell_pydantic_api.bo.valid_schema import ValidFieldDefinition, ValidSchema
 from cherwell_pydantic_api.instance import Instance
-from cherwell_pydantic_api.types import FieldID
+from cherwell_pydantic_api.types import FieldIdentifier
 from cherwell_pydantic_api.utils import fieldid_parts
 
 
 
-class ParsedFieldDefinition(FieldDefinition):
+class ParsedFieldDefinition(ValidFieldDefinition):
     python_type: str = 'Any'
     python_type_modules: set[str] = set()
     python_type_validator: Optional[str] = None
+    python_validator_params: Any = None
     pydantic_field_args: dict[str, Any] = {}
-    fieldId: FieldID  # override Optional[FieldID] with FieldID
 
     @property
     def pydantic_field_params(self) -> str:
         return ', '.join([f'{k}={v}' for k, v in self.pydantic_field_args.items()])
-
-    @property
-    def fieldid_parts(self) -> dict[str, str]:
-        return fieldid_parts(self.fieldId)
 
     def resolve_type(self):
         if self.type == 'Text':
@@ -57,6 +52,7 @@ class ParsedFieldDefinition(FieldDefinition):
             else:
                 self.python_type = 'decimal.Decimal'
                 self.python_type_validator = 'validator_decimal'
+                self.python_validator_params = self.decimalDigits
                 self.python_type_modules.add('decimal')
                 self.pydantic_field_args['decimal_places'] = self.decimalDigits
                 if self.wholeDigits:
@@ -91,20 +87,20 @@ class PydanticModelGenerator:
         fields = [ParsedFieldDefinition(**field.dict())
                   for field in schema.fieldDefinitions]
         modules: set[str] = set()
-        validators: dict[str, list[ParsedFieldDefinition]] = defaultdict(list)
+        validators: dict[tuple[str, ...], list[ParsedFieldDefinition]] = defaultdict(list)
         statefield: Optional[str] = None
         firstrecfield: Optional[str] = None
         for field in fields:
             field.resolve_type()
-            if field.fieldid_parts['FI'] == schema.stateFieldId:
-                statefield = field.name
-            if field.fieldid_parts['FI'] == schema.firstRecIdField:
-                firstrecfield = field.name
+            if field.short_field_id == schema.stateFieldId:
+                statefield = FieldIdentifier(field.name)
+            if field.short_field_id == schema.firstRecIdField:
+                firstrecfield = FieldIdentifier(field.name)
             if field.python_type_modules:
                 modules.update(field.python_type_modules)
             if field.python_type_validator:
-                validators[field.python_type_validator].append(field)
-            assert field.fieldid_parts['BO'] == schema.busObId
+                validators[(field.python_type_validator, field.python_validator_params)].append(field)
+            assert fieldid_parts(field.fieldId)['BO'] == schema.busObId
         model_str = template.render(schema=schema, fields=fields, modules=modules,
                                     validators=validators, settings=self._instance.settings,
                                     statefield=statefield, firstrecfield=firstrecfield)

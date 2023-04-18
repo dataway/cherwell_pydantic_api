@@ -28,7 +28,7 @@ else:
         in which case a prefix of I_ will be added (capitals). For the type checker it is the same as NewType"""
         def identifier_type(x):
             x = re.sub(r'[^0-9A-Za-z_]', '_', x)
-            if x[0].isdigit() or keyword.iskeyword(x):
+            if x[0].isdigit() or x[0] == '_' or keyword.iskeyword(x):
                 x = 'I_' + x
             return x
         identifier_type.__name__ = name
@@ -41,7 +41,7 @@ else:
         in which case a prefix of I_ will be added (capitals). For the type checker it is the same as NewType"""
         def identifier_type(x):
             x = re.sub(r'[^0-9a-z_]', '_', x.lower())
-            if x[0].isdigit() or keyword.iskeyword(x):
+            if x[0].isdigit() or x[0] == '_' or keyword.iskeyword(x):
                 x = 'I_' + x
             return x
         identifier_type.__name__ = name
@@ -54,7 +54,8 @@ BusObID = IDType("BusObID", str)
 BusObRecID = IDType("BusObRecID", str)
 BusObIDParamType = BusObID
 BusObIdentifier = LCIdentifierType("BusObIdentifier", str)
-FieldID = IDType("FieldID", str)
+FieldID = NewType("FieldID", str)
+ShortFieldID = IDType("ShortFieldID", str)
 FieldIdentifier = IdentifierType("FieldIdentifier", str)
 RelationshipID = IDType("RelationshipID", str)
 FileType = Union[str, bytes, Iterable[bytes], AsyncIterable[bytes]]
