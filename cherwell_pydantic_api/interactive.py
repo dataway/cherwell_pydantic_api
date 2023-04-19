@@ -61,11 +61,11 @@ class WaiterProxy(RestaurantInterface):
         def wrapper(*args: Any, **kwargs: Any):
             r = amethod(*args, **kwargs)
             if isinstance(r, types.CoroutineType):
-                return self._waiter(r)
+                return self._waiter(r) # type: ignore
             return r
         return wrapper
 
-    def __setattr__(self, name: str, value) -> None:
+    def __setattr__(self, name: str, value: Any) -> None:
         if not name.startswith('_') and hasattr(self._async_obj, name):
             setattr(self._async_obj, name, value)
         else:

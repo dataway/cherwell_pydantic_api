@@ -1,14 +1,20 @@
 # Auto-generated file. Do not edit!
 ###################################
+# pyright: reportIncompatibleVariableOverride=false, reportUnusedImport=false
 
 
 from typing import Optional
 from pydantic import Field
-from .__base import BusinessObjectModelInstanceBase, BusinessObjectModelData
+from .__base import BusinessObjectModelData
 {% if validators %}
 from cherwell_pydantic_api import validators
 {% endif %}
 from cherwell_pydantic_api.types import BusObID, ShortFieldID
+{% if schema.parentSchema %}
+from .{{ schema.parentSchema.identifier }} import {{ schema.parentSchema.identifier }}
+{% else %}
+from .__base import BusinessObjectModelInstanceBase
+{% endif %}
 {% if schema.relationships %}
 from .__base import BusinessObjectRelationship
 from cherwell_pydantic_api.types import RelationshipID
@@ -18,7 +24,11 @@ import {{ module }}
 {% endfor %}
 
 
+{% if schema.parentSchema %}
+class {{ schema.identifier }}({{ schema.parentSchema.identifier }}):
+{% else %}
 class {{ schema.identifier }}(BusinessObjectModelInstanceBase):
+{% endif %}
     class _ModelData(BusinessObjectModelData):
         busobid = BusObID({{ schema.busObId|repr }})
         firstrecidfield = ShortFieldID({{ schema.firstRecIdField|repr }})

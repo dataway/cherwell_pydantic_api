@@ -21,7 +21,7 @@ from cherwell_pydantic_api.utils import docwraps
 try:
     import click
 except ImportError:
-    click = None # type: ignore
+    click = None  # type: ignore
 
 
 FilterType = Union[Pattern[str], str, None]
@@ -88,8 +88,8 @@ class CollectorItem:
 
 class CollectorSettings(BaseModel):
     # mypy wants to see Pattern[str] but Pydantic requires Pattern
-    bo_include_filter: Optional[Pattern] # type: ignore
-    bo_exclude_filter: Optional[Pattern] # type: ignore
+    bo_include_filter: Optional[Pattern]  # type: ignore
+    bo_exclude_filter: Optional[Pattern]  # type: ignore
 
 
 class Collector:
@@ -168,20 +168,23 @@ class Collector:
         for bo_type in cast(list[BusinessObjectType], ['Major', 'Supporting', 'Lookup', 'Groups']):
             for bo_summary in await self.get_bo_summaries(bo_type):
                 verdict = self.filter_bo(bo_type, bo_summary)
-                item = CollectorItem(
-                    bo_type=bo_type, summary=bo_summary, verdict=verdict)
+                item = CollectorItem(bo_type=bo_type, summary=bo_summary, verdict=verdict)
                 items.append(item)
                 # Add group members. There is only one level of groups according to Cherwell docs.
                 if bo_summary.groupSummaries:
                     for group_summary in bo_summary.groupSummaries:
                         verdict = self.filter_bo(bo_type, group_summary)
-                        sub_item = CollectorItem(
-                            bo_type=bo_type, summary=group_summary, verdict=verdict, parent_item=item)
+                        # If a child group is included, then the parent is included too.
+                        if verdict and not item.verdict:
+                            item.verdict = True
+                        sub_item = CollectorItem(bo_type=bo_type, summary=group_summary,
+                                                 verdict=verdict, parent_item=item)
                         items.append(sub_item)
         return items
 
 
     async def collect(self) -> list[CollectorItem]:
+        "Get all the business object summaries from Cherwell, filter them, and fetch the schemas of matching business objects."
         items = await self.select()
         for item in items:
             if item.verdict:
@@ -203,6 +206,10 @@ class Collector:
             if not item.verdict:
                 continue
             schema = self._instance.bo.get_schema(item.busobid)
+            if item.parent_item:
+                schema.parentSchema = self._instance.bo.get_schema(item.parent_item.busobid)
+            else:
+                schema.parentSchema = None
             yield (f"{schema.identifier}.py", model_generator.generate_model(schema))
 
 
@@ -223,8 +230,8 @@ class Collector:
     def load_settings(self, repo: ModelRepo):
         collector_settings = CollectorSettings.parse_file(
             repo.repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
-        self.bo_include_filter = collector_settings.bo_include_filter # type: ignore
-        self.bo_exclude_filter = collector_settings.bo_exclude_filter # type: ignore
+        self.bo_include_filter = collector_settings.bo_include_filter  # type: ignore
+        self.bo_exclude_filter = collector_settings.bo_exclude_filter  # type: ignore
 
 
     def clear_caches(self):

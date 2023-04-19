@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import Field
 
@@ -21,9 +21,9 @@ class ValidFieldDefinition(FieldDefinition):
     short_field_id: ShortFieldID = Field(description="Just the field ID, without 'BO:..,FI:...'")
     identifier: FieldIdentifier
 
-    def __init__(self, **data):
-        data['short_field_id'] = fieldid_parts(data['fieldId'])['FI']
-        data['identifier'] = FieldIdentifier(data['name'])
+    def __init__(self, **data: Union[str, int, bool, None, FieldID, ShortFieldID, FieldIdentifier]):
+        data['short_field_id'] = fieldid_parts(data['fieldId'])['FI'] # type: ignore
+        data['identifier'] = FieldIdentifier(data['name']) # type: ignore
         super().__init__(**data)
 
 
@@ -40,6 +40,7 @@ class ValidSchema(ApiBaseModel):
     identifier: BusObIdentifier = Field(description="ASCII lowercase of name, to be used as python identifier")
     relationshipIds: list[RelationshipID]
     relationships: dict[RelationshipID, "ValidRelationship"] = {}
+    parentSchema: Optional["ValidSchema"] = None
 
     @classmethod
     def from_schema_response(cls, schema: SchemaResponse):

@@ -1,9 +1,9 @@
 # Auto-generated file. Do not edit!
 ###################################
-# pyright: reportUnusedImport=false, reportPrivateUsage=false
+# pyright: reportUnusedImport=false
 
 from typing import ClassVar
-from cherwell_pydantic_api.bo.model_base import BusinessObjectModelBase, BusinessObjectRelationship
+from cherwell_pydantic_api.bo.model_base import BusinessObjectModelBase, BusinessObjectRelationship, BusinessObjectModelData
 
 
 class BusinessObjectModelInstanceBase(BusinessObjectModelBase):
@@ -12,5 +12,3 @@ class BusinessObjectModelInstanceBase(BusinessObjectModelBase):
 
     _instance_name: ClassVar[str] = {{ settings.name|repr }}
     _subpackage: ClassVar[str] = "{{ settings.get_repo_subpackage() }}"
-
-BusinessObjectModelData = BusinessObjectModelInstanceBase._ModelData

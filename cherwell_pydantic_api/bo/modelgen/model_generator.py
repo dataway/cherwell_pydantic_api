@@ -6,7 +6,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 from cherwell_pydantic_api.bo.valid_schema import ValidFieldDefinition, ValidSchema
 from cherwell_pydantic_api.instance import Instance
-from cherwell_pydantic_api.types import FieldIdentifier
+from cherwell_pydantic_api.types import FieldIdentifier, ShortFieldID
 from cherwell_pydantic_api.utils import fieldid_parts
 
 
@@ -73,7 +73,7 @@ class PydanticModelGenerator:
         self._instance = instance
         self._jinja_env = Environment(loader=PackageLoader('cherwell_pydantic_api.bo', 'templates'),
                                       autoescape=select_autoescape(['py']), trim_blocks=True, lstrip_blocks=True)
-        self._jinja_env.filters['repr'] = repr # type: ignore
+        self._jinja_env.filters['repr'] = repr  # type: ignore
 
     def generate_base(self) -> str:
         template = self._jinja_env.get_template('base.py.j2')
@@ -84,23 +84,40 @@ class PydanticModelGenerator:
 
     def generate_model(self, schema: ValidSchema) -> str:
         template = self._jinja_env.get_template('model.py.j2')
-        fields = [ParsedFieldDefinition(**field.dict())
-                  for field in schema.fieldDefinitions]
         modules: set[str] = set()
         validators: dict[tuple[str, ...], list[ParsedFieldDefinition]] = defaultdict(list)
         statefield: Optional[str] = None
         firstrecfield: Optional[str] = None
-        for field in fields:
+        fields: list[ParsedFieldDefinition] = []
+        parent_fields: dict[ShortFieldID, ValidFieldDefinition] = {}
+        if schema.parentSchema:
+            parent_fields = {field.short_field_id: field for field in schema.parentSchema.fieldDefinitions}
+        for valid_field in schema.fieldDefinitions:
+            field = ParsedFieldDefinition(**valid_field.dict())
             field.resolve_type()
             if field.short_field_id == schema.stateFieldId:
                 statefield = FieldIdentifier(field.name)
             if field.short_field_id == schema.firstRecIdField:
                 firstrecfield = FieldIdentifier(field.name)
-            if field.python_type_modules:
-                modules.update(field.python_type_modules)
             if field.python_type_validator:
                 validators[(field.python_type_validator, field.python_validator_params)].append(field)
             assert fieldid_parts(field.fieldId)['BO'] == schema.busObId
+            if valid_field.short_field_id in parent_fields:
+                #parent_field = parent_fields[valid_field.short_field_id]
+                # TODO: Unclear which aspects of the field are allowed to differ from the parent. For now, don't check anything.
+                # The following list of attributes were observed to differ
+                #mismatches = {k: (v, getattr(parent_field, k))
+                #              for k, v in vars(valid_field).items()
+                #              if v != getattr(parent_field, k) and k not in (
+                #                 'fieldId', 'details', 'autoFill', 'readOnly', 'validated', 'category',
+                #                 'displayName', 'description', 'required', 'calculated')}
+                #if mismatches:
+                #    raise ValueError(
+                #        f"Field {field.name} of {schema.identifier} has mismatches with parent: {mismatches}")
+                continue
+            if field.python_type_modules:
+                modules.update(field.python_type_modules)
+            fields.append(field)
         model_str = template.render(schema=schema, fields=fields, modules=modules,
                                     validators=validators, settings=self._instance.settings,
                                     statefield=statefield, firstrecfield=firstrecfield)

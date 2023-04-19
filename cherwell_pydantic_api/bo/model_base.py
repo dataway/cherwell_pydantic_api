@@ -97,8 +97,6 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
     async def from_api(cls: Type[BusObModel_T], publicid: Optional[str] = None, *, busobrecid: Optional[BusObRecID] = None) -> Optional[BusObModel_T]:
         "Get a Business Object from the Cherwell API."
         response = await cls.get_instance().get_bo(busobid=cls.get_busobid(), publicid=publicid, busobrecid=busobrecid)
-        if response is None:
-            raise ValueError("No response from Cherwell API")
         if response.hasError:
             raise CherwellAPIError(f"from_api[{cls.__name__}]", errorMessage=response.errorMessage,
                                    errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
@@ -162,8 +160,6 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
     async def update(self):
         "Get a Business Object from the Cherwell API and update the existing model with the current values. Any changes made to the model will be discarded."
         response = await self.get_instance().get_bo(busobid=self._ModelData.busobid, busobrecid=self._api_data.busObRecId)
-        if response is None:
-            raise ValueError("No response from Cherwell API")
         if response.hasError:
             raise CherwellAPIError(f"update[{type(self).__name__}]", errorMessage=response.errorMessage,
                                    errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
@@ -180,6 +176,7 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
         save_validate_assignment = self.__config__.validate_assignment
         self.__config__.validate_assignment = True
         for f in response.fields:
+            assert f.name
             setattr(self, FieldIdentifier(f.name), f.value)
         self.reset_changed()
         self.__config__.validate_assignment = save_validate_assignment
@@ -224,9 +221,9 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
 
     @classmethod
     def resolve_relationship(cls, *,
-                          target_busobid: Optional[str] = None,
-                          target: Union[Type["BusinessObjectModelBase"], "BusinessObjectModelBase", None] = None,
-                          keyword: Optional[str] = None) -> RelationshipID:
+                             target_busobid: Optional[str] = None,
+                             target: Union[Type["BusinessObjectModelBase"], "BusinessObjectModelBase", None] = None,
+                             keyword: Optional[str] = None) -> RelationshipID:
         """Find the relationship linking to the specified target model.
         If multiple relationships are found, the keyword parameter can be used to resolve the relationship by searching the displayName field (case-insensitive)."""
         rels = cls.relationships_to(target_busobid=target_busobid, target=target)
@@ -235,13 +232,16 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
         if keyword is None:
             if len(rels) == 1:
                 return next(iter(rels.keys()))
-            raise ValueError(f"Multiple relationships found from {cls.__name__} to {target_busobid=} {target=}. Specify a keyword to resolve the relationship.")
+            raise ValueError(
+                f"Multiple relationships found from {cls.__name__} to {target_busobid=} {target=}. Specify a keyword to resolve the relationship.")
         keyword = keyword.lower()
         matching_rels = {relid: rel for relid, rel in rels.items() if keyword in rel.displayName.lower()}
         if len(matching_rels) == 0:
-            raise ValueError(f"No relationships found from {cls.__name__} to {target_busobid=} {target=} with keyword '{keyword}'.")
+            raise ValueError(
+                f"No relationships found from {cls.__name__} to {target_busobid=} {target=} with keyword '{keyword}'.")
         if len(matching_rels) > 1:
-            raise ValueError(f"Multiple relationships found from {cls.__name__} to {target_busobid=} {target=} with keyword '{keyword}'. Specify a more specific keyword to resolve the relationship.")
+            raise ValueError(
+                f"Multiple relationships found from {cls.__name__} to {target_busobid=} {target=} with keyword '{keyword}'. Specify a more specific keyword to resolve the relationship.")
         return next(iter(matching_rels.keys()))
 
 
@@ -271,3 +271,6 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
             totalsize=len(filedata),
             displaytext=description)
         return response
+
+
+BusinessObjectModelData = BusinessObjectModelBase._ModelData  # type: ignore

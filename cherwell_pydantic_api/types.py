@@ -97,7 +97,7 @@ class CherwellAPIError(Exception):
     def __init__(self, msg: str = "Cherwell API error", *, errorCode: Optional[str] = None,
                  errorMessage: Optional[str] = None,
                  httpStatusCode: Optional[Any] = None,
-                 **kwargs):
+                 **kwargs: Any):
         message = f"{msg}: {errorCode=} {errorMessage=} {httpStatusCode=}"
         self.errorCode = errorCode
         self.errorMessage = errorMessage

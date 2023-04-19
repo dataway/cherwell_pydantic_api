@@ -23,8 +23,8 @@ def repo_group(ctx, instance_name: Optional[str] = None):
     try:
         repo = ModelRepo()
     except FileNotFoundError:
-        click.secho(
-            f"No repository found at expected location of '{Settings().repo_dir.absolute()}'", fg='yellow')
+        if ctx.invoked_subcommand != 'create':
+            click.secho(f"No repository found at expected location of '{Settings().repo_dir.absolute()}'", fg='yellow')
         repo = None
     ctx.obj['repo'] = repo
 
@@ -39,6 +39,33 @@ def info(ctx):
     else:
         repo_info = ModelRepo(permit_missing=True).get_info(instance=instance)
     output_dict(repo_info)
+
+
+@repo_group.command()
+@click.pass_context
+def create(ctx):
+    "Create the repository if it does not exist, and generate an initial collector_settings.json file"
+    instance = ctx.obj['instance']
+    no_action = True
+    if ctx.obj['repo'] is None:
+        repo = ModelRepo(create=True)
+        repo_info = repo.get_info(instance=instance)
+        click.secho(f"Repository created in {repo_info['repo']['settings_path']}", fg='green')
+        no_action = False
+    else:
+        repo = ctx.obj['repo']
+
+    collector = Collector(instance=instance)
+    try:
+        collector.load_settings(repo=repo)
+    except FileNotFoundError:
+        collector.bo_exclude_filter = None
+        collector.bo_include_filter = "(?i)ticket$"
+        collector.save_settings(repo=repo)
+        click.secho("Collector settings file created", fg='green')
+        no_action = False
+    if no_action:
+        click.echo('Nothing done')
 
 
 @repo_group.command()
