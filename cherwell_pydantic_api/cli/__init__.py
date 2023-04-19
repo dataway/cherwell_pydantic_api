@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+# pyright: reportUnusedImport=false
 
 import sys
 from pathlib import Path
+
+from click import Context
 
 
 
@@ -36,7 +39,7 @@ or
     sys.exit(1)
 
 
-def check_envpath(offer_setup=True):
+def check_envpath(offer_setup: bool = True) -> Path:
     envpath = Path.cwd().joinpath('cherwell.env')
     if not envpath.exists():
         click.secho(
@@ -90,17 +93,17 @@ def root():
 
 @root.command(context_settings=dict(ignore_unknown_options=True, allow_extra_args=True))
 @click.pass_context
-def getting_started(ctx):
+def getting_started(ctx: Context):
     "Launch the Getting Started notebook in JupyterLab"
     try:
-        import jupyterlab.labapp
+        import jupyterlab.labapp  # type: ignore
     except:
         click.secho(
             "To use the JupyterLab interface, you must install cherwell_pydantic_api[all].\n", fg='red')
         return
     import os.path
     nb = os.path.dirname(__file__) + '/../examples/GettingStarted.ipynb'
-    jupyterlab.labapp.main(ctx.args + [nb])
+    jupyterlab.labapp.main(ctx.args + [nb]) # type: ignore
 
 
 def cli_normal():

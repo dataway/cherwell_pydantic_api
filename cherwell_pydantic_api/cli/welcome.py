@@ -1,7 +1,9 @@
 """Module for the welcoming initial setup CLI"""
+# pyright: reportUnusedImport=false
 
 import time
 from pathlib import Path
+from typing import Optional
 
 import click
 import httpx
@@ -11,7 +13,7 @@ except:
     pass
 
 
-def api_detect(urls):
+def api_detect(urls: list[str]) -> tuple[Optional[str], str, float, bool]:
     "Try to detect the Cherwell API at the given URLs"
     for url in urls:
         try:
@@ -34,17 +36,17 @@ def api_detect(urls):
                 f"HTTP Error: {response.status_code} {response.reason_phrase}", fg='red')
         except Exception as e:
             click.secho(f"Error: {e}", fg='red')
-    return (None, None, 0.0, False)
+    return (None, '', 0.0, False)
 
 
-def initial_setup(envpath: Path):
+def initial_setup(envpath: Path) -> None:
     "Create a new cherwell.env file from user input"
-    envdict = {}
+    envdict: dict[str, str] = {}
     click.secho("""Enter the API base URL of your Cherwell instance, e.g. https://myinstance.cherwellsoftware.com/CherwellAPI
 You can also just enter the hostname or IP address and I will attempt to guess the rest.
 If you have multiple instances, set up the development instance first. You can add your production instance later.\n""", fg='green')
     while True:
-        api_base_url = click.prompt('API base URL or host', type=str)
+        api_base_url: Optional[str] = click.prompt('API base URL or host', type=str)
         if not api_base_url:
             continue
         if not api_base_url.startswith('http'):
@@ -63,7 +65,7 @@ If you have multiple instances, set up the development instance first. You can a
     duration = round(duration, 1)
     if duration > 5.0:
         click.secho(f"Warning: The API took {duration} seconds to respond. I will configure a timeout of {duration*2} seconds.", fg='yellow')
-        envdict['cherwell_timeout'] = duration * 2
+        envdict['cherwell_timeout'] = f"{duration * 2}"
     if not verify:
         click.secho(
             f"Warning: SSL certificate verification failed. Connection will be set up with verify=False", fg='red', bg='yellow')

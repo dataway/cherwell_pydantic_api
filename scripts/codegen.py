@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Any, Literal, Tuple
 
 import black
-import datamodel_code_generator
-import datamodel_code_generator.format
+import datamodel_code_generator  # type: ignore
+import datamodel_code_generator.format  # type: ignore
 import isort
 
 import cherwell_pydantic_api.types
@@ -341,7 +341,7 @@ def generate(base: Path, force: bool):
             force = True
     if force:
         generate_models(base.joinpath('csm_api-swagger.json'),
-                             apipath.joinpath('models'))
+                        apipath.joinpath('models'))
         r2 = generate_endpoints(apipath.joinpath('endpoints'))
     return r2
 

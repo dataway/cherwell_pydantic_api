@@ -14,7 +14,7 @@ from .utils import async_command, output_dict
 @click.group(name='repo')
 @click.option('--instance-name', '-I', help='The name of the instance to use. If not specified, the default instance will be used.')
 @click.pass_context
-def repo_group(ctx, instance_name: Optional[str] = None):
+def repo_group(ctx: click.Context, instance_name: Optional[str] = None):
     "Manage the repository"
     ctx.ensure_object(dict)
     instance = Instance.use(instance_name)
@@ -31,7 +31,7 @@ def repo_group(ctx, instance_name: Optional[str] = None):
 
 @repo_group.command()
 @click.pass_context
-def info(ctx):
+def info(ctx: click.Context):
     "Display information about the repository"
     instance = ctx.obj['instance']
     if ctx.obj['repo'] is not None:
@@ -43,14 +43,14 @@ def info(ctx):
 
 @repo_group.command()
 @click.pass_context
-def create(ctx):
+def create(ctx: click.Context):
     "Create the repository if it does not exist, and generate an initial collector_settings.json file"
     instance = ctx.obj['instance']
     no_action = True
     if ctx.obj['repo'] is None:
         repo = ModelRepo(create=True)
         repo_info = repo.get_info(instance=instance)
-        click.secho(f"Repository created in {repo_info['repo']['settings_path']}", fg='green')
+        click.secho(f"Repository created in {repo_info['repo']['settings_path']}", fg='green')  # type: ignore
         no_action = False
     else:
         repo = ctx.obj['repo']
@@ -60,7 +60,7 @@ def create(ctx):
         collector.load_settings(repo=repo)
     except FileNotFoundError:
         collector.bo_exclude_filter = None
-        collector.bo_include_filter = "(?i)ticket$"
+        collector.bo_include_filter = "(?i)ticket$"  # type: ignore
         collector.save_settings(repo=repo)
         click.secho("Collector settings file created", fg='green')
         no_action = False
@@ -72,7 +72,7 @@ def create(ctx):
 @click.pass_context
 @click.option('--verbose', '-v', help='Verbose output from the collector', is_flag=True)
 @async_command
-async def update(ctx, verbose: bool = False):
+async def update(ctx: click.Context, verbose: bool = False):
     "Connect to the Cherwell API and update the repository"
     repo = ctx.obj['repo']
     if repo is None:

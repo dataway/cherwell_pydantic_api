@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+# pyright: reportUnusedImport=false, reportUnusedFunction=false
 
-from typing import TYPE_CHECKING, Optional
+
+from typing import TYPE_CHECKING, Any, Optional
 
 import click
 
@@ -10,7 +12,7 @@ import click
 @click.option('--instance-name', '-I', help='The name of the instance to use. If not specified, the default instance will be used.')
 @click.option('--quiet', '-q', is_flag=True, help='Suppress most messages')
 @click.pass_context
-def ipython_shell(ctx, instance_name: Optional[str] = None, quiet: bool = False):
+def ipython_shell(ctx: click.Context, instance_name: Optional[str] = None, quiet: bool = False):
     "Start an interactive IPython shell"
     try:
         import IPython
@@ -33,7 +35,7 @@ def ipython_shell(ctx, instance_name: Optional[str] = None, quiet: bool = False)
     except:
         pass
 
-    def startup(objs):
+    def startup(objs: list[str]) -> Interactive:
         cw = Interactive(instance_name=instance_name,
                          waiter=IPython.get_ipython().loop_runner)  # type: ignore
         if not quiet:
@@ -66,7 +68,7 @@ def ipython_shell(ctx, instance_name: Optional[str] = None, quiet: bool = False)
         return cw
 
     # Create a namespace for the shell
-    ns = {}
+    ns: dict[str, Any] = {}
     for name, obj in locals().items():
         if not (name.startswith('_') or name in ('ctx', 'IPython', 'traitlets', 'quiet', 'ns')):
             ns[name] = obj
@@ -74,14 +76,14 @@ def ipython_shell(ctx, instance_name: Optional[str] = None, quiet: bool = False)
     ns['object_help'] = [k for k in ns.keys() if k not in ('object_help', 'startup')]
     ns['object_help'].sort()
     config = traitlets.config.Config()  # type: ignore
-    config.InteractiveShellApp.exec_lines = [
+    config.InteractiveShellApp.exec_lines = [  # type: ignore
         "cw = startup(object_help)",
         "del startup",
         "del object_help",
     ]
     if quiet:
-        config.InteractiveShellApp.display_banner = False
-    IPython.start_ipython(config=config, user_ns=ns, argv=ctx.args)
+        config.InteractiveShellApp.display_banner = False  # type: ignore
+    IPython.start_ipython(config=config, user_ns=ns, argv=ctx.args)  # type: ignore
 
 
 
