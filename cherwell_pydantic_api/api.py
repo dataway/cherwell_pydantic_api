@@ -33,6 +33,9 @@ class Connection(GeneratedInterfaces, GeneratedInterfaceBase):
         self.retry_on_error_401 = False
         self.retry_on_error_401_wait = 4.0
         self.reauthentication_counter = 0
+        if self._settings.intercept_path:
+            from .intercept_transport import InterceptTransport
+            self._intercept = InterceptTransport(self._client, self._settings.intercept_path)
 
 
     async def request(self,

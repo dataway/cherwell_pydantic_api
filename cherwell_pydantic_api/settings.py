@@ -20,6 +20,7 @@ class InstanceSettingsBase(BaseSettings):
         description='Subpackage name, corresponds to subdirectory name within repo_dir, if unset default to instance name')
     repo_branch: Optional[str] = Field(
         description='Branch to use for this instance, if unset default to main')
+    intercept_path: Optional[Path] = Field(description='If set, intercept HTTP requests and responses and save to files here (internal use)')
 
     @validator('verify')
     def validate_verify(cls, v: str) -> Union[str, bool]:
