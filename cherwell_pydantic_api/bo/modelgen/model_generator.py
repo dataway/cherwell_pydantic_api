@@ -13,6 +13,7 @@ from cherwell_pydantic_api.utils import fieldid_parts
 
 class ParsedFieldDefinition(ValidFieldDefinition):
     python_type: str = 'Any'
+    python_default: str = 'None'
     python_type_modules: set[str] = set()
     python_type_validator: Optional[str] = None
     python_validator_params: Any = None
@@ -25,6 +26,7 @@ class ParsedFieldDefinition(ValidFieldDefinition):
     def resolve_type(self):
         if self.type == 'Text':
             self.python_type = 'str'
+            self.python_default = "''"
             if self.maximumSize:
                 try:
                     self.pydantic_field_args['max_length'] = int(
@@ -32,6 +34,7 @@ class ParsedFieldDefinition(ValidFieldDefinition):
                 except:
                     pass
         elif self.type == 'DateTime':
+            self.python_default = "datetime.datetime(1, 1, 1)"
             self.python_type_modules.add('datetime')
             if self.hasDate and self.hasTime:
                 self.python_type = 'datetime.datetime'
@@ -46,6 +49,7 @@ class ParsedFieldDefinition(ValidFieldDefinition):
                 self.python_type = 'datetime.datetime'
                 self.python_type_validator = 'validator_datetime'
         elif self.type == 'Number':
+            self.python_default = "0"
             if self.decimalDigits == 0:
                 self.python_type = 'int'
                 self.python_type_validator = 'validator_int'
@@ -60,11 +64,13 @@ class ParsedFieldDefinition(ValidFieldDefinition):
                         cast(int, self.decimalDigits)
         elif self.type == 'Logical':
             self.python_type = 'bool'
+            self.python_default = "False"
         else:
             raise ValueError(
                 f"Unknown type: {self.type} for field {self.name}")
         if not self.required:
             self.python_type = f"Optional[{self.python_type}]"
+            self.python_default = 'None'
 
 
 
@@ -89,9 +95,10 @@ class PydanticModelGenerator:
         statefield: Optional[str] = None
         firstrecfield: Optional[str] = None
         fields: list[ParsedFieldDefinition] = []
-        parent_fields: dict[ShortFieldID, ValidFieldDefinition] = {}
+        all_fields: list[ParsedFieldDefinition] = []
+        parent_schema_fields: dict[ShortFieldID, ValidFieldDefinition] = {}
         if schema.parentSchema:
-            parent_fields = {field.short_field_id: field for field in schema.parentSchema.fieldDefinitions}
+            parent_schema_fields = {field.short_field_id: field for field in schema.parentSchema.fieldDefinitions}
         for valid_field in schema.fieldDefinitions:
             field = ParsedFieldDefinition(**valid_field.dict())
             field.resolve_type()
@@ -102,24 +109,25 @@ class PydanticModelGenerator:
             if field.python_type_validator:
                 validators[(field.python_type_validator, field.python_validator_params)].append(field)
             assert fieldid_parts(field.fieldId)['BO'] == schema.busObId
-            if valid_field.short_field_id in parent_fields:
-                #parent_field = parent_fields[valid_field.short_field_id]
+            if field.python_type_modules:
+                modules.update(field.python_type_modules)
+            all_fields.append(field)
+            if valid_field.short_field_id in parent_schema_fields:
+                continue
+                # parent_field = parent_fields[valid_field.short_field_id]
                 # TODO: Unclear which aspects of the field are allowed to differ from the parent. For now, don't check anything.
                 # The following list of attributes were observed to differ
-                #mismatches = {k: (v, getattr(parent_field, k))
+                # mismatches = {k: (v, getattr(parent_field, k))
                 #              for k, v in vars(valid_field).items()
                 #              if v != getattr(parent_field, k) and k not in (
                 #                 'fieldId', 'details', 'autoFill', 'readOnly', 'validated', 'category',
                 #                 'displayName', 'description', 'required', 'calculated')}
-                #if mismatches:
+                # if mismatches:
                 #    raise ValueError(
                 #        f"Field {field.name} of {schema.identifier} has mismatches with parent: {mismatches}")
-                continue
-            if field.python_type_modules:
-                modules.update(field.python_type_modules)
             fields.append(field)
-        model_str = template.render(schema=schema, fields=fields, modules=modules,
-                                    validators=validators, settings=self._instance.settings,
+        model_str = template.render(schema=schema, fields=fields, all_fields=all_fields,
+                                    modules=modules, validators=validators, settings=self._instance.settings,
                                     statefield=statefield, firstrecfield=firstrecfield)
         model_str = black.format_str(
             model_str, mode=black.FileMode(preview=True))

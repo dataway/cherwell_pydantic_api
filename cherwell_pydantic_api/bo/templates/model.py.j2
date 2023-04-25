@@ -3,7 +3,7 @@
 # pyright: reportIncompatibleVariableOverride=false, reportUnusedImport=false
 
 
-from typing import Optional
+from typing import Optional, Union, TYPE_CHECKING
 from pydantic import Field
 from .__base import BusinessObjectModelData
 {% if validators %}
@@ -59,7 +59,7 @@ class {{ schema.identifier }}(BusinessObjectModelInstanceBase):
         allow_population_by_field_name = True
 
     {% for field in fields %}
-    {{ field.identifier }}: {{ field.python_type }} = Field(None,
+    {{ field.identifier }}: {{ field.python_type }} = Field({{ field.python_default }},
         {% if field.identifier != field.name %}alias={{ field.name|repr }},{% endif %}
         {% if field.displayName %}title={{ field.displayName|repr }},{% endif %}
         {% if field.description %}description={{ field.description|repr }},{% endif %}
@@ -77,6 +77,18 @@ class {{ schema.identifier }}(BusinessObjectModelInstanceBase):
         {% if validator_params %}decimal_places={{ validator_params }},{% endif %}
         pre=True, allow_reuse=True)
     {% endfor %}
+
+    if TYPE_CHECKING:
+        def __init__(self, *,
+            {% for field in all_fields %}
+            {% if field.python_type in ('str', 'Optional[str]') %}
+            {{ field.identifier }}: {{ field.python_type }} = {{ field.python_default }},
+            {% else %}
+            {{ field.identifier }}: Union[{{ field.python_type }}, str] = {{ field.python_default }},
+            {% endif %}
+            {% endfor %}
+            ):
+            ...
 
 {% if schema.identifier != schema.name %}
 {{ schema.name }} = {{ schema.identifier }}

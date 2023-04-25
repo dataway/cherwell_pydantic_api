@@ -70,7 +70,7 @@ def validator_int_impl(value: Any) -> int:
     try:
         if '.' in value:
             value = value.split('.')[0]
-        value.translate(str.maketrans("',", "__"))
+        value = value.translate(str.maketrans("',", "__"))
     except:
         pass
     return int(value)
