@@ -49,12 +49,13 @@ class ParsedFieldDefinition(ValidFieldDefinition):
                 self.python_type = 'datetime.datetime'
                 self.python_type_validator = 'validator_datetime'
         elif self.type == 'Number':
-            self.python_default = "0"
             if self.decimalDigits == 0:
                 self.python_type = 'int'
+                self.python_default = "0"
                 self.python_type_validator = 'validator_int'
             else:
                 self.python_type = 'decimal.Decimal'
+                self.python_default = "decimal.Decimal()"
                 self.python_type_validator = 'validator_decimal'
                 self.python_validator_params = self.decimalDigits
                 self.python_type_modules.add('decimal')
