@@ -1,6 +1,8 @@
+import datetime
+from decimal import Decimal
 from typing import Any, ClassVar, Literal, Optional, Type, TypeVar, Union, cast
 
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, PrivateAttr, ValidationError, validate_model
 from pydantic_changedetect.changedetect import ChangeDetectionMixin
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
@@ -9,12 +11,17 @@ from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.
     SaveRequest,
 )
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Core import CherwellLink
+from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Searches import (
+    FilterInfo,
+    SearchResultsRequest,
+)
 from cherwell_pydantic_api.bo.registry import BusinessObjectModelRegistryMixin
 from cherwell_pydantic_api.instance import Instance
 from cherwell_pydantic_api.types import (
     BusObID,
     BusObRecID,
     CherwellAPIError,
+    FieldID,
     FieldIdentifier,
     RelationshipID,
     SaveBusinessObjectError,
@@ -24,11 +31,15 @@ from cherwell_pydantic_api.types import (
 
 
 BusObModel_T = TypeVar("BusObModel_T", bound="BusinessObjectModelBase")
+SearchOp = tuple[Literal["eq", "gt", "lt", "contains", "startswith"],
+                 Union[str, int, Decimal, datetime.datetime, datetime.date, datetime.time]]
+SearchParam = Union[SearchOp, str, int, Decimal, datetime.datetime, datetime.date, datetime.time]
+BusinessObjectApiDataSource = Literal['new', 'save', 'load', 'search']
 
 
 class BusinessObjectApiData(BaseModel):
     "Holds all the per-record data needed between API calls"
-    source: Literal['new', 'save', 'load'] = 'new'
+    source: BusinessObjectApiDataSource = 'new'
     busObRecId: Optional[BusObRecID] = None
     busObPublicId: Optional[str] = None
     fields: list[FieldTemplateItem] = []
@@ -80,15 +91,25 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
 
 
     @classmethod
-    def from_api_response(cls: Type[BusObModel_T], response: ReadResponse) -> BusObModel_T:
+    def from_api_response(cls: Type[BusObModel_T], response: ReadResponse, source: BusinessObjectApiDataSource) -> BusObModel_T:
         assert response.fields is not None
         assert response.busObId == cls.get_busobid()
         assert all([f.name is not None for f in response.fields])
-        api_data = BusinessObjectApiData(source='load', busObRecId=response.busObRecId,
+        api_data = BusinessObjectApiData(source=source, busObRecId=response.busObRecId,
                                          busObPublicId=response.busObPublicId, fields=response.fields, links=response.links or [])
         vals: dict[str, Any] = {
             FieldIdentifier(cast(str, f.name)): f.value for f in response.fields}
-        ob = cls(**vals)
+        try:
+            ob = cls(**vals)
+        except ValidationError as e:
+            if source != 'search':
+                raise
+            # Mitigate the Cherwell API returning invalid data for searches: delete bad fields and try again
+            for error in e.errors():
+                if len(error['loc']) != 1 or error['loc'][0] not in vals:
+                    raise
+                del vals[error['loc'][0]]
+            ob = cls(**vals)
         ob._api_data = api_data
         return ob
 
@@ -100,7 +121,7 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
         if response.hasError:
             raise CherwellAPIError(f"from_api[{cls.__name__}]", errorMessage=response.errorMessage,
                                    errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
-        return cls.from_api_response(response)
+        return cls.from_api_response(response, 'load')
     get = from_api
 
 
@@ -271,6 +292,41 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
             totalsize=len(filedata),
             displaytext=description)
         return response
+
+
+    @classmethod
+    async def search(cls: Type[BusObModel_T], **kwargs: SearchParam) -> list[BusObModel_T]:
+        # see: https://help.cherwell.com/bundle/cherwell_rest_api_950_help_only/page/oxy_ex-1/content/system_administration/rest_api/csm_rest_searches.html
+        # The Cherwell API is buggy and can return invalid field data. This is worked-around in from_api_response().
+        arg_values: dict[str, Any] = {}
+        arg_ops: dict[str, str] = {}
+        for fieldname, param in kwargs.items():
+            if isinstance(param, tuple):
+                op = param[0]
+                value = param[1]
+            else:
+                op = 'eq'
+                value = param
+            arg_ops[fieldname] = op
+            arg_values[fieldname] = value
+        values, fields_set, validation_error = validate_model(cls, arg_values)
+        if validation_error:
+            raise validation_error
+        filter: list[FilterInfo] = []
+        busobid = cls.get_busobid()
+        for fieldname in fields_set:
+            fieldId = cls.__fields__[fieldname].field_info.extra['cw_fi']
+            filter.append(FilterInfo(fieldId=FieldID(f"BO:{busobid},FI:{fieldId}"),
+                          operator=arg_ops[fieldname], value=values[fieldname]))
+        request = SearchResultsRequest(busObId=cls.get_busobid(), filters=filter,
+                                       includeAllFields=True, includeSchema=False, pageSize=100000)
+        response = await cls.get_instance().connection.GetSearchResultsAdHocV1(request)
+        if response.hasError:
+            raise CherwellAPIError(f"search[{cls.__name__}]", errorMessage=response.errorMessage,
+                                   errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
+        assert response.businessObjects is not None
+        return [cls.from_api_response(r, 'search') for r in response.businessObjects]
+
 
 
 BusinessObjectModelData = BusinessObjectModelBase._ModelData  # type: ignore

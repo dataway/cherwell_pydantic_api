@@ -1,5 +1,5 @@
 import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from typing import Any, Callable, Optional, Union
 
 from pydantic import validator  # type: ignore
@@ -85,5 +85,9 @@ def validator_decimal(*args: str, decimal_places: int, **kwargs: Any) -> Callabl
             value = value.translate(str.maketrans("',", "__"))
         except:
             pass
-        return Decimal(value).quantize(Decimal(f'0.{"0" * decimal_places}'))
+        try:
+            return Decimal(value).quantize(Decimal(f'0.{"0" * decimal_places}'))
+        except InvalidOperation as e:
+            # pydantic expects a ValueError
+            raise ValueError from e
     return validator(*args, **kwargs)(v) # type: ignore
