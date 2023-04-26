@@ -29,3 +29,4 @@ dist/
 repo/
 Untitled*.ipynb
 /*swagger.json
+.hypothesis/

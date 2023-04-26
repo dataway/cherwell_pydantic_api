@@ -53,6 +53,9 @@ cherwell_pydantic_api = {path = ".", extras = ["modelgen", "jupyter"]}
 autopep8 = ">=2.0.2"
 pytest = ">=7.3.0"
 mypy = ">=1.2.0"
+pytest-httpx = "^0.22.0"
+hypothesis = {extras = ["cli"], version = "^6.72.0"}
+pytest-asyncio = "^0.21.0"
 
 [tool.poetry.extras]
 modelgen = ["black", "dulwich", "click", "jinja2"]
@@ -80,6 +83,7 @@ lines_after_imports = 3
 #reportUnknownArgumentType = false
 #reportUnknownParameterType = false
 #reportMissingParameterType = false
+pythonVersion = "3.9"
 
 [tool.mypy]
 plugins = "pydantic.mypy"
