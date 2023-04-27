@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pyright: reportUnusedImport=false, reportUnusedFunction=false
+# pyright: reportUnusedImport=false, reportUnusedFunction=false, reportUntypedFunctionDecorator=false
 
 
 from typing import TYPE_CHECKING, Any, Optional

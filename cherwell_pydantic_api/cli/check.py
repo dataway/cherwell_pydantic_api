@@ -1,3 +1,5 @@
+# pyright: reportUnusedImport=false, reportUnusedFunction=false, reportUntypedFunctionDecorator=false
+
 from typing import Optional
 
 import click
