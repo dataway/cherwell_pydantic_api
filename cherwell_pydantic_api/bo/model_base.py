@@ -108,7 +108,7 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
             for error in e.errors():
                 if len(error['loc']) != 1 or error['loc'][0] not in vals:
                     raise
-                del vals[error['loc'][0]]
+                del vals[error['loc'][0]]  # type: ignore
             ob = cls(**vals)
         ob._api_data = api_data
         return ob

@@ -58,7 +58,7 @@ class CollectorItem:
 
     @property
     def busobid(self) -> BusObID:
-        return self.summary.busObId  # type: ignore
+        return self.summary.busObId  # type: ignore  # asserted not None in __init__
 
     @property
     def name(self) -> str:
@@ -87,9 +87,8 @@ class CollectorItem:
 
 
 class CollectorSettings(BaseModel):
-    # mypy wants to see Pattern[str] but Pydantic requires Pattern
-    bo_include_filter: Optional[Pattern]  # type: ignore
-    bo_exclude_filter: Optional[Pattern]  # type: ignore
+    bo_include_filter: Optional[Pattern[str]]
+    bo_exclude_filter: Optional[Pattern[str]]
 
 
 class Collector:
@@ -230,8 +229,8 @@ class Collector:
     def load_settings(self, repo: ModelRepo):
         collector_settings = CollectorSettings.parse_file(
             repo.repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
-        self.bo_include_filter = collector_settings.bo_include_filter  # type: ignore
-        self.bo_exclude_filter = collector_settings.bo_exclude_filter  # type: ignore
+        self.bo_include_filter = collector_settings.bo_include_filter
+        self.bo_exclude_filter = collector_settings.bo_exclude_filter
 
 
     def clear_caches(self):

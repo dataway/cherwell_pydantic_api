@@ -36,7 +36,7 @@ class InterceptTransport(httpx.AsyncBaseTransport):
         client._transport = self
 
     async def __aenter__(self: A) -> A:
-        return self._original_transport.__aenter__()
+        return await self._original_transport.__aenter__() # type: ignore
 
     async def __aexit__(
         self,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# pyright: reportUnusedImport=false
+# pyright: reportUnusedImport=false, reportGeneralTypeIssues=false
 
 import sys
 from pathlib import Path
@@ -85,7 +85,7 @@ def cli_welcome():
     return 0
 
 
-@click.group()
+@click.group
 def root():
     "cherwell_pydantic_api CLI"
     pass

@@ -24,7 +24,7 @@ class ValidFieldDefinition(FieldDefinition):
     def __init__(self, **data: Union[str, int, bool, None, FieldID, ShortFieldID, FieldIdentifier]):
         data['short_field_id'] = fieldid_parts(data['fieldId'])['FI'] # type: ignore
         data['identifier'] = FieldIdentifier(data['name']) # type: ignore
-        super().__init__(**data)
+        super().__init__(**data) # type: ignore
 
 
 class ValidSchema(ApiBaseModel):

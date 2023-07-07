@@ -1,5 +1,4 @@
-# pyright: reportUnusedImport=false, reportUnusedFunction=false, reportUntypedFunctionDecorator=false
-
+# mypy: ignore-errors
 from typing import Optional
 
 import click
@@ -9,7 +8,7 @@ from .utils import async_command
 
 
 
-@click.command()
+@click.command
 @click.option('--instance-name', '-I', help='The name of the instance to use. If not specified, the default instance will be used.')
 @async_command
 async def check(instance_name: Optional[str] = None):

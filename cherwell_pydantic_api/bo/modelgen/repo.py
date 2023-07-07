@@ -1,3 +1,4 @@
+# pyright errors abound without the following, because dulwich is not typed
 # pyright: strict, reportUnknownMemberType=false
 import logging
 from pathlib import Path

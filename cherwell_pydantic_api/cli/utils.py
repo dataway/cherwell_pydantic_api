@@ -1,11 +1,14 @@
 from functools import wraps
-from typing import Any, Callable, Coroutine
+from typing import Any, Callable, Coroutine, TypeVar
 
 import click
 
 
 
-def async_command(command: Callable[..., Coroutine[Any, Any, Any]]) -> Callable[..., Callable[..., Any]]:
+_T = TypeVar("_T")
+
+
+def async_command(command: Callable[..., Coroutine[Any, Any, _T]]) -> Callable[..., _T]:
     @wraps(command)
     def wrapper(*args: Any, **kwargs: Any):
         import asyncio

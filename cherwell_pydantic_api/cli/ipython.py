@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# pyright: reportUnusedImport=false, reportUnusedFunction=false, reportUntypedFunctionDecorator=false
+# pyright: reportUnusedImport=false, reportUnusedFunction=false
+# mypy: ignore-errors
 
 
 from typing import TYPE_CHECKING, Any, Optional
