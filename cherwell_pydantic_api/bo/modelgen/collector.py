@@ -87,8 +87,9 @@ class CollectorItem:
 
 
 class CollectorSettings(BaseModel):
-    bo_include_filter: Optional[Pattern[str]]
-    bo_exclude_filter: Optional[Pattern[str]]
+    # mypy wants to see Pattern[str] but Pydantic requires Pattern
+    bo_include_filter: Optional[Pattern]  # type: ignore
+    bo_exclude_filter: Optional[Pattern]  # type: ignore
 
 
 class Collector:
@@ -229,8 +230,8 @@ class Collector:
     def load_settings(self, repo: ModelRepo):
         collector_settings = CollectorSettings.parse_file(
             repo.repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
-        self.bo_include_filter = collector_settings.bo_include_filter
-        self.bo_exclude_filter = collector_settings.bo_exclude_filter
+        self.bo_include_filter = collector_settings.bo_include_filter  # type: ignore
+        self.bo_exclude_filter = collector_settings.bo_exclude_filter  # type: ignore
 
 
     def clear_caches(self):
