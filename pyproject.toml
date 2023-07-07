@@ -87,4 +87,4 @@ pythonVersion = "3.9"
 [tool.mypy]
 plugins = "pydantic.mypy"
 #ignore_missing_imports = true
-exclude = ['repo/']
+exclude = ['repo/', 'tests/']
