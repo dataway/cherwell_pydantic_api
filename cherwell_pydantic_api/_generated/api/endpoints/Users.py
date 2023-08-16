@@ -19,7 +19,7 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/deleteuserbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -40,7 +40,7 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V2/deleteuserbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -122,7 +122,7 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/getuserbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -261,7 +261,7 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/saveuserbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -282,7 +282,7 @@ class UsersInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V2/saveuserbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -302,7 +302,8 @@ class UsersInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveResponse
         """
         response = await self.post_body(
-            "/api/V1/saveuser", content=request.json(exclude_unset=True, by_alias=True)
+            "/api/V1/saveuser",
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -322,7 +323,8 @@ class UsersInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Users.UserSaveV2Response
         """
         response = await self.post_body(
-            "/api/V2/saveuser", content=request.json(exclude_unset=True, by_alias=True)
+            "/api/V2/saveuser",
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,

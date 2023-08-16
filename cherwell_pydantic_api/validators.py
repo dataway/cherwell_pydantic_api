@@ -79,8 +79,10 @@ def validator_int(*args: str, **kwargs: Any) -> Callable[[Any, str], int]:
     return validator(*args, **kwargs)(validator_int_impl) # type: ignore
 
 
-def validator_decimal(*args: str, decimal_places: int, **kwargs: Any) -> Callable[[Any, str], Decimal]:
-    def v(value: Any) -> Decimal:
+def validator_decimal(*args: str, decimal_places: int, **kwargs: Any) -> Callable[[Any, str], Optional[Decimal]]:
+    def v(value: Any) -> Optional[Decimal]:
+        if not value:
+            return None
         try:
             value = value.translate(str.maketrans("',", "__"))
         except:

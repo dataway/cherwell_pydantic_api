@@ -68,14 +68,14 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
     def marshal(self, include_summaries: bool = False) -> Iterable[tuple[str, str]]:
         yield ('instance_name.txt', self._instance.settings.name)
         for busobid, schema in self._schemas.items():
-            yield (f'bo.{busobid}.json', schema.json(indent=2, sort_keys=True, exclude_unset=True, exclude_defaults=True))
+            yield (f'bo.{busobid}.json', schema.model_dump_json(indent=2, exclude_unset=True, exclude_defaults=True))
         for relid, rel in self._relationships.items():
-            yield (f'rel.{relid}.json', rel.json(indent=2, exclude={'target_schema', 'source_schema', 'fieldDefinitions'}, sort_keys=True, exclude_unset=True, exclude_defaults=True))
+            yield (f'rel.{relid}.json', rel.model_dump_json(indent=2, exclude={'target_schema', 'source_schema', 'fieldDefinitions'}, exclude_unset=True, exclude_defaults=True))
         if include_summaries:
             for busobid, summary in self._summaries.items():
                 if busobid in self._schemas:
                     continue
-                yield (f'bo_sum.{busobid}.json', summary.json(indent=2, sort_keys=True))
+                yield (f'bo_sum.{busobid}.json', summary.model_dump_json(indent=2))
         names_csv = [
             f"{name};{self._name_to_id[name]}\n" for name in self._name_to_id.keys()]
         names_csv.sort()
@@ -87,7 +87,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
                 csmVersion=self._service_info.csmVersion,
                 base_url=self._instance.settings.base_url,
             )
-            yield ('service_info.json', si_model.json(indent=2, sort_keys=True))
+            yield ('service_info.json', si_model.model_dump_json(indent=2))
 
 
     def get_schema(self, busobid: BusObID) -> ValidSchema:

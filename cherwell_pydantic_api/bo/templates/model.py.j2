@@ -3,8 +3,8 @@
 # pyright: reportIncompatibleVariableOverride=false, reportUnusedImport=false
 
 
-from typing import Optional, Union, TYPE_CHECKING
-from pydantic import Field
+from typing import Optional, Union, Annotated, TYPE_CHECKING
+from pydantic import Field, ConfigDict
 from .__base import BusinessObjectModelData
 {% if validators %}
 from cherwell_pydantic_api import validators
@@ -54,18 +54,18 @@ class {{ schema.identifier }}(BusinessObjectModelInstanceBase):
         }
         {% endif %}
 
-    class Config:
-        title = {{ schema.name|repr }}
-        allow_population_by_field_name = True
+    model_config = ConfigDict(title={{ schema.name|repr }})
 
     {% for field in fields %}
     {{ field.identifier }}: {{ field.python_type }} = Field({{ field.python_default }},
         {% if field.identifier != field.name %}alias={{ field.name|repr }},{% endif %}
         {% if field.displayName %}title={{ field.displayName|repr }},{% endif %}
         {% if field.description %}description={{ field.description|repr }},{% endif %}
-        cw_fi={{ field.short_field_id|repr }},
-        {% if field.category %}cw_category={{ field.category|repr }},{% endif %}
-        {% if field.details %}cw_details={{ field.details|repr }},{% endif %}
+        json_schema_extra={
+            'cw_fi':{{ field.short_field_id|repr }},
+            {% if field.category %}'cw_category':{{ field.category|repr }},{% endif %}
+            {% if field.details %}'cw_details':{{ field.details|repr }},{% endif %}
+        },
         {{ field.pydantic_field_params }})
     {% endfor %}
 

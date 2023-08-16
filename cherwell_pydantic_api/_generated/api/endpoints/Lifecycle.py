@@ -161,7 +161,9 @@ class LifecycleInterface(GeneratedInterfaceBase):
         self.validate_path_param(recordId, str)
         response = await self.post_body(
             f"/api/V1/{businessObjectDefinitionId}/records/{recordId}/transitions",
-            content=transitionRecordRequest.json(exclude_unset=True, by_alias=True),
+            content=transitionRecordRequest.model_dump_json(
+                exclude_unset=True, by_alias=True
+            ),
         )
         return self.parse_response(
             response,

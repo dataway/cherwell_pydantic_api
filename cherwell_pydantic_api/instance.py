@@ -25,7 +25,7 @@ class Instance(ApiRequesterInterface):
             raise TypeError(
                 'Please create Instance objects using Instance.use()')
         # Take into account that the settings might change under our nose
-        self._settings = instance_settings.copy()
+        self._settings = instance_settings.model_copy()
         self.bo = BusinessObjectRegistry(self)
         self._connection = Connection(instance_settings)
 

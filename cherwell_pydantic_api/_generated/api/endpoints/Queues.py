@@ -20,7 +20,7 @@ class QueuesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/additemtoqueue",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -41,7 +41,7 @@ class QueuesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/checkinqueueitem",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -62,7 +62,7 @@ class QueuesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/checkoutqueueitem",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -190,7 +190,7 @@ class QueuesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/removeitemfromqueue",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,

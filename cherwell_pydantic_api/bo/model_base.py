@@ -2,7 +2,7 @@ import datetime
 from decimal import Decimal
 from typing import Any, ClassVar, Literal, Optional, Type, TypeVar, Union, cast
 
-from pydantic import BaseModel, PrivateAttr, ValidationError, validate_model
+from pydantic import BaseModel, PrivateAttr, ValidationError
 from pydantic_changedetect.changedetect import ChangeDetectionMixin
 
 from cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.BusinessObject import (
@@ -49,7 +49,7 @@ class BusinessObjectApiData(BaseModel):
 
 class BusinessObjectRelationship(BaseModel):
     target_busobid: BusObID
-    target_class_name: Optional[str]
+    target_class_name: Optional[str] = None
     oneToMany: bool
     description: str
     displayName: str
@@ -60,6 +60,8 @@ class BusinessObjectRelationship(BaseModel):
                          oneToMany=oneToMany, description=description, displayName=displayName)
 
 
+# TODO: pyright complaints about ChangeDetectionMixin._copy_and_set_values; check
+# pyright: reportIncompatibleMethodOverride=false
 class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectModelRegistryMixin):
     _instance_name: ClassVar[str]
     _api_data: BusinessObjectApiData = PrivateAttr(
@@ -75,13 +77,13 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
 
     class _ModelData:
         busobid: BusObID
-        statefieldid: Optional[ShortFieldID]
-        firstrecidfield: Optional[ShortFieldID]
-        recidfields: Optional[ShortFieldID]
-        statefield: Optional[str]
-        firstrecfield: Optional[str]
-        states: Optional[list[str]]
-        relationships: Optional[dict[RelationshipID, BusinessObjectRelationship]]
+        statefieldid: Optional[ShortFieldID] = None
+        firstrecidfield: Optional[ShortFieldID] = None
+        recidfields: Optional[ShortFieldID] = None
+        statefield: Optional[str] = None
+        firstrecfield: Optional[str] = None
+        states: Optional[list[str]] = None
+        relationships: Optional[dict[RelationshipID, BusinessObjectRelationship]] = None
 
 
     @classmethod
@@ -122,12 +124,21 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
             raise CherwellAPIError(f"from_api[{cls.__name__}]", errorMessage=response.errorMessage,
                                    errorCode=response.errorCode, httpStatusCode=response.httpStatusCode)
         return cls.from_api_response(response, 'load')
-    get = from_api
+    get = from_api # type: ignore[pydantic-field]
 
 
     @classmethod
     def get_busobid(cls) -> BusObID:
         return cls._ModelData.busobid
+
+
+    @classmethod
+    def get_fieldid(cls, fieldname: str) -> FieldID:
+        field = cls.model_fields[fieldname]
+        if not isinstance(field.json_schema_extra, dict) or 'cw_fi' not in field.json_schema_extra:
+            raise ValueError(f"Field {fieldname} has no cw_fi, is it a pydantic_cherwell_api model?")
+        return field.json_schema_extra['cw_fi']
+
 
     def get_busobrecid(self) -> BusObRecID:
         """Get the BusObRecID of the Business Object. Raises ValueError if BusObRecID is not set."""
@@ -139,14 +150,14 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
     def _prepare_changes_for_save(self) -> list[FieldTemplateItem]:
         if not self._api_data.fields:
             r: list[FieldTemplateItem] = []
-            for fname, field in self.__fields__.items():
+            for fname in self.model_fields.keys():
                 v = getattr(self, fname)
                 if v:
-                    r.append(FieldTemplateItem(dirty=True, value=str(v), fieldId=field.field_info.extra['cw_fi']))
+                    r.append(FieldTemplateItem(dirty=True, value=str(v), fieldId=self.get_fieldid(fname)))
             return r
 
         for fld in self._api_data.fields:
-            if fld.name in self.__self_changed_fields__:
+            if fld.name in self.model_self_changed_fields:
                 fld.value = str(getattr(self, fld.name))
                 fld.dirty = True
         return self._api_data.fields
@@ -194,13 +205,13 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
         self._api_data.links = response.links or []
         self._api_data.cacheKey = None
         # HACK: Enable validate_assignment for the duration of the update
-        save_validate_assignment = self.__config__.validate_assignment
-        self.__config__.validate_assignment = True
+        save_validate_assignment = self.model_config.get('validate_assignment', False)
+        self.model_config['validate_assignment'] = True
         for f in response.fields:
             assert f.name
             setattr(self, FieldIdentifier(f.name), f.value)
         self.reset_changed()
-        self.__config__.validate_assignment = save_validate_assignment
+        self.model_config['validate_assignment'] = save_validate_assignment
         return self
 
 
@@ -309,15 +320,13 @@ class BusinessObjectModelBase(ChangeDetectionMixin, BaseModel, BusinessObjectMod
                 value = param
             arg_ops[fieldname] = op
             arg_values[fieldname] = value
-        values, fields_set, validation_error = validate_model(cls, arg_values)
-        if validation_error:
-            raise validation_error
+        search_model: BusObModel_T = cls.model_validate(arg_values, strict=True)
         filter: list[FilterInfo] = []
         busobid = cls.get_busobid()
-        for fieldname in fields_set:
-            fieldId = cls.__fields__[fieldname].field_info.extra['cw_fi']
+        for fieldname in search_model.model_fields_set:
+            fieldId = cls.get_fieldid(fieldname)
             filter.append(FilterInfo(fieldId=FieldID(f"BO:{busobid},FI:{fieldId}"),
-                          operator=arg_ops[fieldname], value=values[fieldname]))
+                          operator=arg_ops[fieldname], value=getattr(search_model, fieldname)))
         request = SearchResultsRequest(busObId=cls.get_busobid(), filters=filter,
                                        includeAllFields=True, includeSchema=False, pageSize=100000)
         response = await cls.get_instance().connection.GetSearchResultsAdHocV1(request)

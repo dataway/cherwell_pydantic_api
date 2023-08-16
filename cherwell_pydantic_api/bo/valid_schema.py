@@ -52,7 +52,7 @@ class ValidSchema(ApiBaseModel):
         else:
             relIds = []
         return cls(busObId=BusObID(schema.busObId),
-                   fieldDefinitions=[ValidFieldDefinition(**field.dict()) for field in schema.fieldDefinitions],
+                   fieldDefinitions=[ValidFieldDefinition(**field.model_dump()) for field in schema.fieldDefinitions],
                    firstRecIdField=schema.firstRecIdField,
                    gridDefinitions=schema.gridDefinitions,
                    name=schema.name,
@@ -84,7 +84,7 @@ class ValidRelationship(ApiBaseModel):
                    cardinality=relationship.cardinality,
                    description=relationship.description,
                    displayName=relationship.displayName,
-                   fieldDefinitions=[ValidFieldDefinition(**field.dict()) for field in relationship.fieldDefinitions],
+                   fieldDefinitions=[ValidFieldDefinition(**field.model_dump()) for field in relationship.fieldDefinitions],
                    target=BusObID(relationship.target),
                    source=source_schema.busObId,
                    source_schema=source_schema,

@@ -98,16 +98,16 @@ class GeneratedInterfaceBase(GeneratedInterfaceBaseType):
     def parse_response(self, response: Response, rtype: Type[Union[ApiBaseModel, list[ApiBaseModel_co], list[CherwellObjectID], str, bytes]]) -> Any:
         # If the response type has a `httpStatusCode` field, set it to the actual HTTP status code
         # and don't raise an exception if the HTTP request failed
+        js = None
+        if 'application/json' in response.headers.get('content-type', ''):
+            js = response.json()
         if issubclass_noexcept(rtype, ApiBaseModel):
             if TYPE_CHECKING:
                 assert issubclass(rtype, ApiBaseModel)
             status_code = None
             try:
                 # The Cherwell server sends the header: "Content-Type: application/json;charset=UTF-8"
-                obj = rtype.parse_raw(response.content,
-                                      content_type=response.headers.get(
-                                          'content-type').split(';', 1)[0],
-                                      encoding=response.encoding or 'utf-8')
+                obj = rtype.model_validate(js)
                 if hasattr(obj, 'httpStatusCode'):
                     obj.httpStatusCode = response.status_code  # type: ignore
                     status_code = response.status_code
@@ -131,11 +131,7 @@ class GeneratedInterfaceBase(GeneratedInterfaceBaseType):
         if rtype is bytes:
             return response.content
 
-        return pydantic.parse_raw_as(rtype,
-                                     response.content,
-                                     content_type=response.headers.get(
-                                         'content-type').split(';', 1)[0],
-                                     encoding=response.encoding or 'utf-8')
+        return pydantic.TypeAdapter(rtype).validate_python(js)
 
 
     def download_response(self, response: Response) -> FileDownload:

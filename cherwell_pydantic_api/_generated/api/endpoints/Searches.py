@@ -52,7 +52,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/getquicksearchconfigurationforbusobs",
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -127,7 +127,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V1/getquicksearchresults",
             params=params,
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -162,7 +162,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V1/getquicksearchspecificresults",
             params=params,
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -197,7 +197,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V2/getquicksearchspecificresults",
             params=params,
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -527,7 +527,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/getsearchresults",
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -700,7 +700,7 @@ class SearchesInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api.types.StringResponse"""
         response = await self.post_body(
             "/api/V1/getsearchresultsexport",
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(response, cherwell_pydantic_api.types.StringResponse)
 
@@ -923,7 +923,7 @@ class SearchesInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V2/storedsearches",
-            content=searchRequest.json(exclude_unset=True, by_alias=True),
+            content=searchRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,

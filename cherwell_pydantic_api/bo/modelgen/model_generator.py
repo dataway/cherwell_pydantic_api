@@ -69,7 +69,11 @@ class ParsedFieldDefinition(ValidFieldDefinition):
         else:
             raise ValueError(
                 f"Unknown type: {self.type} for field {self.name}")
-        if not self.required:
+        if not self.required or (self.details and 'Conditionally Required' in self.details):
+            # Pydantic v2 requires this workaround per https://github.com/pydantic/pydantic/issues/6955
+            if self.python_type in ('decimal.Decimal',):
+                self.python_type = f"Annotated[{self.python_type}, Field({self.pydantic_field_params})]"
+                self.pydantic_field_args = {}
             self.python_type = f"Optional[{self.python_type}]"
             self.python_default = 'None'
 
@@ -101,7 +105,7 @@ class PydanticModelGenerator:
         if schema.parentSchema:
             parent_schema_fields = {field.short_field_id: field for field in schema.parentSchema.fieldDefinitions}
         for valid_field in schema.fieldDefinitions:
-            field = ParsedFieldDefinition(**valid_field.dict())
+            field = ParsedFieldDefinition(**valid_field.model_dump())
             field.resolve_type()
             if field.short_field_id == schema.stateFieldId:
                 statefield = FieldIdentifier(field.name)

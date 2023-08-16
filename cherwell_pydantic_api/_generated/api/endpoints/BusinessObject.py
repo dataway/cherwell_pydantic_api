@@ -22,7 +22,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/deletebusinessobjectbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -163,7 +163,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/fieldvalueslookup",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -473,7 +473,9 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/getbusinessobjectattachments",
-            content=attachmentsRequest.json(exclude_unset=True, by_alias=True),
+            content=attachmentsRequest.model_dump_json(
+                exclude_unset=True, by_alias=True
+            ),
         )
         return self.parse_response(
             response,
@@ -494,7 +496,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/getbusinessobjectbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -707,7 +709,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/getbusinessobjecttemplate",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -734,7 +736,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         response = await self.post_body(
             "/api/V1/getrelatedbusinessobject",
             params=params,
-            content=relatedBusinessObjectRequest.json(
+            content=relatedBusinessObjectRequest.model_dump_json(
                 exclude_unset=True, by_alias=True
             ),
         )
@@ -1024,7 +1026,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/savebusinessobjectattachmentbusob",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -1045,7 +1047,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/savebusinessobjectattachmentlink",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -1066,7 +1068,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/savebusinessobjectattachmenturl",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -1087,7 +1089,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/savebusinessobjectbatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -1108,7 +1110,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/savebusinessobject",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -1129,7 +1131,7 @@ class BusinessObjectInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/saverelatedbusinessobject",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,

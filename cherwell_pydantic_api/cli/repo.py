@@ -1,6 +1,6 @@
 # mypy: ignore-errors
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import click
 
@@ -16,7 +16,9 @@ except:
     @click.command(name='repo')
     def repo_group():  # type: ignore
         click.secho(f"UNAVAILABLE - be sure to install cherwell_pydantic_api[modelgen]", fg='red')
-
+if TYPE_CHECKING:
+    from cherwell_pydantic_api.bo.modelgen.collector import Collector
+    from cherwell_pydantic_api.bo.modelgen.repo import ModelRepo
 
 
 if _imports_ok:

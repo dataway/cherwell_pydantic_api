@@ -88,8 +88,8 @@ class CollectorItem:
 
 class CollectorSettings(BaseModel):
     # mypy wants to see Pattern[str] but Pydantic requires Pattern
-    bo_include_filter: Optional[Pattern]  # type: ignore
-    bo_exclude_filter: Optional[Pattern]  # type: ignore
+    bo_include_filter: Optional[Pattern] = None  # type: ignore
+    bo_exclude_filter: Optional[Pattern] = None  # type: ignore
 
 
 class Collector:
@@ -220,7 +220,7 @@ class Collector:
     def generate_settings(self) -> FileGenerator:
         collector_settings = CollectorSettings(
             bo_include_filter=self.bo_include_filter, bo_exclude_filter=self.bo_exclude_filter)
-        yield ('collector_settings.json', collector_settings.json(indent=2, sort_keys=True))
+        yield ('collector_settings.json', collector_settings.model_dump_json(indent=2, round_trip=True))
 
 
     def save_settings(self, repo: ModelRepo):
@@ -228,8 +228,9 @@ class Collector:
 
 
     def load_settings(self, repo: ModelRepo):
-        collector_settings = CollectorSettings.parse_file(
-            repo.repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json')
+        filepath = repo.repo_dir / self._instance.settings.get_repo_subpackage() / 'registry/collector_settings.json'
+        collector_settings = CollectorSettings.model_validate_json(filepath.read_text())
+
         self.bo_include_filter = collector_settings.bo_include_filter  # type: ignore
         self.bo_exclude_filter = collector_settings.bo_exclude_filter  # type: ignore
 

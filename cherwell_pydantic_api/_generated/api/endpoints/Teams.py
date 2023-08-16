@@ -19,7 +19,7 @@ class TeamsInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/addusertoteambybatch",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -37,7 +37,7 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: None"""
         response = await self.post_body(
             "/api/V1/addusertoteam",
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         self.check_response(response)
 
@@ -55,7 +55,7 @@ class TeamsInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V2/addusertoteam",
-            content=dataRequest.json(exclude_unset=True, by_alias=True),
+            content=dataRequest.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -275,7 +275,8 @@ class TeamsInterface(GeneratedInterfaceBase):
          :return: cherwell_pydantic_api._generated.api.models.Trebuchet.WebApi.DataContracts.Teams.TeamSaveResponse
         """
         response = await self.post_body(
-            "/api/V1/saveteam", content=request.json(exclude_unset=True, by_alias=True)
+            "/api/V1/saveteam",
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -296,7 +297,7 @@ class TeamsInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/saveteammember",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
@@ -317,7 +318,7 @@ class TeamsInterface(GeneratedInterfaceBase):
         """
         response = await self.post_body(
             "/api/V1/saveworkgroupmember",
-            content=request.json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self.parse_response(
             response,
