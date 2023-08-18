@@ -83,7 +83,6 @@ lines_after_imports = 3
 #reportUnknownArgumentType = false
 #reportUnknownParameterType = false
 #reportMissingParameterType = false
-pythonVersion = "3.9"
 exclude = ['.venv/', 'tests/']
 
 [tool.mypy]

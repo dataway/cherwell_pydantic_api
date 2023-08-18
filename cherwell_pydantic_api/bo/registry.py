@@ -222,7 +222,7 @@ class BusinessObjectRegistry(Mapping[str, BusinessObjectWrapperBase]):
         try:
             busobid = BusObID(item)
         except ValueError:
-            busobid = False
+            busobid = None
         if not busobid or busobid not in self._schemas:
             busobname = BusObIdentifier(item)
             busobid = self._name_to_id[busobname]
